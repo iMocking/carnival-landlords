@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3]
+
+[ext_resource type="FontFile" uid="uid://ds2hetktdx3xs" path="res://assets/fonts/harmonyos_sans/HarmonyOS_Sans_SC.ttf" id="1_harmony"]
+
+[resource]
+default_font = ExtResource("1_harmony")
+default_font_size = 16

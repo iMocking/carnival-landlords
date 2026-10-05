@@ -42,6 +42,7 @@ type Service struct {
 	tokens   *token.Manager
 	sender   mailer.Sender
 	sessions *SessionStore
+	devices  *DeviceStore
 	roles    RoleAssigner
 	wallet   *wallet.Service
 	cfg      config.Config
@@ -68,6 +69,7 @@ func New(d Deps) *Service {
 		tokens:   d.Tokens,
 		sender:   d.Sender,
 		sessions: NewSessionStore(d.Redis, d.Tokens.RefreshTTL(), d.Config.JWT.MaxActiveSessions),
+		devices:  NewDeviceStore(d.Redis, d.Tokens.GameTTL()),
 		roles:    d.Roles,
 		wallet:   d.Wallet,
 		cfg:      d.Config,
@@ -88,7 +90,32 @@ type Principal struct {
 
 // IsGM 是否具备后台权限。
 func (p *Principal) IsGM() bool {
-	return p != nil && (p.Role == catalog.RoleGM || p.Role == catalog.RoleAdmin)
+	return p != nil && (p.Role == catalog.RoleOperator || p.Role == catalog.RoleAdmin)
+}
+
+// VerifyResult 是 game_token 校验的结果（D-09 / AUTH-06）。
+//
+// 返回身份字段**同时**附带一次新会话：文档里 AUTH-06 的形状是
+// `{user_id, nickname, status, device_id}`，那是"解析出一个身份"的最小契约；
+// 而客户端真正需要的是"不用重登就能继续调其它接口"。
+// 两者不冲突 —— 身份字段保持原样，额外给出 tokens，调用方只取身份也完全可以。
+//
+// 另一点很关键：这个接口**不需要调用方持有服务端密钥**。
+// game_token 本身就是凭证，安全性由它自身的保密性 + 可吊销保证 ——
+// 于是跑在玩家设备上的离线服务也能安全地调它。
+type VerifyResult struct {
+	UserID   string `json:"user_id"`
+	Nickname string `json:"nickname"`
+	Status   string `json:"status"`
+	DeviceID string `json:"device_id"`
+	// Tokens 为静默登录签发的新会话（access + refresh）。
+	Tokens token.Pair `json:"tokens"`
+	// Profile 完整档案，省掉客户端紧接着再调一次 /user/me。
+	Profile view.User `json:"profile"`
+	// SessionID 新会话的 ID，与登录响应里的含义一致。
+	SessionID string `json:"session_id"`
+	// GameToken 续期后的设备凭证。客户端可就地更新本地保存的那一份。
+	GameToken *token.GameToken `json:"game_token,omitempty"`
 }
 
 // RegisterInput 邮箱+密码注册入参。
@@ -99,6 +126,12 @@ type RegisterInput struct {
 	Code      string
 	IP        string
 	UserAgent string
+	// DeviceID 客户端上报的设备标识，用于签发长期设备凭证（game_token）。
+	//
+	// 允许为空：那样服务端会**自己生成一个并在响应里回传**（见 Result.DeviceID），
+	// 客户端把它持久化即可。这样即使调用方还没实现"上报设备 ID"，
+	// "免重登"也能立刻工作，而不是静默失效。
+	DeviceID string
 }
 
 // Result 是一次成功登录/注册的结果。
@@ -107,6 +140,15 @@ type Result struct {
 	Profile   view.User  `json:"profile"`
 	SessionID string     `json:"session_id"`
 	IsNewUser bool       `json:"is_new_user"`
+	// GameToken 长期设备凭证（D-09）。客户端应持久化，
+	// 下次启动直接用它换会话，从而跳过登录页。
+	//
+	// **绝不可写进日志**（需求 §4.1 明确要求）：它等同于账号在设备上的长期通行证。
+	// 刷新令牌的响应里不会有它（omitempty）—— 那时客户端早就持有它了。
+	GameToken *token.GameToken `json:"game_token,omitempty"`
+	// DeviceID 本次绑定的设备标识。客户端**即使没上报**也要保存它：
+	// 它是后续判断"是否同一台设备"的依据。
+	DeviceID string `json:"device_id,omitempty"`
 }
 
 // Register 邮箱注册。
@@ -150,7 +192,7 @@ func (s *Service) Register(ctx context.Context, in RegisterInput) (Result, error
 	if err != nil {
 		return Result{}, err
 	}
-	result, err := s.issue(ctx, u, in.IP, in.UserAgent)
+	result, err := s.issue(ctx, u, in.IP, in.UserAgent, Device{DeviceID: in.DeviceID})
 	if err != nil {
 		return Result{}, err
 	}
@@ -251,7 +293,7 @@ func (s *Service) createUser(ctx context.Context, email, nickname, passwordHash,
 }
 
 // LoginPassword 邮箱 + 密码登录。
-func (s *Service) LoginPassword(ctx context.Context, rawEmail, pwd, ip, ua string) (Result, error) {
+func (s *Service) LoginPassword(ctx context.Context, rawEmail, pwd, ip, ua, deviceID string) (Result, error) {
 	email, err := validate.Email(rawEmail)
 	if err != nil {
 		return Result{}, err
@@ -275,7 +317,7 @@ func (s *Service) LoginPassword(ctx context.Context, rawEmail, pwd, ip, ua strin
 	if err := s.touchLogin(ctx, u, ip); err != nil {
 		return Result{}, err
 	}
-	return s.issue(ctx, u, ip, ua)
+	return s.issue(ctx, u, ip, ua, Device{DeviceID: deviceID})
 }
 
 // dummyHash 是一个固定的 bcrypt 哈希，用于"账号不存在"时也消耗等量的 CPU 时间。
@@ -283,7 +325,7 @@ func (s *Service) LoginPassword(ctx context.Context, rawEmail, pwd, ip, ua strin
 const dummyHash = "$2a$12$C6UzMDM.H6dfI/f/IKcEe.oJDFDpJ6Z8WW1FcR7SdFqB3MVR4J8Ku"
 
 // LoginCode 验证码登录。邮箱未注册时**自动建号**（验证码即注册）。
-func (s *Service) LoginCode(ctx context.Context, rawEmail, codeInput, ip, ua string) (Result, error) {
+func (s *Service) LoginCode(ctx context.Context, rawEmail, codeInput, ip, ua, deviceID string) (Result, error) {
 	email, err := validate.Email(rawEmail)
 	if err != nil {
 		return Result{}, err
@@ -320,7 +362,7 @@ func (s *Service) LoginCode(ctx context.Context, rawEmail, codeInput, ip, ua str
 		if err != nil {
 			return Result{}, err
 		}
-		result, err := s.issue(ctx, u, ip, ua)
+		result, err := s.issue(ctx, u, ip, ua, Device{DeviceID: deviceID})
 		if err != nil {
 			return Result{}, err
 		}
@@ -334,7 +376,7 @@ func (s *Service) LoginCode(ctx context.Context, rawEmail, codeInput, ip, ua str
 	if err := s.touchLogin(ctx, u, ip); err != nil {
 		return Result{}, err
 	}
-	return s.issue(ctx, u, ip, ua)
+	return s.issue(ctx, u, ip, ua, Device{DeviceID: deviceID})
 }
 
 // Refresh 用 refresh token 换新的一对令牌。
@@ -383,9 +425,15 @@ func (s *Service) Logout(ctx context.Context, userID, sessionID string) error {
 	return s.sessions.Delete(ctx, userID, sessionID)
 }
 
-// LogoutAll 登出全部设备。
+// LogoutAll 登出全部设备：会话与**设备凭证**一起吊销。
+//
+// 设备凭证必须一起吊销，否则"退出所有设备"之后旧设备仍能靠 game_token
+// 静默重登 —— 那会让这个按钮变成纯粹的安慰剂。
 func (s *Service) LogoutAll(ctx context.Context, userID string) error {
-	return s.sessions.DeleteAll(ctx, userID)
+	if err := s.sessions.DeleteAll(ctx, userID); err != nil {
+		return err
+	}
+	return s.devices.DeleteAll(ctx, userID)
 }
 
 // Authenticate 校验 access token 并返回调用者身份。
@@ -437,10 +485,22 @@ func (s *Service) ChangePassword(ctx context.Context, userID, currentSessionID, 
 	if _, err := s.client.User.UpdateOneID(userID).SetPasswordHash(hash).Save(ctx); err != nil {
 		return apperr.ErrDependency.WithCause(err)
 	}
+	// 改密码必须吊销**全部**设备凭证，**包括当前这台**。
+	//
+	// 为什么不像会话那样"保留当前会话"：改密码的常见动机是"我怀疑账号被盗"，
+	// 此时保留任何长期凭证都是错的。当前设备的代价只是重新登录一次，
+	// 而漏掉一台被入侵的设备的代价是账号继续被控制一年。
+	// （会话仍然保留当前这一条，所以本次操作不会把自己立刻踢下线。）
+	if err := s.devices.DeleteAll(ctx, userID); err != nil {
+		return err
+	}
 	return s.revokeOthers(ctx, userID, currentSessionID)
 }
 
 // ResetPassword 用验证码重置密码（忘记密码）。
+//
+// 走的是"忘记密码"路径，因此更要把设备凭证全部吊销：
+// 触发这个流程的玩家多半已经无法登录，也就无从判断哪些设备是可信的。
 func (s *Service) ResetPassword(ctx context.Context, rawEmail, codeInput, newPwd string) error {
 	email, err := validate.Email(rawEmail)
 	if err != nil {
@@ -467,7 +527,11 @@ func (s *Service) ResetPassword(ctx context.Context, rawEmail, codeInput, newPwd
 	if _, err := s.client.User.UpdateOneID(u.ID).SetPasswordHash(hash).Save(ctx); err != nil {
 		return apperr.ErrDependency.WithCause(err)
 	}
-	// 改密码意味着"账号可能已经泄露"，必须把所有人踢下线。
+	// 重置密码同样是"账号可能已泄露"的信号：全部设备凭证与全部会话一起吊销。
+	// 泄漏的长命凭证比泄漏的会话危险得多 —— 会话最多再活 30 天，game_token 能活一年。
+	if err := s.devices.DeleteAll(ctx, u.ID); err != nil {
+		return err
+	}
 	return s.sessions.DeleteAll(ctx, u.ID)
 }
 
@@ -541,9 +605,9 @@ func (s *Service) EnsureBootstrapAdmin(ctx context.Context, email string) (bool,
 
 // ---------------- 内部
 
-func (s *Service) issue(ctx context.Context, u *ent.User, ip, ua string) (Result, error) {
+func (s *Service) issue(ctx context.Context, u *ent.User, ip, ua string, seed Device) (Result, error) {
 	sess := Session{
-		ID:        id.NewPrefixed("sess"),
+		ID:        id.New(),
 		UserID:    u.ID,
 		Role:      catalog.Role(u.Role),
 		Nickname:  u.Nickname,
@@ -558,8 +622,110 @@ func (s *Service) issue(ctx context.Context, u *ent.User, ip, ua string) (Result
 	if err := s.sessions.Create(ctx, sess); err != nil {
 		return Result{}, err
 	}
-	return Result{Tokens: pair, Profile: view.From(u), SessionID: sess.ID}, nil
+
+	// 设备凭证与设备记录必须**一起**成功：只签令牌不落记录，
+	// 会得到一枚谁也吊销不了的长期凭证（校验时查不到记录 = 永远无效，
+	// 但玩家会看到"免重登时好时坏"这种最难查的现象）。
+	game, err := s.issueDeviceToken(ctx, u, seed, ua)
+	if err != nil {
+		return Result{}, err
+	}
+	return Result{
+		Tokens: pair, Profile: view.From(u), SessionID: sess.ID,
+		GameToken: game, DeviceID: game.DeviceID,
+	}, nil
 }
+
+// issueDeviceToken 签发 game_token 并写入设备记录。
+//
+// `keep` 用于**续期**场景：校验既有凭证时把原来的 CreatedAt 传进来，
+// 保住"这台设备何时首次绑定"这个信息。设备记录被覆盖写是有意的 ——
+// 覆盖即续期，于是常用的设备不会在一年后突然要求重新登录。
+func (s *Service) issueDeviceToken(ctx context.Context, u *ent.User, seed Device, ua string) (*token.GameToken, error) {
+	if seed.DeviceID == "" {
+		// 调用方没上报设备 ID：服务端代生成一个并在响应里回传。
+		// 与其因为客户端少传一个字段就静默地不给长期凭证
+		//（表现为"每次启动都要重新登录"，且很难归因），
+		// 不如这里补上 —— 设备 ID 只是个稳定标识，不需要客户端先实现什么。
+		seed.DeviceID = id.New()
+	}
+	game, err := s.tokens.IssueGame(u.ID, u.Role, seed.DeviceID, u.Nickname)
+	if err != nil {
+		return nil, err
+	}
+	dev := Device{
+		DeviceID:  seed.DeviceID,
+		UserID:    u.ID,
+		Role:      catalog.Role(u.Role),
+		Status:    u.Status,
+		UserAgent: truncate(ua, 256),
+		CreatedAt: seed.CreatedAt,
+	}
+	if err := s.devices.Create(ctx, dev); err != nil {
+		return nil, err
+	}
+	return &game, nil
+}
+
+// VerifyGameToken 用长期设备凭证换取身份与一次新会话（D-09 / AUTH-06）。
+//
+// 校验分三步，**每一步都必要**：
+//  1. JWT 验签与类型/audience 校验 —— 挡住伪造与"拿 access token 冒充设备凭证"；
+//  2. Redis 设备记录存在性 —— 这是**可吊销性**的来源。少了这步，
+//     一枚泄漏的 game_token 在整整一年内都无法作废；
+//  3. **回读 users 表**确认账号仍可用 —— 封号、注销必须立刻生效。
+//     会话体系为了性能刻意不快照数据库，但这里是"每次启动调一次"的接口，
+//     一次主键查询换来"封号即时生效"完全值得。
+func (s *Service) VerifyGameToken(ctx context.Context, rawToken, ip, ua string) (VerifyResult, error) {
+	claims, err := s.tokens.Parse(rawToken, token.KindGame)
+	if err != nil {
+		return VerifyResult{}, err
+	}
+
+	dev, err := s.devices.Get(ctx, claims.UserID, claims.DeviceID)
+	if err != nil {
+		return VerifyResult{}, err
+	}
+
+	u, err := s.client.User.Get(ctx, claims.UserID)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			// 账号已注销但设备记录还在：顺手清掉，避免它一直留在索引里。
+			_ = s.devices.Delete(ctx, claims.UserID, claims.DeviceID)
+			return VerifyResult{}, apperr.ErrAccountNotFound
+		}
+		return VerifyResult{}, apperr.ErrDependency.WithCause(err)
+	}
+	if err := checkAccountUsable(u); err != nil {
+		return VerifyResult{}, err
+	}
+
+	// 续期与 last_seen：让"一直在用的设备"不会因为一年到期而突然要求重登。
+	// 上面那一步 issue 会覆盖写设备记录（保留首次绑定时间），
+	// 因此这里不需要再单独 Touch —— 覆盖写本身就把 TTL 与 last_seen 一起续上了。
+	result, err := s.issue(ctx, u, ip, ua, Device{DeviceID: dev.DeviceID, CreatedAt: dev.CreatedAt})
+	if err != nil {
+		return VerifyResult{}, err
+	}
+	if err := s.touchLogin(ctx, u, ip); err != nil {
+		return VerifyResult{}, err
+	}
+	return VerifyResult{
+		UserID:    u.ID,
+		Nickname:  u.Nickname,
+		Status:    u.Status,
+		DeviceID:  dev.DeviceID,
+		Tokens:    result.Tokens,
+		Profile:   result.Profile,
+		SessionID: result.SessionID,
+		// 把续期后的设备凭证一并回传：客户端可以就地更新本地保存的那一份。
+		// 不回传也不会坏 —— 旧令牌在自身有效期内仍然有效，且设备记录是同一个键。
+		GameToken: result.GameToken,
+	}, nil
+}
+
+// Devices 暴露设备凭证存储，供后台巡检与测试使用。
+func (s *Service) Devices() *DeviceStore { return s.devices }
 
 func (s *Service) touchLogin(ctx context.Context, u *ent.User, ip string) error {
 	now := time.Now()

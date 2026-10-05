@@ -30,7 +30,9 @@ type User struct {
 	Nickname string `json:"nickname,omitempty"`
 	// 头像序号，客户端按序号程序化绘制
 	AvatarIndex int `json:"avatar_index,omitempty"`
-	// 平台角色：player / gm / admin，Casbin 据此授权
+	// 自定义头像的相对 URL（上传后写入）。为空表示用 avatar_index 绘制的预设头像
+	AvatarURL string `json:"avatar_url,omitempty"`
+	// 平台角色：player / operator / admin，Casbin 据此授权
 	Role string `json:"role,omitempty"`
 	// 账号状态：active / banned
 	Status string `json:"status,omitempty"`
@@ -50,6 +52,8 @@ type User struct {
 	Diamonds int64 `json:"diamonds,omitempty"`
 	// 积分，用于排行榜与匹配分池
 	Points int64 `json:"points,omitempty"`
+	// 其中来自离线对局回传的部分（REC-06）。**匹配分池必须排除它**（读 points - offline_points）：离线对局由客户端本地结算、服务端只能事后接收，若计入匹配分，刷离线积分就能匹配到远高于自身水平的对手。排行榜仍读 points —— 对离线玩家算是正向激励。
+	OfflinePoints int64 `json:"offline_points,omitempty"`
 	// 总对局数
 	Games int64 `json:"games,omitempty"`
 	// 总胜场
@@ -102,9 +106,9 @@ func (*User) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case user.FieldMusicEnabled, user.FieldSfxEnabled, user.FieldTtsEnabled, user.FieldVibrateEnabled, user.FieldQuickHintEnabled, user.FieldAutoSortHand:
 			values[i] = new(sql.NullBool)
-		case user.FieldAvatarIndex, user.FieldLevel, user.FieldExp, user.FieldGold, user.FieldDiamonds, user.FieldPoints, user.FieldGames, user.FieldWins, user.FieldLandlordGames, user.FieldLandlordWins, user.FieldBombsTotal, user.FieldMaxMultiplier, user.FieldMaxStreak, user.FieldCurrentStreak, user.FieldCardSpeed, user.FieldHintLevel, user.FieldVersion:
+		case user.FieldAvatarIndex, user.FieldLevel, user.FieldExp, user.FieldGold, user.FieldDiamonds, user.FieldPoints, user.FieldOfflinePoints, user.FieldGames, user.FieldWins, user.FieldLandlordGames, user.FieldLandlordWins, user.FieldBombsTotal, user.FieldMaxMultiplier, user.FieldMaxStreak, user.FieldCurrentStreak, user.FieldCardSpeed, user.FieldHintLevel, user.FieldVersion:
 			values[i] = new(sql.NullInt64)
-		case user.FieldID, user.FieldEmail, user.FieldPasswordHash, user.FieldNickname, user.FieldRole, user.FieldStatus, user.FieldBanReason, user.FieldTableSkinID, user.FieldCardSkinID, user.FieldLastLoginIP:
+		case user.FieldID, user.FieldEmail, user.FieldPasswordHash, user.FieldNickname, user.FieldAvatarURL, user.FieldRole, user.FieldStatus, user.FieldBanReason, user.FieldTableSkinID, user.FieldCardSkinID, user.FieldLastLoginIP:
 			values[i] = new(sql.NullString)
 		case user.FieldCreatedAt, user.FieldUpdatedAt, user.FieldBannedUntil, user.FieldVipExpireAt, user.FieldLastLoginAt:
 			values[i] = new(sql.NullTime)
@@ -164,6 +168,12 @@ func (_m *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field avatar_index", values[i])
 			} else if value.Valid {
 				_m.AvatarIndex = int(value.Int64)
+			}
+		case user.FieldAvatarURL:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field avatar_url", values[i])
+			} else if value.Valid {
+				_m.AvatarURL = value.String
 			}
 		case user.FieldRole:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -226,6 +236,12 @@ func (_m *User) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field points", values[i])
 			} else if value.Valid {
 				_m.Points = value.Int64
+			}
+		case user.FieldOfflinePoints:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field offline_points", values[i])
+			} else if value.Valid {
+				_m.OfflinePoints = value.Int64
 			}
 		case user.FieldGames:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -407,6 +423,9 @@ func (_m *User) String() string {
 	builder.WriteString("avatar_index=")
 	builder.WriteString(fmt.Sprintf("%v", _m.AvatarIndex))
 	builder.WriteString(", ")
+	builder.WriteString("avatar_url=")
+	builder.WriteString(_m.AvatarURL)
+	builder.WriteString(", ")
 	builder.WriteString("role=")
 	builder.WriteString(_m.Role)
 	builder.WriteString(", ")
@@ -440,6 +459,9 @@ func (_m *User) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("points=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Points))
+	builder.WriteString(", ")
+	builder.WriteString("offline_points=")
+	builder.WriteString(fmt.Sprintf("%v", _m.OfflinePoints))
 	builder.WriteString(", ")
 	builder.WriteString("games=")
 	builder.WriteString(fmt.Sprintf("%v", _m.Games))

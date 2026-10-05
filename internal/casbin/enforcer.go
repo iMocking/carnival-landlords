@@ -156,14 +156,70 @@ type RoutePolicy struct {
 	Roles []catalog.Role
 }
 
-// SyncRoutePolicies 用真实路由表同步策略。
+// SyncRoutePolicies 用真实路由表同步策略：**该加的要加，该收的必须收**。
 //
-// 幂等：已存在的策略不会重复写入（casbin 在内存里做过存在性判断）。
-// 返回新增的策略条数，便于启动日志里核对。
+// # 为什么必须做"收"这一半
+//
+// 早期这里只 AddPolicy，从不删除。后果是：**把某条路由的允许角色改窄之后，
+// 旧策略仍然留在库里继续放行**。Casbin 是允许式的 —— 只要有一条匹配就通过，
+// 于是"代码里已经收紧了，线上权限没变"，而且没有任何报错。
+//
+// 这个坑真实发生过：后台路由曾被统一标成 `{运营, 管理员}`，
+// 于是运营拿到了改钱包、改角色、改权限的权限；把路由表改对之后，
+// 因为同步只加不减，那三条危险授权**依然有效**。
+//
+// # 收的范围（刻意收窄，避免误删）
+//
+// 只处理 `obj` **恰好等于某条真实路由路径**的策略。
+// 因此 `seedDefaults` 里管理员那条通配策略 `p role_admin /api/v1/admin/* *`
+// 不会被碰到（它不是某条具体路由），后台通过接口手工授予的非路由对象也安全。
+//
+// 代价要说清楚：**路由路径上的权限一律以路由表为准**，
+// 想给某条路由开例外就得改路由表，而不是往 casbin 里插一条策略。
+// 这个取舍是刻意的 —— 两个来源同时决定同一件事，才是最难排查的形态。
 func (e *Enforcer) SyncRoutePolicies(routes []RoutePolicy) (int, error) {
 	e.mu.Lock()
 	defer e.mu.Unlock()
 
+	// 期望集合：sub|obj|act
+	want := make(map[string]struct{}, len(routes)*2)
+	// 属于"真实路由路径"的对象集合：只有这些 obj 才会被回收
+	routeObjs := make(map[string]struct{}, len(routes))
+	for _, r := range routes {
+		if r.Path == "" || r.Method == "" {
+			continue
+		}
+		routeObjs[r.Path] = struct{}{}
+		for _, role := range r.Roles {
+			want[policyKey(RoleSubject(role), r.Path, r.Method)] = struct{}{}
+		}
+	}
+
+	// ---- 回收：obj 是真实路由、但已不在期望集合里的策略
+	removed := 0
+	current, err := e.GetPolicy()
+	if err != nil {
+		return 0, fmt.Errorf("casbin: 读取现有策略失败: %w", err)
+	}
+	for _, rule := range current {
+		if len(rule) < 3 {
+			continue
+		}
+		sub, obj, act := rule[0], rule[1], rule[2]
+		if _, isRoute := routeObjs[obj]; !isRoute {
+			continue // 通配策略、非路由对象：不归路由表管
+		}
+		if _, keep := want[policyKey(sub, obj, act)]; keep {
+			continue
+		}
+		if ok, err := e.RemovePolicy(sub, obj, act); err != nil {
+			return 0, fmt.Errorf("casbin: 回收过期路由策略 %s %s %s 失败: %w", sub, obj, act, err)
+		} else if ok {
+			removed++
+		}
+	}
+
+	// ---- 新增
 	added := 0
 	for _, r := range routes {
 		if r.Path == "" || r.Method == "" {
@@ -179,50 +235,73 @@ func (e *Enforcer) SyncRoutePolicies(routes []RoutePolicy) (int, error) {
 			}
 		}
 	}
-	// AddPolicy 会改内存策略，务必重建索引，否则新策略在本次进程内不生效。
-	if added > 0 {
+	// AddPolicy/RemovePolicy 会改内存策略，务必重建索引，否则本次进程内不生效。
+	if added > 0 || removed > 0 {
 		if err := e.LoadPolicy(); err != nil {
 			return added, fmt.Errorf("casbin: 重新加载策略失败: %w", err)
 		}
 	}
-	if e.log != nil {
-		e.log.Info("Casbin 路由策略已同步", zap.Int("added", added), zap.Int("routes", len(routes)))
+	if e.log != nil && (added > 0 || removed > 0) {
+		e.log.Info("Casbin 路由策略已同步",
+			zap.Int("added", added), zap.Int("removed", removed), zap.Int("routes", len(routes)))
 	}
 	return added, nil
 }
 
-// seedDefaults 写入角色继承关系与管理员策略。
+// policyKey 把策略三元组拼成 map 键。
+func policyKey(sub, obj, act string) string { return sub + "\x00" + obj + "\x00" + act }
+
+// RoleInherits 是角色继承关系：admin（管理员） ⊇ operator（运营） ⊇ player（用户）。
+//
+// 抽成包级变量而不是写在 seedDefaults 里，是为了让**权限边界可被测试**
+// （casbin_test.go 会读它，断言运营这一档拿不到改钱包/改角色/改策略）。
+var RoleInherits = [][2]catalog.Role{
+	{catalog.RoleAdmin, catalog.RoleOperator},
+	{catalog.RoleOperator, catalog.RolePlayer},
+}
+
+// Policy 一条策略三元组。
+type Policy struct {
+	Sub string
+	Obj string
+	Act string
+}
+
+// OperatorPolicies 是**运营**这一档允许做的事。
+//
+// 设计原则是"最小可用"：运营要能处理玩家投诉、发补偿邮件、踢掉卡住的房间，
+// 但**不能**改钱、改角色、改权限 —— 那是三个最容易被滥用的能力，
+// 只能由管理员做。这条边界有测试守着（`casbin_test.go`），
+// 因为它一旦被"顺手放开"不会有任何报错。
+//
+// 服务端当前返回给运营的角色标识是 `operator`。
+var OperatorPolicies = []Policy{
+	{RoleSubject(catalog.RoleOperator), "/api/v1/admin/players", "GET"},
+	{RoleSubject(catalog.RoleOperator), "/api/v1/admin/players/:id", "GET"},
+	{RoleSubject(catalog.RoleOperator), "/api/v1/admin/mail", "POST"},
+	{RoleSubject(catalog.RoleOperator), "/api/v1/admin/mail/broadcast", "POST"},
+	{RoleSubject(catalog.RoleOperator), "/api/v1/admin/rooms", "GET"},
+	{RoleSubject(catalog.RoleOperator), "/api/v1/admin/rooms/:id", "GET"},
+	{RoleSubject(catalog.RoleOperator), "/api/v1/admin/rooms/:id/kick", "POST"},
+	{RoleSubject(catalog.RoleOperator), "/api/v1/admin/stats", "GET"},
+}
+
+// AdminPolicies 是管理员这一档：拥有整个后台。
+var AdminPolicies = []Policy{
+	{RoleSubject(catalog.RoleAdmin), "/api/v1/admin/*", "*"},
+}
+
+// seedDefaults 写入角色继承关系与各档默认策略。
 func (e *Enforcer) seedDefaults(ctx context.Context) error {
-	// 角色继承：admin ⊇ gm ⊇ player
-	inherits := [][2]string{
-		{RoleSubject(catalog.RoleAdmin), RoleSubject(catalog.RoleGM)},
-		{RoleSubject(catalog.RoleGM), RoleSubject(catalog.RolePlayer)},
-	}
-	for _, pair := range inherits {
-		if _, err := e.AddRoleForUser(pair[0], pair[1]); err != nil {
+	for _, pair := range RoleInherits {
+		if _, err := e.AddRoleForUser(RoleSubject(pair[0]), RoleSubject(pair[1])); err != nil {
 			return fmt.Errorf("casbin: 建立角色继承 %s->%s 失败: %w", pair[0], pair[1], err)
 		}
 	}
-
-	// 管理员拥有整个后台；其余细粒度权限按"最小可用"给 GM。
-	type policy struct{ sub, obj, act string }
-	defaults := []policy{
-		{RoleSubject(catalog.RoleAdmin), "/api/v1/admin/*", "*"},
-
-		// GM 能做的：查询、发邮件、巡检房间、踢人、看审计。
-		// 刻意**不给**改钱包与改策略 —— 那是最容易被滥用的两个能力。
-		{RoleSubject(catalog.RoleGM), "/api/v1/admin/players", "GET"},
-		{RoleSubject(catalog.RoleGM), "/api/v1/admin/players/:id", "GET"},
-		{RoleSubject(catalog.RoleGM), "/api/v1/admin/mail", "POST"},
-		{RoleSubject(catalog.RoleGM), "/api/v1/admin/mail/broadcast", "POST"},
-		{RoleSubject(catalog.RoleGM), "/api/v1/admin/rooms", "GET"},
-		{RoleSubject(catalog.RoleGM), "/api/v1/admin/rooms/:id", "GET"},
-		{RoleSubject(catalog.RoleGM), "/api/v1/admin/rooms/:id/kick", "POST"},
-		{RoleSubject(catalog.RoleGM), "/api/v1/admin/stats", "GET"},
-	}
+	defaults := append(append([]Policy{}, AdminPolicies...), OperatorPolicies...)
 	for _, p := range defaults {
-		if _, err := e.AddPolicy(p.sub, p.obj, p.act); err != nil {
-			return fmt.Errorf("casbin: 写入默认策略 %s %s %s 失败: %w", p.sub, p.obj, p.act, err)
+		if _, err := e.AddPolicy(p.Sub, p.Obj, p.Act); err != nil {
+			return fmt.Errorf("casbin: 写入默认策略 %s %s %s 失败: %w", p.Sub, p.Obj, p.Act, err)
 		}
 	}
 	return nil

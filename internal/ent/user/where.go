@@ -94,6 +94,11 @@ func AvatarIndex(v int) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldAvatarIndex, v))
 }
 
+// AvatarURL applies equality check predicate on the "avatar_url" field. It's identical to AvatarURLEQ.
+func AvatarURL(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldAvatarURL, v))
+}
+
 // Role applies equality check predicate on the "role" field. It's identical to RoleEQ.
 func Role(v string) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldRole, v))
@@ -142,6 +147,11 @@ func Diamonds(v int64) predicate.User {
 // Points applies equality check predicate on the "points" field. It's identical to PointsEQ.
 func Points(v int64) predicate.User {
 	return predicate.User(sql.FieldEQ(FieldPoints, v))
+}
+
+// OfflinePoints applies equality check predicate on the "offline_points" field. It's identical to OfflinePointsEQ.
+func OfflinePoints(v int64) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldOfflinePoints, v))
 }
 
 // Games applies equality check predicate on the "games" field. It's identical to GamesEQ.
@@ -562,6 +572,71 @@ func AvatarIndexLT(v int) predicate.User {
 // AvatarIndexLTE applies the LTE predicate on the "avatar_index" field.
 func AvatarIndexLTE(v int) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldAvatarIndex, v))
+}
+
+// AvatarURLEQ applies the EQ predicate on the "avatar_url" field.
+func AvatarURLEQ(v string) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldAvatarURL, v))
+}
+
+// AvatarURLNEQ applies the NEQ predicate on the "avatar_url" field.
+func AvatarURLNEQ(v string) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldAvatarURL, v))
+}
+
+// AvatarURLIn applies the In predicate on the "avatar_url" field.
+func AvatarURLIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldIn(FieldAvatarURL, vs...))
+}
+
+// AvatarURLNotIn applies the NotIn predicate on the "avatar_url" field.
+func AvatarURLNotIn(vs ...string) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldAvatarURL, vs...))
+}
+
+// AvatarURLGT applies the GT predicate on the "avatar_url" field.
+func AvatarURLGT(v string) predicate.User {
+	return predicate.User(sql.FieldGT(FieldAvatarURL, v))
+}
+
+// AvatarURLGTE applies the GTE predicate on the "avatar_url" field.
+func AvatarURLGTE(v string) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldAvatarURL, v))
+}
+
+// AvatarURLLT applies the LT predicate on the "avatar_url" field.
+func AvatarURLLT(v string) predicate.User {
+	return predicate.User(sql.FieldLT(FieldAvatarURL, v))
+}
+
+// AvatarURLLTE applies the LTE predicate on the "avatar_url" field.
+func AvatarURLLTE(v string) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldAvatarURL, v))
+}
+
+// AvatarURLContains applies the Contains predicate on the "avatar_url" field.
+func AvatarURLContains(v string) predicate.User {
+	return predicate.User(sql.FieldContains(FieldAvatarURL, v))
+}
+
+// AvatarURLHasPrefix applies the HasPrefix predicate on the "avatar_url" field.
+func AvatarURLHasPrefix(v string) predicate.User {
+	return predicate.User(sql.FieldHasPrefix(FieldAvatarURL, v))
+}
+
+// AvatarURLHasSuffix applies the HasSuffix predicate on the "avatar_url" field.
+func AvatarURLHasSuffix(v string) predicate.User {
+	return predicate.User(sql.FieldHasSuffix(FieldAvatarURL, v))
+}
+
+// AvatarURLEqualFold applies the EqualFold predicate on the "avatar_url" field.
+func AvatarURLEqualFold(v string) predicate.User {
+	return predicate.User(sql.FieldEqualFold(FieldAvatarURL, v))
+}
+
+// AvatarURLContainsFold applies the ContainsFold predicate on the "avatar_url" field.
+func AvatarURLContainsFold(v string) predicate.User {
+	return predicate.User(sql.FieldContainsFold(FieldAvatarURL, v))
 }
 
 // RoleEQ applies the EQ predicate on the "role" field.
@@ -1057,6 +1132,46 @@ func PointsLT(v int64) predicate.User {
 // PointsLTE applies the LTE predicate on the "points" field.
 func PointsLTE(v int64) predicate.User {
 	return predicate.User(sql.FieldLTE(FieldPoints, v))
+}
+
+// OfflinePointsEQ applies the EQ predicate on the "offline_points" field.
+func OfflinePointsEQ(v int64) predicate.User {
+	return predicate.User(sql.FieldEQ(FieldOfflinePoints, v))
+}
+
+// OfflinePointsNEQ applies the NEQ predicate on the "offline_points" field.
+func OfflinePointsNEQ(v int64) predicate.User {
+	return predicate.User(sql.FieldNEQ(FieldOfflinePoints, v))
+}
+
+// OfflinePointsIn applies the In predicate on the "offline_points" field.
+func OfflinePointsIn(vs ...int64) predicate.User {
+	return predicate.User(sql.FieldIn(FieldOfflinePoints, vs...))
+}
+
+// OfflinePointsNotIn applies the NotIn predicate on the "offline_points" field.
+func OfflinePointsNotIn(vs ...int64) predicate.User {
+	return predicate.User(sql.FieldNotIn(FieldOfflinePoints, vs...))
+}
+
+// OfflinePointsGT applies the GT predicate on the "offline_points" field.
+func OfflinePointsGT(v int64) predicate.User {
+	return predicate.User(sql.FieldGT(FieldOfflinePoints, v))
+}
+
+// OfflinePointsGTE applies the GTE predicate on the "offline_points" field.
+func OfflinePointsGTE(v int64) predicate.User {
+	return predicate.User(sql.FieldGTE(FieldOfflinePoints, v))
+}
+
+// OfflinePointsLT applies the LT predicate on the "offline_points" field.
+func OfflinePointsLT(v int64) predicate.User {
+	return predicate.User(sql.FieldLT(FieldOfflinePoints, v))
+}
+
+// OfflinePointsLTE applies the LTE predicate on the "offline_points" field.
+func OfflinePointsLTE(v int64) predicate.User {
+	return predicate.User(sql.FieldLTE(FieldOfflinePoints, v))
 }
 
 // GamesEQ applies the EQ predicate on the "games" field.

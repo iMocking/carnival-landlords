@@ -56,9 +56,12 @@ func (User) Fields() []ent.Field {
 		field.Int("avatar_index").
 			Default(0).NonNegative().
 			Comment("头像序号，客户端按序号程序化绘制"),
+		field.String("avatar_url").
+			Default("").
+			Comment("自定义头像的相对 URL（上传后写入）。为空表示用 avatar_index 绘制的预设头像"),
 		field.String("role").
 			Default(string(catalog.RolePlayer)).
-			Comment("平台角色：player / gm / admin，Casbin 据此授权"),
+			Comment("平台角色：player / operator / admin，Casbin 据此授权"),
 		field.String("status").
 			Default("active").
 			Comment("账号状态：active / banned"),
@@ -88,6 +91,13 @@ func (User) Fields() []ent.Field {
 		field.Int64("points").
 			Default(0).NonNegative().
 			Comment("积分，用于排行榜与匹配分池"),
+		field.Int64("offline_points").
+			Default(0).NonNegative().
+			Comment("其中来自离线对局回传的部分（REC-06）。" +
+				"**匹配分池必须排除它**（读 points - offline_points）：" +
+				"离线对局由客户端本地结算、服务端只能事后接收，" +
+				"若计入匹配分，刷离线积分就能匹配到远高于自身水平的对手。" +
+				"排行榜仍读 points —— 对离线玩家算是正向激励。"),
 
 		// ---------------- 战绩（与客户端 PlayerProfile 对齐）
 		field.Int64("games").Default(0).NonNegative().Comment("总对局数"),

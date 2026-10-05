@@ -1,0 +1,1483 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/view/pages/profile_view.gd" id="1_xvrlx"]
+[ext_resource type="Script" path="res://src/view/widgets/table_backdrop.gd" id="2_17j7s"]
+[ext_resource type="Script" path="res://src/view/widgets/glossy_box.gd" id="3_wmjvo"]
+[ext_resource type="Script" path="res://src/view/widgets/currency_icon.gd" id="4_bjmoy"]
+[ext_resource type="Script" path="res://src/view/widgets/avatar_view.gd" id="5_7he21"]
+[ext_resource type="Script" path="res://src/view/widgets/segment_tabs.gd" id="6_y2npq"]
+
+[sub_resource type="StyleBox" id="StyleBox_ug30i"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0, 0, 0, 0)
+bottom_color = Color(0, 0, 0, 0)
+border_color = Color(0, 0, 0, 0)
+border_width = 0
+gloss_strength = 0.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 0.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_6e5sy"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+script = ExtResource("3_wmjvo")
+top_color = Color(1, 1, 1, 0.04)
+bottom_color = Color(1, 1, 1, 0.02)
+border_color = Color(0.65882355, 0.44705883, 0.101960786, 1)
+border_width = 1
+gloss_strength = 0.05
+shadow_color = Color(0, 0, 0, 0.08)
+shadow_size = 2.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_6h4td"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+script = ExtResource("3_wmjvo")
+top_color = Color(1, 1, 1, 0.09)
+bottom_color = Color(1, 1, 1, 0.03)
+border_color = Color(1, 1, 1, 0.18)
+border_width = 1
+gloss_strength = 0.08
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 2.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_3nvvi"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 14.0
+content_margin_top = 10.0
+content_margin_right = 14.0
+content_margin_bottom = 10.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0, 0, 0, 0)
+bottom_color = Color(0, 0, 0, 0)
+border_color = Color(0, 0, 0, 0)
+border_width = 0
+gloss_strength = 0.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 0.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_lb4ek"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.36078432, 0.08235294, 0.09803922, 0.94)
+bottom_color = Color(0.15686275, 0.02745098, 0.039215688, 1)
+border_color = Color(0.8784314, 0.6627451, 0.17254902, 0.3)
+border_width = 1
+corner_radius = 22
+gloss_strength = 0.07
+shadow_color = Color(0, 0, 0, 0.36)
+shadow_size = 6.0
+shadow_offset = Vector2(0, 3.6)
+
+[sub_resource type="StyleBox" id="StyleBox_j20sf"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.23921569, 0.050980393, 0.06666667, 0.5)
+bottom_color = Color(0.105882354, 0.019607844, 0.02745098, 0.5)
+border_color = Color(0.96862745, 0.8117647, 0.37254903, 0.58)
+border_width = 1
+corner_radius = 999
+gloss_strength = 0.16
+shadow_color = Color(0, 0, 0, 0.3)
+shadow_size = 3.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t4jdd"]
+content_margin_left = 16.0
+content_margin_top = 10.0
+content_margin_right = 16.0
+content_margin_bottom = 10.0
+bg_color = Color(0, 0, 0, 0.45)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBox" id="StyleBox_03dcn"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 0.0
+content_margin_top = 0.0
+content_margin_right = 0.0
+content_margin_bottom = 0.0
+script = ExtResource("3_wmjvo")
+top_color = Color(1, 0.9529412, 0.76862746, 1)
+bottom_color = Color(0.8784314, 0.6627451, 0.17254902, 1)
+border_color = Color(0.37254903, 0.21176471, 0.02745098, 1)
+border_width = 1
+corner_radius = 8
+gloss_strength = 0.45
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 0.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_w3dny"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.47843137, 0.11764706, 0.13333334, 1)
+bottom_color = Color(0.23921569, 0.050980393, 0.06666667, 1)
+border_color = Color(0.8784314, 0.6627451, 0.17254902, 0.55)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.26
+shadow_color = Color(0, 0, 0, 0.38)
+shadow_size = 5.0
+
+[sub_resource type="StyleBox" id="StyleBox_7avo1"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.36078432, 0.08235294, 0.09803922, 1)
+bottom_color = Color(0.15686275, 0.02745098, 0.039215688, 1)
+border_color = Color(0.65882355, 0.44705883, 0.101960786, 1)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.14
+shadow_color = Color(0, 0, 0, 0.22)
+shadow_size = 2.0
+shadow_offset = Vector2(0, 2)
+bottom_shade = 0.18
+
+[sub_resource type="StyleBox" id="StyleBox_vlvfv"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.627451, 0.15686275, 0.17254902, 1)
+bottom_color = Color(0.36078432, 0.08235294, 0.09803922, 1)
+border_color = Color(0.8784314, 0.6627451, 0.17254902, 1)
+corner_radius = 14
+gloss_strength = 0.34
+shadow_color = Color(0, 0, 0, 0.42)
+shadow_size = 6.0
+shadow_offset = Vector2(0, 3.6)
+
+[sub_resource type="StyleBox" id="StyleBox_f2rct"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.3019608, 0.2509804, 0.24705882, 1)
+bottom_color = Color(0.18039216, 0.14509805, 0.14117648, 1)
+border_color = Color(0.11764706, 0.08627451, 0.08627451, 1)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.08
+shadow_color = Color(0, 0, 0, 0.18)
+shadow_size = 3.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_rqsua"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0, 0, 0, 0)
+bottom_color = Color(0, 0, 0, 0)
+border_color = Color(0, 0, 0, 0)
+border_width = 0
+corner_radius = 14
+gloss_strength = 0.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 0.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_pf7bi"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.8117647, 0.1254902, 0.15294118, 1)
+bottom_color = Color(0.49019608, 0.07058824, 0.08627451, 1)
+border_color = Color(0.24705882, 0.039215688, 0.047058824, 1)
+corner_radius = 14
+gloss_strength = 0.3
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 5.0
+
+[sub_resource type="StyleBox" id="StyleBox_vdqd3"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.65882355, 0.101960786, 0.1254902, 1)
+bottom_color = Color(0.36078432, 0.05882353, 0.07058824, 1)
+border_color = Color(0.2, 0.03137255, 0.03529412, 1)
+corner_radius = 14
+gloss_strength = 0.14
+shadow_color = Color(0, 0, 0, 0.22)
+shadow_size = 2.0
+shadow_offset = Vector2(0, 2)
+bottom_shade = 0.18
+
+[sub_resource type="StyleBox" id="StyleBox_psmtt"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.9098039, 0.2509804, 0.18431373, 1)
+bottom_color = Color(0.56078434, 0.11372549, 0.12941177, 1)
+border_color = Color(0.24705882, 0.039215688, 0.047058824, 1)
+corner_radius = 14
+gloss_strength = 0.38
+shadow_color = Color(0, 0, 0, 0.44)
+shadow_size = 6.0
+shadow_offset = Vector2(0, 3.6)
+
+[sub_resource type="StyleBox" id="StyleBox_5vodw"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.3019608, 0.22745098, 0.23137255, 1)
+bottom_color = Color(0.16862746, 0.12941177, 0.13333334, 1)
+border_color = Color(0.10980392, 0.08235294, 0.08627451, 1)
+corner_radius = 14
+gloss_strength = 0.08
+shadow_color = Color(0, 0, 0, 0.18)
+shadow_size = 3.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_ksq76"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0, 0, 0, 0)
+bottom_color = Color(0, 0, 0, 0)
+border_color = Color(0, 0, 0, 0)
+border_width = 0
+corner_radius = 14
+gloss_strength = 0.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 0.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_umc0p"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.23921569, 0.050980393, 0.06666667, 0.86)
+bottom_color = Color(0.14831373, 0.031607844, 0.041333336, 0.86)
+border_color = Color(0.8784314, 0.6627451, 0.17254902, 0.74)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.05
+shadow_color = Color(0, 0, 0, 0.26)
+shadow_size = 3.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_vbvxb"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.23921569, 0.050980393, 0.06666667, 0.92)
+bottom_color = Color(0.14831373, 0.031607844, 0.041333336, 0.92)
+border_color = Color(0.96862745, 0.8117647, 0.37254903, 1)
+corner_radius = 14
+gloss_strength = 0.05
+shadow_color = Color(0, 0, 0, 0.26)
+shadow_size = 3.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_11847"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.9098039, 0.2509804, 0.18431373, 1)
+bottom_color = Color(0.49019608, 0.07058824, 0.08627451, 1)
+border_color = Color(0.96862745, 0.8117647, 0.37254903, 1)
+corner_radius = 15
+gloss_strength = 0.38
+shadow_color = Color(0, 0, 0, 0.42)
+shadow_size = 6.0
+shadow_offset = Vector2(0, 3.6)
+
+[sub_resource type="StyleBox" id="StyleBox_63mx2"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.8117647, 0.1254902, 0.15294118, 1)
+bottom_color = Color(0.42745098, 0.05882353, 0.07450981, 1)
+border_color = Color(0.37254903, 0.21176471, 0.02745098, 1)
+corner_radius = 15
+gloss_strength = 0.16
+shadow_color = Color(0, 0, 0, 0.24)
+shadow_size = 2.0
+shadow_offset = Vector2(0, 2)
+bottom_shade = 0.2
+
+[sub_resource type="StyleBox" id="StyleBox_werjb"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+script = ExtResource("3_wmjvo")
+top_color = Color(1, 0.41568628, 0.2901961, 1)
+bottom_color = Color(0.65882355, 0.08627451, 0.105882354, 1)
+border_color = Color(1, 0.9529412, 0.76862746, 1)
+corner_radius = 15
+gloss_strength = 0.44
+shadow_color = Color(0, 0, 0, 0.46)
+shadow_size = 7.0
+shadow_offset = Vector2(0, 4.2)
+
+[sub_resource type="StyleBox" id="StyleBox_71xfa"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.41960785, 0.2901961, 0.28235295, 1)
+bottom_color = Color(0.22745098, 0.14117648, 0.13333334, 1)
+border_color = Color(0.14117648, 0.078431375, 0.07450981, 1)
+corner_radius = 15
+gloss_strength = 0.1
+shadow_color = Color(0, 0, 0, 0.2)
+shadow_size = 3.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_6151i"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0, 0, 0, 0)
+bottom_color = Color(0, 0, 0, 0)
+border_color = Color(0, 0, 0, 0)
+border_width = 0
+corner_radius = 15
+gloss_strength = 0.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 0.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_iiqj6"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(1, 1, 1, 0.07)
+bottom_color = Color(1, 1, 1, 0.03)
+border_color = Color(1, 1, 1, 0.16)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.1
+shadow_color = Color(0, 0, 0, 0.16)
+shadow_size = 3.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_kvcax"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(1, 1, 1, 0.05)
+bottom_color = Color(1, 1, 1, 0.02)
+border_color = Color(0.65882355, 0.44705883, 0.101960786, 1)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.06
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 2.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_0dfif"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(1, 1, 1, 0.16)
+bottom_color = Color(1, 1, 1, 0.07)
+border_color = Color(1, 1, 1, 0.3)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.16
+shadow_color = Color(0, 0, 0, 0.2)
+shadow_offset = Vector2(0, 2.4)
+
+[sub_resource type="StyleBox" id="StyleBox_o5khd"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(1, 1, 1, 0.03)
+bottom_color = Color(1, 1, 1, 0.02)
+border_color = Color(1, 1, 1, 0.07)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.04
+shadow_color = Color(0, 0, 0, 0.08)
+shadow_size = 2.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_y2ms3"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0, 0, 0, 0)
+bottom_color = Color(0, 0, 0, 0)
+border_color = Color(0, 0, 0, 0)
+border_width = 0
+corner_radius = 14
+gloss_strength = 0.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 0.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_xhx0r"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.47843137, 0.11764706, 0.13333334, 1)
+bottom_color = Color(0.23921569, 0.050980393, 0.06666667, 1)
+border_color = Color(0.8784314, 0.6627451, 0.17254902, 0.55)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.26
+shadow_color = Color(0, 0, 0, 0.38)
+shadow_size = 5.0
+
+[sub_resource type="StyleBox" id="StyleBox_6pjdl"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.36078432, 0.08235294, 0.09803922, 1)
+bottom_color = Color(0.15686275, 0.02745098, 0.039215688, 1)
+border_color = Color(0.65882355, 0.44705883, 0.101960786, 1)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.14
+shadow_color = Color(0, 0, 0, 0.22)
+shadow_size = 2.0
+shadow_offset = Vector2(0, 2)
+bottom_shade = 0.18
+
+[sub_resource type="StyleBox" id="StyleBox_pat7a"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.627451, 0.15686275, 0.17254902, 1)
+bottom_color = Color(0.36078432, 0.08235294, 0.09803922, 1)
+border_color = Color(0.8784314, 0.6627451, 0.17254902, 1)
+corner_radius = 14
+gloss_strength = 0.34
+shadow_color = Color(0, 0, 0, 0.42)
+shadow_size = 6.0
+shadow_offset = Vector2(0, 3.6)
+
+[sub_resource type="StyleBox" id="StyleBox_po7ga"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0.3019608, 0.2509804, 0.24705882, 1)
+bottom_color = Color(0.18039216, 0.14509805, 0.14117648, 1)
+border_color = Color(0.11764706, 0.08627451, 0.08627451, 1)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.08
+shadow_color = Color(0, 0, 0, 0.18)
+shadow_size = 3.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_in7v1"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_wmjvo")
+top_color = Color(0, 0, 0, 0)
+bottom_color = Color(0, 0, 0, 0)
+border_color = Color(0, 0, 0, 0)
+border_width = 0
+corner_radius = 14
+gloss_strength = 0.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 0.0
+shadow_offset = Vector2(0, 2)
+
+[node name="ProfileView" type="Control" unique_id=1723697337]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_xvrlx")
+
+[node name="Background" type="Control" parent="." unique_id=937722914]
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("2_17j7s")
+
+[node name="SafeArea" type="MarginContainer" parent="." unique_id=2023176638]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Root" type="VBoxContainer" parent="SafeArea" unique_id=42889325]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="TopRow" type="HBoxContainer" parent="SafeArea/Root" unique_id=1561111707]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BackButton" type="Button" parent="SafeArea/Root/TopRow" unique_id=485020714]
+custom_minimum_size = Vector2(112, 48)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBox_ug30i")
+theme_override_styles/pressed = SubResource("StyleBox_6e5sy")
+theme_override_styles/hover = SubResource("StyleBox_6h4td")
+theme_override_styles/focus = SubResource("StyleBox_3nvvi")
+theme_override_colors/font_color = Color(1, 0.95686275, 0.8862745, 1)
+theme_override_colors/font_hover_color = Color(1, 0.9529412, 0.76862746, 1)
+theme_override_font_sizes/font_size = 18
+text = "‹  返回"
+
+[node name="TitleLabel" type="Label" parent="SafeArea/Root/TopRow" unique_id=1435528723]
+layout_mode = 2
+theme_override_font_sizes/font_size = 26
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+text = "个人中心"
+
+[node name="TopSpacer" type="Control" parent="SafeArea/Root/TopRow" unique_id=375205542]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="TopAssets" type="HBoxContainer" parent="SafeArea/Root/TopRow" unique_id=510227532]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 14
+
+[node name="TopGoldLabelPair" type="HBoxContainer" parent="SafeArea/Root/TopRow/TopAssets" unique_id=369523242]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 6
+
+[node name="CurrencyIcon" type="Control" parent="SafeArea/Root/TopRow/TopAssets/TopGoldLabelPair" unique_id=782068307]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "金币"
+mouse_filter = 2
+script = ExtResource("4_bjmoy")
+accent = Color(0.96862745, 0.8117647, 0.37254903, 1)
+
+[node name="TopGoldLabel" type="Label" parent="SafeArea/Root/TopRow/TopAssets/TopGoldLabelPair" unique_id=1154838533]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.97333336, 0.84000003, 0.46666667, 1)
+text = "0"
+
+[node name="TopDiamondLabelPair" type="HBoxContainer" parent="SafeArea/Root/TopRow/TopAssets" unique_id=942348448]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 6
+
+[node name="CurrencyIcon" type="Control" parent="SafeArea/Root/TopRow/TopAssets/TopDiamondLabelPair" unique_id=1976451288]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "钻石"
+mouse_filter = 2
+script = ExtResource("4_bjmoy")
+kind = 1
+accent = Color(0.43529412, 0.8156863, 0.9607843, 1)
+
+[node name="TopDiamondLabel" type="Label" parent="SafeArea/Root/TopRow/TopAssets/TopDiamondLabelPair" unique_id=1922353994]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(0.52, 0.84333336, 0.9666667, 1)
+text = "0"
+
+[node name="TopPointsLabelPair" type="HBoxContainer" parent="SafeArea/Root/TopRow/TopAssets" unique_id=376065629]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_constants/separation = 6
+
+[node name="CurrencyIcon" type="Control" parent="SafeArea/Root/TopRow/TopAssets/TopPointsLabelPair" unique_id=580554717]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "积分"
+mouse_filter = 2
+script = ExtResource("4_bjmoy")
+kind = 2
+accent = Color(1, 0.6156863, 0.5411765, 1)
+
+[node name="TopPointsLabel" type="Label" parent="SafeArea/Root/TopRow/TopAssets/TopPointsLabelPair" unique_id=89995622]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1, 0.67333335, 0.61, 1)
+text = "0"
+
+[node name="MainPanel" type="PanelContainer" parent="SafeArea/Root" unique_id=1567884447]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBox_lb4ek")
+
+[node name="MainBox" type="VBoxContainer" parent="SafeArea/Root/MainPanel" unique_id=241049590]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="HeroBoxPad" type="MarginContainer" parent="SafeArea/Root/MainPanel/MainBox" unique_id=821927958]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 17
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 17
+
+[node name="HeroBox" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad" unique_id=100362321]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="HeadRow" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox" unique_id=390808681]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Avatar" type="Control" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow" unique_id=572434826]
+custom_minimum_size = Vector2(96, 96)
+layout_mode = 2
+size_flags_vertical = 4
+script = ExtResource("5_7he21")
+
+[node name="Info" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow" unique_id=1138852731]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+theme_override_constants/separation = 7
+
+[node name="TitleRow" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow/Info" unique_id=1319389629]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 10
+
+[node name="NicknameLabel" type="Label" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow/Info/TitleRow" unique_id=1980902213]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(1, 0.95686275, 0.8862745, 1)
+text = "玩家"
+
+[node name="LevelPill" type="PanelContainer" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow/Info/TitleRow" unique_id=291501187]
+layout_mode = 2
+size_flags_vertical = 4
+theme_override_styles/panel = SubResource("StyleBox_j20sf")
+
+[node name="LevelLabel" type="Label" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow/Info/TitleRow/LevelPill" unique_id=733998383]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+text = "Lv.1"
+
+[node name="MetaRow" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow/Info" unique_id=665751215]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="IdLabel" type="Label" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow/Info/MetaRow" unique_id=1335006941]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.8784314, 0.7058824, 0.6039216, 1)
+text = "ID --"
+
+[node name="MetaDot" type="Label" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow/Info/MetaRow" unique_id=1824711746]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "·"
+
+[node name="CreatedLabel" type="Label" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow/Info/MetaRow" unique_id=2047935397]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "注册时间 --"
+
+[node name="ExpBar" type="ProgressBar" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow/Info" unique_id=1182757709]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/background = SubResource("StyleBoxFlat_t4jdd")
+theme_override_styles/fill = SubResource("StyleBox_03dcn")
+show_percentage = false
+
+[node name="ExpLabel" type="Label" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow/Info" unique_id=1969271613]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "经验 0 / 200"
+
+[node name="AccountBox" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow" unique_id=960579926]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 8
+
+[node name="RenameButton" type="Button" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow/AccountBox" unique_id=1728213293]
+custom_minimum_size = Vector2(150, 42)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBox_w3dny")
+theme_override_styles/pressed = SubResource("StyleBox_7avo1")
+theme_override_styles/hover = SubResource("StyleBox_vlvfv")
+theme_override_styles/disabled = SubResource("StyleBox_f2rct")
+theme_override_styles/focus = SubResource("StyleBox_rqsua")
+theme_override_colors/font_color = Color(1, 0.95686275, 0.8862745, 1)
+theme_override_colors/font_pressed_color = Color(0.9, 0.86117643, 0.79764706, 1)
+theme_override_colors/font_hover_color = Color(1, 0.96462744, 0.9067451, 1)
+theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.42)
+theme_override_font_sizes/font_size = 17
+text = "修改昵称"
+
+[node name="LogoutButton" type="Button" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/HeadRow/AccountBox" unique_id=1674211828]
+custom_minimum_size = Vector2(150, 42)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBox_pf7bi")
+theme_override_styles/pressed = SubResource("StyleBox_vdqd3")
+theme_override_styles/hover = SubResource("StyleBox_psmtt")
+theme_override_styles/disabled = SubResource("StyleBox_5vodw")
+theme_override_styles/focus = SubResource("StyleBox_ksq76")
+theme_override_colors/font_color = Color(1, 0.9137255, 0.9019608, 1)
+theme_override_colors/font_pressed_color = Color(0.9, 0.82235295, 0.8117647, 1)
+theme_override_colors/font_hover_color = Color(1, 0.9292549, 0.9196079, 1)
+theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.42)
+theme_override_font_sizes/font_size = 17
+text = "退出登录"
+
+[node name="RenameRow" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox" unique_id=190777132]
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RenameEdit" type="LineEdit" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/RenameRow" unique_id=38291589]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBox_umc0p")
+theme_override_styles/focus = SubResource("StyleBox_vbvxb")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 0.95686275, 0.8862745, 1)
+theme_override_colors/font_placeholder_color = Color(1, 0.95686275, 0.8862745, 0.42)
+theme_override_colors/caret_color = Color(0.96862745, 0.8117647, 0.37254903, 1)
+theme_override_colors/selection_color = Color(0.96862745, 0.8117647, 0.37254903, 0.38)
+placeholder_text = "新的昵称"
+max_length = 12
+
+[node name="RenameSaveButton" type="Button" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/RenameRow" unique_id=1467099230]
+custom_minimum_size = Vector2(130, 56)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBox_11847")
+theme_override_styles/pressed = SubResource("StyleBox_63mx2")
+theme_override_styles/hover = SubResource("StyleBox_werjb")
+theme_override_styles/disabled = SubResource("StyleBox_71xfa")
+theme_override_styles/focus = SubResource("StyleBox_6151i")
+theme_override_colors/font_color = Color(1, 0.9647059, 0.9098039, 1)
+theme_override_colors/font_pressed_color = Color(0.9, 0.8682353, 0.8188235, 1)
+theme_override_colors/font_hover_color = Color(1, 0.97105885, 0.9260392, 1)
+theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.42)
+theme_override_font_sizes/font_size = 18
+text = "保存"
+
+[node name="RenameCancelButton" type="Button" parent="SafeArea/Root/MainPanel/MainBox/HeroBoxPad/HeroBox/RenameRow" unique_id=1821279913]
+custom_minimum_size = Vector2(120, 56)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBox_iiqj6")
+theme_override_styles/pressed = SubResource("StyleBox_kvcax")
+theme_override_styles/hover = SubResource("StyleBox_0dfif")
+theme_override_styles/disabled = SubResource("StyleBox_o5khd")
+theme_override_styles/focus = SubResource("StyleBox_y2ms3")
+theme_override_colors/font_color = Color(0.8784314, 0.7058824, 0.6039216, 1)
+theme_override_colors/font_pressed_color = Color(0.7905882, 0.63529414, 0.5435294, 1)
+theme_override_colors/font_hover_color = Color(0.90031374, 0.7588236, 0.6752157, 1)
+theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.42)
+theme_override_font_sizes/font_size = 18
+text = "取消"
+
+[node name="HeroDivider" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox" unique_id=1531711317]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.1)
+
+[node name="TabBarPad" type="MarginContainer" parent="SafeArea/Root/MainPanel/MainBox" unique_id=1863794221]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 9
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 9
+
+[node name="TabBar" type="Control" parent="SafeArea/Root/MainPanel/MainBox/TabBarPad" unique_id=1676375999]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+script = ExtResource("6_y2npq")
+track_visible = false
+
+[node name="TabDivider" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox" unique_id=90890826]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.1)
+
+[node name="Scroll" type="ScrollContainer" parent="SafeArea/Root/MainPanel/MainBox" unique_id=1188949953]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 3
+
+[node name="@MarginContainer@21" type="MarginContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll" unique_id=2134047756]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="Body" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21" unique_id=1466480013]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="TabProfile" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body" unique_id=295026075]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="ProfilePanel" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile" unique_id=471618156]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+
+[node name="@VBoxContainer@26" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel" unique_id=1158587135]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="@HBoxContainer@22" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/@VBoxContainer@26" unique_id=1771556640]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="@ColorRect@23" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/@VBoxContainer@26/@HBoxContainer@22" unique_id=1385386558]
+custom_minimum_size = Vector2(4, 24)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(0.96862745, 0.8117647, 0.37254903, 1)
+
+[node name="@Label@24" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/@VBoxContainer@26/@HBoxContainer@22" unique_id=1475697296]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+text = "战绩统计"
+
+[node name="@Label@25" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/@VBoxContainer@26" unique_id=2060060097]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "统计本机账号的全部对局数据"
+autowrap_mode = 3
+
+[node name="StatsTable" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel" unique_id=1326675627]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="StatsTableRow0" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable" unique_id=2072508701]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="StatGames" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow0" unique_id=725035238]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
+
+[node name="Value" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow0/StatGames" unique_id=1554766759]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+text = "-"
+horizontal_alignment = 1
+
+[node name="Caption" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow0/StatGames" unique_id=1698765004]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "总局数"
+horizontal_alignment = 1
+
+[node name="@ColorRect@27" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow0" unique_id=2036439604]
+custom_minimum_size = Vector2(1, 46)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(1, 1, 1, 0.09)
+
+[node name="StatWinRate" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow0" unique_id=1547096262]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
+
+[node name="Value" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow0/StatWinRate" unique_id=1345743894]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+text = "-"
+horizontal_alignment = 1
+
+[node name="Caption" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow0/StatWinRate" unique_id=1165269306]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "胜率"
+horizontal_alignment = 1
+
+[node name="@ColorRect@28" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow0" unique_id=2141376037]
+custom_minimum_size = Vector2(1, 46)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(1, 1, 1, 0.09)
+
+[node name="StatLandlordRate" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow0" unique_id=1404030257]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
+
+[node name="Value" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow0/StatLandlordRate" unique_id=1486437666]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+text = "-"
+horizontal_alignment = 1
+
+[node name="Caption" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow0/StatLandlordRate" unique_id=1803962558]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "地主胜率"
+horizontal_alignment = 1
+
+[node name="@ColorRect@29" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable" unique_id=1673126165]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.07)
+
+[node name="StatsTableRow1" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable" unique_id=798947021]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="StatWins" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow1" unique_id=100112636]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
+
+[node name="Value" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow1/StatWins" unique_id=1505259450]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+text = "-"
+horizontal_alignment = 1
+
+[node name="Caption" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow1/StatWins" unique_id=1376650056]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "胜利场次"
+horizontal_alignment = 1
+
+[node name="@ColorRect@30" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow1" unique_id=1481207601]
+custom_minimum_size = Vector2(1, 46)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(1, 1, 1, 0.09)
+
+[node name="StatStreak" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow1" unique_id=436562599]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
+
+[node name="Value" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow1/StatStreak" unique_id=968033434]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+text = "-"
+horizontal_alignment = 1
+
+[node name="Caption" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow1/StatStreak" unique_id=12053822]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "最高连胜"
+horizontal_alignment = 1
+
+[node name="@ColorRect@31" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow1" unique_id=1808663524]
+custom_minimum_size = Vector2(1, 46)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(1, 1, 1, 0.09)
+
+[node name="StatMaxMultiplier" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow1" unique_id=1319643866]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
+
+[node name="Value" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow1/StatMaxMultiplier" unique_id=1277819491]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+text = "-"
+horizontal_alignment = 1
+
+[node name="Caption" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/StatsTable/StatsTableRow1/StatMaxMultiplier" unique_id=632925102]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "最高倍数"
+horizontal_alignment = 1
+
+[node name="@ColorRect@32" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel" unique_id=433518763]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.09)
+
+[node name="@VBoxContainer@37" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel" unique_id=1814621051]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="@HBoxContainer@33" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/@VBoxContainer@37" unique_id=539472660]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="@ColorRect@34" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/@VBoxContainer@37/@HBoxContainer@33" unique_id=255063656]
+custom_minimum_size = Vector2(4, 24)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(0.96862745, 0.8117647, 0.37254903, 1)
+
+[node name="@Label@35" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/@VBoxContainer@37/@HBoxContainer@33" unique_id=1042363291]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+text = "我的资产"
+
+[node name="@Label@36" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/@VBoxContainer@37" unique_id=990328424]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "钻石用于解锁主题皮肤，金币与积分来自对局结算"
+autowrap_mode = 3
+
+[node name="AssetsTable" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel" unique_id=1117532844]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="AssetsTableRow0" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable" unique_id=2067297335]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
+
+[node name="StatGold" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0" unique_id=393389339]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
+
+[node name="Value" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0/StatGold" unique_id=1997602695]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.96862745, 0.8117647, 0.37254903, 1)
+text = "-"
+horizontal_alignment = 1
+
+[node name="StatGoldCaption" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0/StatGold" unique_id=1906218118]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="CurrencyIcon" type="Control" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0/StatGold/StatGoldCaption" unique_id=706813183]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "金币"
+mouse_filter = 2
+script = ExtResource("4_bjmoy")
+accent = Color(0.96862745, 0.8117647, 0.37254903, 1)
+
+[node name="Caption" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0/StatGold/StatGoldCaption" unique_id=1345978618]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "金币"
+
+[node name="@ColorRect@38" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0" unique_id=1119298831]
+custom_minimum_size = Vector2(1, 46)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(1, 1, 1, 0.09)
+
+[node name="StatDiamonds" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0" unique_id=569094523]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
+
+[node name="Value" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0/StatDiamonds" unique_id=859197595]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.43529412, 0.8156863, 0.9607843, 1)
+text = "-"
+horizontal_alignment = 1
+
+[node name="StatDiamondsCaption" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0/StatDiamonds" unique_id=1766043758]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="CurrencyIcon" type="Control" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0/StatDiamonds/StatDiamondsCaption" unique_id=570039571]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "钻石"
+mouse_filter = 2
+script = ExtResource("4_bjmoy")
+kind = 1
+accent = Color(0.43529412, 0.8156863, 0.9607843, 1)
+
+[node name="Caption" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0/StatDiamonds/StatDiamondsCaption" unique_id=341072813]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "钻石"
+
+[node name="@ColorRect@39" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0" unique_id=244944420]
+custom_minimum_size = Vector2(1, 46)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(1, 1, 1, 0.09)
+
+[node name="StatPoints" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0" unique_id=2028358668]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 3
+
+[node name="Value" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0/StatPoints" unique_id=1190817573]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(1, 0.6156863, 0.5411765, 1)
+text = "-"
+horizontal_alignment = 1
+
+[node name="StatPointsCaption" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0/StatPoints" unique_id=1363576345]
+layout_mode = 2
+theme_override_constants/separation = 5
+alignment = 1
+
+[node name="CurrencyIcon" type="Control" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0/StatPoints/StatPointsCaption" unique_id=830339439]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+size_flags_vertical = 4
+tooltip_text = "积分"
+mouse_filter = 2
+script = ExtResource("4_bjmoy")
+kind = 2
+accent = Color(1, 0.6156863, 0.5411765, 1)
+
+[node name="Caption" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabProfile/ProfilePanel/AssetsTable/AssetsTableRow0/StatPoints/StatPointsCaption" unique_id=981127771]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "积分"
+
+[node name="TabHistory" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body" unique_id=1233735937]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="HistoryPanel" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabHistory" unique_id=1311289586]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="@VBoxContainer@44" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabHistory/HistoryPanel" unique_id=1362741939]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="@HBoxContainer@40" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabHistory/HistoryPanel/@VBoxContainer@44" unique_id=1083238125]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="@ColorRect@41" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabHistory/HistoryPanel/@VBoxContainer@44/@HBoxContainer@40" unique_id=2031300105]
+custom_minimum_size = Vector2(4, 24)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(0.96862745, 0.8117647, 0.37254903, 1)
+
+[node name="@Label@42" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabHistory/HistoryPanel/@VBoxContainer@44/@HBoxContainer@40" unique_id=1047135170]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+text = "历史对局"
+
+[node name="@Label@43" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabHistory/HistoryPanel/@VBoxContainer@44" unique_id=6613247]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "最近 8 局战绩（账号数据保存在本机）"
+autowrap_mode = 3
+
+[node name="HistoryList" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabHistory/HistoryPanel" unique_id=443918807]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="TabSkins" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body" unique_id=500732332]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="SkinPanel" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins" unique_id=1688149847]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="@VBoxContainer@49" type="VBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel" unique_id=1932045737]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="@HBoxContainer@45" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel/@VBoxContainer@49" unique_id=677169475]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="@ColorRect@46" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel/@VBoxContainer@49/@HBoxContainer@45" unique_id=31501269]
+custom_minimum_size = Vector2(4, 24)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+color = Color(0.96862745, 0.8117647, 0.37254903, 1)
+
+[node name="@Label@47" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel/@VBoxContainer@49/@HBoxContainer@45" unique_id=1313397013]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+text = "主题皮肤"
+
+[node name="@Label@48" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel/@VBoxContainer@49" unique_id=781536155]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.7019608, 0.5254902, 0.43529412, 1)
+text = "点击已拥有皮肤立即装备；未解锁的皮肤需确认后消耗钻石解锁"
+autowrap_mode = 3
+
+[node name="LookRow" type="HBoxContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel" unique_id=1330025534]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="LookCaption" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel/LookRow" unique_id=379573813]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.8784314, 0.7058824, 0.6039216, 1)
+text = "当前装扮"
+
+[node name="LookValue" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel/LookRow" unique_id=602221507]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(1, 0.95686275, 0.8862745, 1)
+vertical_alignment = 1
+
+[node name="ResetSkinButton" type="Button" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel/LookRow" unique_id=376296560]
+custom_minimum_size = Vector2(116, 42)
+layout_mode = 2
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBox_xhx0r")
+theme_override_styles/pressed = SubResource("StyleBox_6pjdl")
+theme_override_styles/hover = SubResource("StyleBox_pat7a")
+theme_override_styles/disabled = SubResource("StyleBox_po7ga")
+theme_override_styles/focus = SubResource("StyleBox_in7v1")
+theme_override_colors/font_color = Color(1, 0.95686275, 0.8862745, 1)
+theme_override_colors/font_pressed_color = Color(0.9, 0.86117643, 0.79764706, 1)
+theme_override_colors/font_hover_color = Color(1, 0.96462744, 0.9067451, 1)
+theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.42)
+theme_override_font_sizes/font_size = 15
+text = "恢复默认"
+
+[node name="@ColorRect@50" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel" unique_id=584229171]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.09)
+
+[node name="TableSkinLabel" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel" unique_id=288054605]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.8784314, 0.7058824, 0.6039216, 1)
+text = "对局背景"
+
+[node name="TableSkinList" type="GridContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel" unique_id=1073610725]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 6
+
+[node name="@ColorRect@51" type="ColorRect" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel" unique_id=1994452920]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.09)
+
+[node name="CardSkinLabel" type="Label" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel" unique_id=554422421]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.8784314, 0.7058824, 0.6039216, 1)
+text = "卡牌皮肤"
+
+[node name="CardSkinList" type="GridContainer" parent="SafeArea/Root/MainPanel/MainBox/Scroll/@MarginContainer@21/Body/TabSkins/SkinPanel" unique_id=1192968130]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
+columns = 6

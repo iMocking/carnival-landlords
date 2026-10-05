@@ -172,7 +172,7 @@ func (s *Service) Ban(ctx context.Context, actor Actor, userID, reason string, u
 	if s.rooms != nil {
 		s.rooms.Disconnect(userID, realtime.ServerMessage{
 			Type: realtime.MsgNotice,
-			Data: realtime.NoticeData{Level: "error", Text: "账号已被封禁：" + reason, Seconds: 10},
+			Body: realtime.NoticeData{Level: "error", Text: "账号已被封禁：" + reason, Seconds: 10},
 		})
 	}
 
@@ -204,7 +204,7 @@ func (s *Service) Unban(ctx context.Context, actor Actor, userID string) error {
 // 不撤销的话，降权要等到令牌过期才生效 —— 那等于没降权。
 func (s *Service) SetRole(ctx context.Context, actor Actor, userID string, role catalog.Role) error {
 	switch role {
-	case catalog.RolePlayer, catalog.RoleGM, catalog.RoleAdmin:
+	case catalog.RolePlayer, catalog.RoleOperator, catalog.RoleAdmin:
 	default:
 		return apperr.ErrInvalidParam.WithMessage("未知角色 %q", role)
 	}
@@ -566,7 +566,7 @@ func (s *Service) audit(ctx context.Context, actor Actor, action, targetType, ta
 		errText = opErr.Error()
 	}
 	_, err := s.client.AdminAudit.Create().
-		SetID(id.NewPrefixed("audit")).
+		SetID(id.New()).
 		SetActorID(actor.UserID).
 		SetActorEmail(actor.Email).
 		SetAction(action).

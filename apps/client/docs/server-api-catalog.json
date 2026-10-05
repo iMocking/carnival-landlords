@@ -1,0 +1,1978 @@
+{
+    "version":  "1.0",
+    "generated_at":  "2026-10-05",
+    "description":  "《狂欢斗地主》服务端数据接口机器可读清单。详细需求见 server-api-requirements.md。",
+    "base_url":  "/api/v1",
+    "protocols":  {
+                      "http":  "https://\u003chost\u003e/api/v1",
+                      "websocket_game":  "wss://\u003chost\u003e/api/v1/ws/game",
+                      "websocket_social":  "wss://\u003chost\u003e/api/v1/ws"
+                  },
+    "auth":  {
+                 "header":  "Authorization: Bearer \u003caccess_token\u003e",
+                 "ws_first_frame":  {
+                                        "type":  "auth",
+                                        "payload":  {
+                                                        "token":  "\u003caccess_token\u003e"
+                                                    }
+                                    },
+                 "tokens":  [
+                                "access_token",
+                                "refresh_token",
+                                "game_token"
+                            ]
+             },
+    "response_envelope":  {
+                              "success":  {
+                                              "code":  0,
+                                              "message":  "ok",
+                                              "body":  {
+
+                                                       }
+                                          },
+                              "error":  {
+                                            "code":  10003,
+                                            "message":  "unauthorized"
+                                        }
+                          },
+    "implemented_legend":  "本服务（carnival-landlords）是否已实现该端点。由 scripts 从 internal/transport/api/router.go 的真实路由表逐条比对生成，不要手改 —— 路径以服务端实际注册的为准。",
+    "status_legend":  {
+                          "existing":  "后端 games 已有可用实现",
+                          "extend":  "已有但需扩展/修正",
+                          "new":  "后端缺失，需要新增"
+                      },
+    "priority_legend":  {
+                            "P0":  "上线必需",
+                            "P1":  "重要但可稍后",
+                            "P2":  "远期/运营增强"
+                        },
+    "endpoints":  [
+                      {
+                          "id":  "AUTH-01",
+                          "method":  "POST",
+                          "path":  "/auth/register",
+                          "status":  "extend",
+                          "priority":  "P0",
+                          "auth":  false,
+                          "summary":  "注册正式账号（扩展手机/邮箱/昵称唯一性）",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "AUTH-02",
+                          "method":  "POST",
+                          "path":  "/auth/login",
+                          "status":  "extend",
+                          "priority":  "P0",
+                          "auth":  false,
+                          "summary":  "账号密码登录（支持昵称/手机/邮箱）",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "AUTH-03",
+                          "method":  "POST",
+                          "path":  "/auth/guest",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  false,
+                          "summary":  "游客/设备登录，兼容当前游客入口",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "AUTH-04",
+                          "method":  "POST",
+                          "path":  "/auth/refresh",
+                          "status":  "existing",
+                          "priority":  "P0",
+                          "auth":  false,
+                          "summary":  "刷新 Access Token",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "AUTH-05",
+                          "method":  "POST",
+                          "path":  "/auth/logout",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "退出登录，吊销 refresh token/设备会话",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "AUTH-06",
+                          "method":  "POST",
+                          "path":  "/auth/verify",
+                          "status":  "existing",
+                          "priority":  "P0",
+                          "auth":  false,
+                          "summary":  "游戏服务端校验 game_token",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "AUTH-07",
+                          "method":  "POST",
+                          "path":  "/auth/sms/send",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  false,
+                          "summary":  "发送短信验证码",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "AUTH-08",
+                          "method":  "POST",
+                          "path":  "/auth/sms/login",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  false,
+                          "summary":  "手机验证码登录",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "AUTH-09",
+                          "method":  "POST",
+                          "path":  "/auth/password/forgot",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  false,
+                          "summary":  "找回密码：发送验证码",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "AUTH-10",
+                          "method":  "POST",
+                          "path":  "/auth/password/reset",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  false,
+                          "summary":  "重置密码",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "AUTH-11",
+                          "method":  "POST",
+                          "path":  "/auth/oauth/:provider",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  false,
+                          "summary":  "微信/QQ/Apple 第三方登录",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "AUTH-12",
+                          "method":  "GET",
+                          "path":  "/auth/sessions",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "登录设备/会话列表",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "AUTH-13",
+                          "method":  "DELETE",
+                          "path":  "/auth/sessions/:id",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "远程下线指定设备",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "USER-01",
+                          "method":  "GET",
+                          "path":  "/user/profile",
+                          "status":  "extend",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "个人资料+等级经验+资产+战绩汇总+设置",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "USER-02",
+                          "method":  "PUT",
+                          "path":  "/user/profile",
+                          "status":  "existing",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "修改昵称/头像",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "USER-03",
+                          "method":  "POST",
+                          "path":  "/user/avatar",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "上传头像并返回 URL",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "USER-04",
+                          "method":  "GET",
+                          "path":  "/user/settings",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "读取系统设置",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "USER-05",
+                          "method":  "PUT",
+                          "path":  "/user/settings",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "保存系统设置（部分更新+版本）",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "USER-06",
+                          "method":  "POST",
+                          "path":  "/user/bind-phone",
+                          "status":  "existing",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "绑定手机号",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "USER-07",
+                          "method":  "POST",
+                          "path":  "/user/real-name",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "实名认证/防沉迷",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "USER-08",
+                          "method":  "GET",
+                          "path":  "/user/statistics",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "总战绩+分玩法胜率",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "USER-09",
+                          "method":  "GET",
+                          "path":  "/user/online-status",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "查询玩家在线状态",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "USER-10",
+                          "method":  "POST",
+                          "path":  "/user/rename-card/use",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "使用改名卡修改昵称",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "WALLET-01",
+                          "method":  "GET",
+                          "path":  "/wallet",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "查询金币/钻石/积分余额",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "WALLET-02",
+                          "method":  "GET",
+                          "path":  "/wallet/transactions",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "资产流水分页查询",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "WALLET-03",
+                          "method":  "POST",
+                          "path":  "/wallet/exchange",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "钻石兑换金币等",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "INV-01",
+                          "method":  "GET",
+                          "path":  "/inventory",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "道具背包",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "INV-02",
+                          "method":  "POST",
+                          "path":  "/inventory/use",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "使用道具",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "SKIN-01",
+                          "method":  "GET",
+                          "path":  "/skins",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "皮肤目录+拥有/装备状态",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "SKIN-02",
+                          "method":  "POST",
+                          "path":  "/skins/:skin_id/purchase",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "钻石购买皮肤",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "SKIN-03",
+                          "method":  "POST",
+                          "path":  "/skins/:skin_id/equip",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "装备皮肤",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "SKIN-04",
+                          "method":  "POST",
+                          "path":  "/skins/reset",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "恢复默认装扮",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "SKIN-05",
+                          "method":  "POST",
+                          "path":  "/skins/equip-batch",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "同时装备背景+卡牌皮肤",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "CFG-01",
+                          "method":  "GET",
+                          "path":  "/config/bootstrap",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "一次拉取全部配置+版本号",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "CFG-02",
+                          "method":  "GET",
+                          "path":  "/config/version",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  false,
+                          "summary":  "配置版本/哈希",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "CFG-03",
+                          "method":  "GET",
+                          "path":  "/config/modes",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  false,
+                          "summary":  "玩法配置",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "CFG-04",
+                          "method":  "GET",
+                          "path":  "/config/skins",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "皮肤目录",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "CFG-05",
+                          "method":  "GET",
+                          "path":  "/config/shop",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  false,
+                          "summary":  "商城分栏与商品目录",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "CFG-06",
+                          "method":  "GET",
+                          "path":  "/config/activities",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "签到奖励/每日任务/活动横幅",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "CFG-07",
+                          "method":  "GET",
+                          "path":  "/config/achievements",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "成就定义与分组",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "CFG-08",
+                          "method":  "GET",
+                          "path":  "/config/announcements",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  false,
+                          "summary":  "公告/跑马灯/登录弹窗",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "CFG-09",
+                          "method":  "GET",
+                          "path":  "/config/audio",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  false,
+                          "summary":  "音频资源版本/映射",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "MATCH-01",
+                          "method":  "POST",
+                          "path":  "/match/quick",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "快速匹配",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "MATCH-02",
+                          "method":  "GET",
+                          "path":  "/match/tickets/:id",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "查询匹配状态",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "MATCH-03",
+                          "method":  "DELETE",
+                          "path":  "/match/tickets/:id",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "取消匹配",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "MATCH-04",
+                          "method":  "POST",
+                          "path":  "/match/ai",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "创建人机练习局",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ROOM-01",
+                          "method":  "POST",
+                          "path":  "/rooms",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "创建房间",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ROOM-02",
+                          "method":  "GET",
+                          "path":  "/rooms/:room_id",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "房间快照",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ROOM-03",
+                          "method":  "POST",
+                          "path":  "/rooms/:room_id/join",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "加入房间",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ROOM-06",
+                          "method":  "POST",
+                          "path":  "/rooms/:room_id/kick",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "房主踢人",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ROOM-07",
+                          "method":  "POST",
+                          "path":  "/rooms/:room_id/ai",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "添加/移除 AI 补位",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ROOM-08",
+                          "method":  "POST",
+                          "path":  "/rooms/:room_id/invite",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "邀请好友进房",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ROOM-09",
+                          "method":  "POST",
+                          "path":  "/rooms/:room_id/rematch",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "再来一局",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ROOM-10",
+                          "method":  "POST",
+                          "path":  "/rooms/:room_id/disband",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "解散房间",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ROOM-11",
+                          "method":  "GET",
+                          "path":  "/rooms",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "公开房间列表",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ROOM-13",
+                          "method":  "GET",
+                          "path":  "/rooms/current",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "查询当前房间/对局，用于重连",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "ROOM-14",
+                          "method":  "POST",
+                          "path":  "/rooms/join-by-code",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "房间号加入",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "REC-01",
+                          "method":  "GET",
+                          "path":  "/matches",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "历史对局分页",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "REC-02",
+                          "method":  "GET",
+                          "path":  "/matches/:match_id",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "单局详情",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "REC-03",
+                          "method":  "GET",
+                          "path":  "/matches/:match_id/replay",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "回放数据",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "REC-04",
+                          "method":  "GET",
+                          "path":  "/user/statistics",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "战绩统计（与 USER-08 相同路径）",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "REC-05",
+                          "method":  "GET",
+                          "path":  "/user/statistics/daily",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "今日计数（任务用）",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "REC-06",
+                          "method":  "POST",
+                          "path":  "/matches/report",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "本地 AI 对局结果上报+服务端校验（Phase 1 过渡）",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "RANK-01",
+                          "method":  "GET",
+                          "path":  "/leaderboards/:mode_id",
+                          "status":  "extend",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "全服/好友/日榜/周榜/总榜",
+                          "implemented":  true,
+                          "query":  "metric=points|wins（默认 points）、period=total|daily|weekly（默认 total）、limit（默认 50，上限 200）",
+                          "server_note":  "服务端把这一段实现为**玩法**（mode_classic 等），分数由 match_records 聚合（净积分或胜场），支持日榜/周榜。响应会回显实际使用的 metric 与 period。"
+                      },
+                      {
+                          "id":  "RANK-02",
+                          "method":  "GET",
+                          "path":  "/leaderboards/:mode_id/me",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "我的排名/分数",
+                          "implemented":  true,
+                          "query":  "metric、period（同 RANK-01）",
+                          "server_note":  "rank=0 表示未上榜，但 score 仍是真实值（可能是负数，例如该玩法净积分为负）。"
+                      },
+                      {
+                          "id":  "RANK-03",
+                          "method":  "GET",
+                          "path":  "/leaderboards/friends",
+                          "status":  "extend",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "好友排行榜",
+                          "implemented":  false,
+                          "server_note":  "**未实现**：好友榜依赖好友系统（FRIEND 组）。请求时会得到明确说明，而不是\"未知玩法\"。"
+                      },
+                      {
+                          "id":  "RANK-04",
+                          "method":  "GET",
+                          "path":  "/leaderboards/:mode_id/history",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "历史赛季/周榜快照",
+                          "implemented":  false,
+                          "server_note":  "**未实现**：历史赛季/周榜快照需要按周归档，尚无任务在跑。"
+                      },
+                      {
+                          "id":  "ACT-01",
+                          "method":  "GET",
+                          "path":  "/activity/center",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "活动中心聚合",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "ACT-02",
+                          "method":  "POST",
+                          "path":  "/activity/checkin",
+                          "status":  "extend",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "签到领奖（7天循环/连签）",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "ACT-03",
+                          "method":  "GET",
+                          "path":  "/activity/checkin/status",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "签到日历状态",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ACT-04",
+                          "method":  "GET",
+                          "path":  "/activity/tasks",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "每日任务列表+进度",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ACT-05",
+                          "method":  "POST",
+                          "path":  "/activity/tasks/:task_id/claim",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "领取每日任务奖励",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "ACT-06",
+                          "method":  "GET",
+                          "path":  "/activity/events",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "进行中的运营活动",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ACT-07",
+                          "method":  "POST",
+                          "path":  "/activity/events/:event_id/claim",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "领取活动奖励",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ACT-08",
+                          "method":  "GET",
+                          "path":  "/activity/banners",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  false,
+                          "summary":  "活动横幅配置",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "SHOP-01",
+                          "method":  "GET",
+                          "path":  "/shop/catalog",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "商城分栏+商品目录",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "SHOP-02",
+                          "method":  "POST",
+                          "path":  "/shop/purchase",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "钻石购买金币/道具（服务端扣款+发货）",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "SHOP-03",
+                          "method":  "GET",
+                          "path":  "/shop/purchase-records",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "购买记录",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "SHOP-04",
+                          "method":  "GET",
+                          "path":  "/shop/limits",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "每日/每周限购状态",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "PAY-01",
+                          "method":  "GET",
+                          "path":  "/pay/packages",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "人民币充值套餐",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "PAY-02",
+                          "method":  "POST",
+                          "path":  "/pay/order/create",
+                          "status":  "extend",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "创建充值订单（服务端定价）",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "PAY-03",
+                          "method":  "GET",
+                          "path":  "/pay/order/:id",
+                          "status":  "existing",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "查询订单",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "PAY-04",
+                          "method":  "GET",
+                          "path":  "/pay/order",
+                          "status":  "existing",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "订单列表",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "PAY-05",
+                          "method":  "POST",
+                          "path":  "/pay/order/notify",
+                          "status":  "extend",
+                          "priority":  "P1",
+                          "auth":  false,
+                          "summary":  "支付回调（验签+幂等+发货）",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "PAY-06",
+                          "method":  "POST",
+                          "path":  "/pay/order/:id/cancel",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "取消未支付订单",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "PAY-07",
+                          "method":  "POST",
+                          "path":  "/pay/refund",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "退款",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "FRIEND-01",
+                          "method":  "POST",
+                          "path":  "/friend/apply",
+                          "status":  "existing",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "申请添加好友",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "FRIEND-02",
+                          "method":  "POST",
+                          "path":  "/friend/respond",
+                          "status":  "existing",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "同意/拒绝好友申请",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "FRIEND-03",
+                          "method":  "GET",
+                          "path":  "/friend/list",
+                          "status":  "extend",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "好友列表（在线状态/备注/最近一起玩）",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "FRIEND-04",
+                          "method":  "GET",
+                          "path":  "/friend/search",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "按昵称/ID搜索玩家",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "FRIEND-05",
+                          "method":  "DELETE",
+                          "path":  "/friend/:friend_id",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "删除好友",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "FRIEND-06",
+                          "method":  "GET",
+                          "path":  "/friend/requests",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "待处理申请列表",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "FRIEND-07",
+                          "method":  "PUT",
+                          "path":  "/friend/:friend_id/remark",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "设置好友备注",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "FRIEND-08",
+                          "method":  "POST",
+                          "path":  "/friend/:friend_id/block",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "拉黑/解除拉黑",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "FRIEND-09",
+                          "method":  "GET",
+                          "path":  "/friend/recent-teammates",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "最近一起玩的玩家",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "CHAT-01",
+                          "method":  "POST",
+                          "path":  "/chat/send",
+                          "status":  "existing",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "发送私信",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "CHAT-02",
+                          "method":  "GET",
+                          "path":  "/chat/messages",
+                          "status":  "existing",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "私信历史",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "CHAT-03",
+                          "method":  "GET",
+                          "path":  "/chat/conversations",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "会话列表+未读数",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "CHAT-04",
+                          "method":  "POST",
+                          "path":  "/chat/read",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "标记会话已读",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "CHAT-05",
+                          "method":  "WS",
+                          "path":  "chat.message",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "实时私信推送",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "MSG-01",
+                          "method":  "GET",
+                          "path":  "/notifications",
+                          "status":  "extend",
+                          "priority":  "P1",
+                          "auth":  false,
+                          "summary":  "通知列表（分页/分类/已读）",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "MSG-02",
+                          "method":  "GET",
+                          "path":  "/notifications/unread-count",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "未读数红点",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "MSG-03",
+                          "method":  "POST",
+                          "path":  "/notifications/:id/read",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "单条已读",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "MSG-04",
+                          "method":  "POST",
+                          "path":  "/notifications/read-all",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "全部已读",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "MSG-05",
+                          "method":  "DELETE",
+                          "path":  "/notifications/:id",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "删除通知",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "MSG-06",
+                          "method":  "GET",
+                          "path":  "/mail",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "奖励邮件列表",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "MSG-07",
+                          "method":  "POST",
+                          "path":  "/mail/:id/claim",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "领取邮件附件奖励",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "MSG-08",
+                          "method":  "GET",
+                          "path":  "/announcements",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  false,
+                          "summary":  "公告/跑马灯/登录弹窗",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "MSG-09",
+                          "method":  "WS",
+                          "path":  "notification",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "新消息/奖励实时推送",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ACHV-01",
+                          "method":  "GET",
+                          "path":  "/achievements",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "成就定义+进度+解锁状态",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "ACHV-02",
+                          "method":  "GET",
+                          "path":  "/achievements/summary",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "成就总进度",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "ACHV-03",
+                          "method":  "POST",
+                          "path":  "/achievements/:id/claim",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "领取成就奖励（如需要）",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "ADMIN-04",
+                          "method":  "POST/PUT/DELETE",
+                          "path":  "/admin/modes",
+                          "status":  "new",
+                          "priority":  "P0",
+                          "auth":  true,
+                          "summary":  "玩法配置管理",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ADMIN-05",
+                          "method":  "POST/PUT/DELETE",
+                          "path":  "/admin/skins",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "皮肤目录管理",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ADMIN-06",
+                          "method":  "POST/PUT/DELETE",
+                          "path":  "/admin/shop/goods",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "商城商品管理",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ADMIN-07",
+                          "method":  "POST/PUT/DELETE",
+                          "path":  "/admin/activity/tasks",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "每日任务/签到配置管理",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ADMIN-08",
+                          "method":  "POST/PUT/DELETE",
+                          "path":  "/admin/notifications",
+                          "status":  "extend",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "公告/站内信推送",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ADMIN-09",
+                          "method":  "GET",
+                          "path":  "/admin/matches",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "对局记录/回放查询",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ADMIN-10",
+                          "method":  "GET",
+                          "path":  "/admin/wallet/transactions",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "钱包流水/人工调账",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ADMIN-11",
+                          "method":  "GET",
+                          "path":  "/admin/risk/events",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "风控/反作弊事件",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ADMIN-12",
+                          "method":  "POST",
+                          "path":  "/admin/configs/publish",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "配置发布/回滚/灰度",
+                          "implemented":  false
+                      },
+                      {
+                          "id":  "ADMIN-13",
+                          "method":  "GET",
+                          "path":  "/admin/rooms",
+                          "status":  "new",
+                          "priority":  "P2",
+                          "auth":  true,
+                          "summary":  "在线房间/对局监控",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "ADMIN-14",
+                          "method":  "POST",
+                          "path":  "/admin/mail",
+                          "status":  "new",
+                          "priority":  "P1",
+                          "auth":  true,
+                          "summary":  "邮件/补偿发放",
+                          "implemented":  true
+                      },
+                      {
+                          "id":  "RANK-05",
+                          "method":  "GET",
+                          "path":  "/leaderboards/account/:board",
+                          "status":  "existing",
+                          "priority":  "P1",
+                          "auth":  false,
+                          "summary":  "账号级排行榜（积分/金币/胜场/最高连胜）",
+                          "query":  "limit（默认 50，上限 200）",
+                          "server_note":  "这是与玩法榜**不同维度**的榜：分数取自用户行上的累计值（Redis ZSET）。board 取 points/gold/wins/streak。另有 /leaderboards/account/:board/me 与 /around。",
+                          "implemented":  true
+                      }
+                  ],
+    "websocket":  {
+                      "url":  "/api/v1/ws/game",
+                      "auth_first_frame":  {
+                                               "type":  "auth",
+                                               "request_id":  "req-1",
+                                               "payload":  {
+                                                               "token":  "\u003caccess_token\u003e"
+                                                           }
+                                           },
+                      "client_envelope":  {
+                                              "op":  "play",
+                                              "seq":  1024,
+                                              "note":  "**上行用 `op`，不是 `type`**；命令名是裸名（ready / play / chat），不带 room. 或 game. 前缀。字段名与 internal/realtime/protocol.go 的 ClientMessage 一致。",
+                                              "fields":  "op（必填）、seq、score、cards、on、kind、value、item_id、mode_id"
+                                          },
+                      "envelope":  {
+                                       "type":  "event.name",
+                                       "seq":  1024,
+                                       "ts":  1780000000000,
+                                       "room_id":  "r_xxx",
+                                       "match_id":  "m_xxx",
+                                       "request_id":  "optional",
+                                       "body":  {
+
+                                                }
+                                   },
+                      "envelope_note":  "下行用 `type`（与上行不对称，以服务端实现为准）。信封里的消息体字段名是 `body`（决策 D-01）。",
+                      "client_commands":  [
+                                              {
+                                                  "op":  "ping",
+                                                  "note":  "心跳；服务端回 pong",
+                                                  "fields":  [
+
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "match",
+                                                  "note":  "开始匹配",
+                                                  "fields":  [
+                                                                 "mode_id"
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "cancel_match",
+                                                  "note":  "取消匹配",
+                                                  "fields":  [
+
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "match_status",
+                                                  "note":  "查询匹配状态",
+                                                  "fields":  [
+
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "ready",
+                                                  "note":  "准备。**当前实现是空操作**：匹配成功即开打，服务端接受该命令但什么都不做（保留以兼容客户端）",
+                                                  "fields":  [
+
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "bid",
+                                                  "note":  "叫分 0~3（0 = 不叫）",
+                                                  "fields":  [
+                                                                 "score"
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "play",
+                                                  "note":  "出牌，cards 为牌 ID 列表",
+                                                  "fields":  [
+                                                                 "cards"
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "pass",
+                                                  "note":  "不出",
+                                                  "fields":  [
+
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "hint",
+                                                  "note":  "提示；带 item_id 时消耗提示符道具",
+                                                  "fields":  [
+                                                                 "item_id"
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "use_prop",
+                                                  "note":  "使用道具（记牌器 / 换牌卡等）",
+                                                  "fields":  [
+                                                                 "item_id"
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "trustee",
+                                                  "note":  "托管开关，on 为布尔",
+                                                  "fields":  [
+                                                                 "on"
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "chat",
+                                                  "note":  "快捷聊天。kind 取 emoji / text，value 为内容",
+                                                  "fields":  [
+                                                                 "kind",
+                                                                 "value"
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "sync",
+                                                  "note":  "请求全量快照（断线重连 / 跳号恢复）",
+                                                  "fields":  [
+
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "snapshot_ack",
+                                                  "note":  "确认收到快照",
+                                                  "fields":  [
+
+                                                             ]
+                                              },
+                                              {
+                                                  "op":  "leave",
+                                                  "note":  "离开房间 / 牌桌",
+                                                  "fields":  [
+
+                                                             ]
+                                              }
+                                          ],
+                      "server_events":  [
+                                            {
+                                                "type":  "hello",
+                                                "note":  "连接问候（含 user_id / in_room / heartbeat_seconds）"
+                                            },
+                                            {
+                                                "type":  "pong",
+                                                "note":  "心跳回复"
+                                            },
+                                            {
+                                                "type":  "snapshot",
+                                                "note":  "全量快照（进房 / 重连 / sync）"
+                                            },
+                                            {
+                                                "type":  "event",
+                                                "note":  "对局或房间事件；具体事件名在 body.type 里，见 event_frames"
+                                            },
+                                            {
+                                                "type":  "settled",
+                                                "note":  "本局结算"
+                                            },
+                                            {
+                                                "type":  "match_status",
+                                                "note":  "匹配状态变化（queued / matched / canceled / timeout）"
+                                            },
+                                            {
+                                                "type":  "room_closed",
+                                                "note":  "房间结束"
+                                            },
+                                            {
+                                                "type":  "chat",
+                                                "note":  "聊天广播"
+                                            },
+                                            {
+                                                "type":  "error",
+                                                "note":  "命令失败；带 code / message"
+                                            },
+                                            {
+                                                "type":  "notice",
+                                                "note":  "系统播报（托管、离线等）"
+                                            }
+                                        ],
+                      "event_frames":  {
+                                           "type":  "event",
+                                           "body":  {
+                                                        "type":  "played",
+                                                        "seat":  0,
+                                                        "at":  "2026-01-01T00:00:00Z",
+                                                        "body":  {
+
+                                                                 }
+                                                    },
+                                           "names":  [
+                                                         "hand_start",
+                                                         "wild_rank",
+                                                         "bid_turn",
+                                                         "bid_made",
+                                                         "landlord_decided",
+                                                         "turn",
+                                                         "played",
+                                                         "passed",
+                                                         "multiplier_changed",
+                                                         "redeal",
+                                                         "hand_end",
+                                                         "message"
+                                                     ],
+                                           "note":  "对局/房间细节都是 `type=event` 的帧，真正的事件名在 `body.type`（裸名，不带 game. 前缀）。"
+                                       },
+                      "room_transport_note":  "房间内动作（准备/离开/聊天/叫分/出牌/不出/提示/道具/托管/同步）**全部走 WebSocket**，不提供对应的 HTTP 端点。HTTP 只负责房间的建立与查询类操作（见 endpoints 里的 ROOM 组），客户端不要再为这些动作调用 HTTP。",
+                      "migrated_http_endpoints":  [
+                                                      {
+                                                          "ws_command":  "leave",
+                                                          "removed":  "ROOM-04 POST /rooms/:room_id/leave",
+                                                          "note":  "离开房间改走 WS"
+                                                      },
+                                                      {
+                                                          "ws_command":  "ready",
+                                                          "removed":  "ROOM-05 POST /rooms/:room_id/ready",
+                                                          "note":  "准备改走 WS（且当前是空操作）"
+                                                      },
+                                                      {
+                                                          "ws_command":  "chat",
+                                                          "removed":  "ROOM-12 POST /rooms/:room_id/chat",
+                                                          "note":  "房间内聊天改走 WS"
+                                                      }
+                                                  ]
+                  },
+    "error_codes":  [
+                        {
+                            "code":  10001,
+                            "name":  "invalid_param",
+                            "message":  "参数不合法",
+                            "http":  400
+                        },
+                        {
+                            "code":  10002,
+                            "name":  "not_found",
+                            "message":  "资源不存在",
+                            "http":  404
+                        },
+                        {
+                            "code":  10003,
+                            "name":  "conflict",
+                            "message":  "状态冲突",
+                            "http":  409
+                        },
+                        {
+                            "code":  10004,
+                            "name":  "too_many_requests",
+                            "message":  "操作过于频繁，请稍后再试",
+                            "http":  429
+                        },
+                        {
+                            "code":  10005,
+                            "name":  "forbidden",
+                            "message":  "没有操作权限",
+                            "http":  403
+                        },
+                        {
+                            "code":  10006,
+                            "name":  "idempotent_hit",
+                            "message":  "重复请求，已返回首次结果",
+                            "http":  200
+                        },
+                        {
+                            "code":  20001,
+                            "name":  "unauthorized",
+                            "message":  "请先登录",
+                            "http":  401
+                        },
+                        {
+                            "code":  20002,
+                            "name":  "token_expired",
+                            "message":  "登录状态已过期",
+                            "http":  401
+                        },
+                        {
+                            "code":  20003,
+                            "name":  "session_revoked",
+                            "message":  "账号已在其它设备登录",
+                            "http":  401
+                        },
+                        {
+                            "code":  20004,
+                            "name":  "email_exists",
+                            "message":  "该邮箱已注册",
+                            "http":  409
+                        },
+                        {
+                            "code":  20005,
+                            "name":  "account_not_found",
+                            "message":  "账号不存在",
+                            "http":  404
+                        },
+                        {
+                            "code":  20006,
+                            "name":  "password_wrong",
+                            "message":  "邮箱或密码不正确",
+                            "http":  401
+                        },
+                        {
+                            "code":  20007,
+                            "name":  "email_code_invalid",
+                            "message":  "验证码错误或已过期",
+                            "http":  400
+                        },
+                        {
+                            "code":  20008,
+                            "name":  "email_code_too_fast",
+                            "message":  "验证码发送过于频繁",
+                            "http":  429
+                        },
+                        {
+                            "code":  20009,
+                            "name":  "account_banned",
+                            "message":  "账号已被封禁",
+                            "http":  403
+                        },
+                        {
+                            "code":  20010,
+                            "name":  "refresh_invalid",
+                            "message":  "刷新令牌无效，请重新登录",
+                            "http":  401
+                        },
+                        {
+                            "code":  20011,
+                            "name":  "nickname_taken",
+                            "message":  "昵称已被占用",
+                            "http":  409
+                        },
+                        {
+                            "code":  30001,
+                            "name":  "insufficient_gold",
+                            "message":  "金币不足",
+                            "http":  400
+                        },
+                        {
+                            "code":  30002,
+                            "name":  "insufficient_diamond",
+                            "message":  "钻石不足",
+                            "http":  400
+                        },
+                        {
+                            "code":  30003,
+                            "name":  "wallet_frozen",
+                            "message":  "钱包已被冻结",
+                            "http":  403
+                        },
+                        {
+                            "code":  30004,
+                            "name":  "wallet_concurrent",
+                            "message":  "钱包正在被其它请求修改，请重试",
+                            "http":  409
+                        },
+                        {
+                            "code":  40001,
+                            "name":  "good_not_found",
+                            "message":  "商品不存在或已下架",
+                            "http":  404
+                        },
+                        {
+                            "code":  40002,
+                            "name":  "item_not_owned",
+                            "message":  "背包中没有该道具",
+                            "http":  400
+                        },
+                        {
+                            "code":  40003,
+                            "name":  "item_not_usable",
+                            "message":  "该道具当前不可使用",
+                            "http":  400
+                        },
+                        {
+                            "code":  40005,
+                            "name":  "order_not_found",
+                            "message":  "订单不存在",
+                            "http":  404
+                        },
+                        {
+                            "code":  40006,
+                            "name":  "order_already_paid",
+                            "message":  "订单已支付",
+                            "http":  409
+                        },
+                        {
+                            "code":  40007,
+                            "name":  "pay_channel_blocked",
+                            "message":  "当前环境不允许使用该支付通道",
+                            "http":  403
+                        },
+                        {
+                            "code":  40008,
+                            "name":  "skin_not_owned",
+                            "message":  "尚未拥有该皮肤",
+                            "http":  403
+                        },
+                        {
+                            "code":  50001,
+                            "name":  "task_not_found",
+                            "message":  "任务不存在",
+                            "http":  404
+                        },
+                        {
+                            "code":  50002,
+                            "name":  "task_not_completed",
+                            "message":  "任务尚未完成",
+                            "http":  400
+                        },
+                        {
+                            "code":  50003,
+                            "name":  "task_already_claimed",
+                            "message":  "任务奖励已领取",
+                            "http":  409
+                        },
+                        {
+                            "code":  50004,
+                            "name":  "signed_in_today",
+                            "message":  "今日已经签到过了",
+                            "http":  409
+                        },
+                        {
+                            "code":  50006,
+                            "name":  "mail_not_found",
+                            "message":  "邮件不存在",
+                            "http":  404
+                        },
+                        {
+                            "code":  50007,
+                            "name":  "mail_already_claimed",
+                            "message":  "邮件附件已领取",
+                            "http":  409
+                        },
+                        {
+                            "code":  50008,
+                            "name":  "mail_expired",
+                            "message":  "邮件已过期",
+                            "http":  400
+                        },
+                        {
+                            "code":  60001,
+                            "name":  "room_not_found",
+                            "message":  "房间不存在",
+                            "http":  404
+                        },
+                        {
+                            "code":  60002,
+                            "name":  "room_full",
+                            "message":  "房间已满",
+                            "http":  409
+                        },
+                        {
+                            "code":  60003,
+                            "name":  "not_in_room",
+                            "message":  "你不在任何房间中",
+                            "http":  400
+                        },
+                        {
+                            "code":  60004,
+                            "name":  "not_your_turn",
+                            "message":  "还没轮到你操作",
+                            "http":  409
+                        },
+                        {
+                            "code":  60005,
+                            "name":  "invalid_pattern",
+                            "message":  "牌型不符合规则",
+                            "http":  400
+                        },
+                        {
+                            "code":  60006,
+                            "name":  "pattern_too_weak",
+                            "message":  "打不过上家的牌",
+                            "http":  400
+                        },
+                        {
+                            "code":  60007,
+                            "name":  "cards_not_in_hand",
+                            "message":  "手牌中没有这些牌",
+                            "http":  400
+                        },
+                        {
+                            "code":  60008,
+                            "name":  "phase_mismatch",
+                            "message":  "当前阶段不允许该操作",
+                            "http":  409
+                        },
+                        {
+                            "code":  60009,
+                            "name":  "already_matching",
+                            "message":  "已经在匹配队列中",
+                            "http":  409
+                        },
+                        {
+                            "code":  60010,
+                            "name":  "not_matching",
+                            "message":  "不在匹配队列中",
+                            "http":  409
+                        },
+                        {
+                            "code":  60011,
+                            "name":  "mode_not_found",
+                            "message":  "玩法不存在",
+                            "http":  404
+                        },
+                        {
+                            "code":  60012,
+                            "name":  "settlement_failed",
+                            "message":  "结算失败",
+                            "http":  500
+                        },
+                        {
+                            "code":  90001,
+                            "name":  "internal",
+                            "message":  "服务开小差了，请稍后再试",
+                            "http":  500
+                        },
+                        {
+                            "code":  90002,
+                            "name":  "dependency",
+                            "message":  "依赖服务不可用",
+                            "http":  503
+                        },
+                        {
+                            "code":  90003,
+                            "name":  "not_implemented",
+                            "message":  "功能尚未实现",
+                            "http":  501
+                        }
+                    ],
+    "models":  {
+                   "user_profile":  [
+                                        "user_id",
+                                        "short_id",
+                                        "nickname",
+                                        "avatar_url",
+                                        "avatar_index",
+                                        "level",
+                                        "exp",
+                                        "level_progress",
+                                        "level_span",
+                                        "created_at",
+                                        "last_login_at",
+                                        "wallet",
+                                        "statistics",
+                                        "settings"
+                                    ],
+                   "wallet":  [
+                                  "user_id",
+                                  "gold",
+                                  "diamonds",
+                                  "points",
+                                  "version",
+                                  "updated_at"
+                              ],
+                   "wallet_transaction":  [
+                                              "id",
+                                              "user_id",
+                                              "currency",
+                                              "delta",
+                                              "balance_after",
+                                              "biz_type",
+                                              "biz_id",
+                                              "ref_id",
+                                              "idempotency_key",
+                                              "created_at"
+                                          ],
+                   "game_mode":  [
+                                     "id",
+                                     "name",
+                                     "tagline",
+                                     "desc",
+                                     "stake",
+                                     "entry_fee",
+                                     "wildcards",
+                                     "wild_count",
+                                     "rounds",
+                                     "prizes",
+                                     "hot",
+                                     "status",
+                                     "min_gold"
+                                 ],
+                   "match":  [
+                                 "id",
+                                 "mode_id",
+                                 "room_id",
+                                 "status",
+                                 "started_at",
+                                 "ended_at",
+                                 "landlord_seat",
+                                 "winner_seat",
+                                 "multiplier",
+                                 "base_score",
+                                 "spring",
+                                 "wild_rank",
+                                 "stake",
+                                 "entry_fee"
+                             ],
+                   "match_player":  [
+                                        "match_id",
+                                        "user_id",
+                                        "seat",
+                                        "role",
+                                        "is_ai",
+                                        "won",
+                                        "gold_delta",
+                                        "points_delta",
+                                        "balance_after",
+                                        "hand_snapshot",
+                                        "play_count"
+                                    ],
+                   "room":  [
+                                "id",
+                                "room_code",
+                                "mode_id",
+                                "owner_id",
+                                "status",
+                                "max_players",
+                                "options",
+                                "created_at",
+                                "closed_at"
+                            ],
+                   "room_member":  [
+                                       "room_id",
+                                       "user_id",
+                                       "seat",
+                                       "status",
+                                       "ready",
+                                       "joined_at",
+                                       "left_at"
+                                   ],
+                   "skin":  [
+                                "id",
+                                "name",
+                                "kind",
+                                "price",
+                                "currency",
+                                "colors",
+                                "status",
+                                "sort_order"
+                            ],
+                   "shop_good":  [
+                                     "id",
+                                     "tab",
+                                     "name",
+                                     "amount",
+                                     "price",
+                                     "currency",
+                                     "badge",
+                                     "art",
+                                     "status",
+                                     "sort_order",
+                                     "limits"
+                                 ],
+                   "daily_task":  [
+                                      "id",
+                                      "title",
+                                      "metric",
+                                      "target",
+                                      "reward",
+                                      "status",
+                                      "sort_order"
+                                  ],
+                   "achievement":  [
+                                       "id",
+                                       "title",
+                                       "desc",
+                                       "metric",
+                                       "target",
+                                       "group_name",
+                                       "reward",
+                                       "status"
+                                   ],
+                   "mail":  [
+                                "id",
+                                "user_id",
+                                "title",
+                                "content",
+                                "attachments",
+                                "status",
+                                "expire_at",
+                                "claimed_at",
+                                "created_at"
+                            ]
+               }
+}

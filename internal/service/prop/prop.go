@@ -18,6 +18,7 @@ import (
 	"carnival-landlords/internal/ent/user"
 	"carnival-landlords/internal/infra/redisx"
 	"carnival-landlords/internal/pkg/apperr"
+	"carnival-landlords/internal/pkg/id"
 	"carnival-landlords/internal/service/view"
 )
 
@@ -184,9 +185,14 @@ func (s *Service) Invalidate(ctx context.Context, userID string) {
 	_ = s.redis.Del(ctx, s.redis.Keys().CardCounterCache(userID))
 }
 
-// IsBotUser 判断是否是机器人账号（避免 prop 包反向依赖 realtime）。
+// IsBotUser 判断是否是机器人账号。
+//
+// 原本这里手写 `userID[:4] == "bot_"`（避免 prop 包反向依赖 realtime）；
+// 现在统一收敛到 `id.IsBot`：判据是"合法 ULID 且时间戳字段全零"。
+// 之所以复制过一份实现，是因为机器人 ID 的形态属于**跨包约定** ——
+// 放在 id 包里就不会出现两处判据不一致的情况。
 func IsBotUser(userID string) bool {
-	return len(userID) > 4 && userID[:4] == "bot_"
+	return id.IsBot(userID)
 }
 
 // 静态断言：ItemIDs 列出本服务关心的道具，供测试与后台核对。

@@ -60,7 +60,7 @@ func (s *SessionStore) TTL() time.Duration { return s.ttl }
 // Create 写入新会话，并执行"最多 N 个活跃会话"的裁剪。
 func (s *SessionStore) Create(ctx context.Context, sess Session) error {
 	if sess.ID == "" {
-		sess.ID = id.NewPrefixed("sess")
+		sess.ID = id.New()
 	}
 	now := time.Now()
 	if sess.CreatedAt.IsZero() {

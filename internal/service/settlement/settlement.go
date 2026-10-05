@@ -590,7 +590,7 @@ func (s *Service) insertMatchRecords(ctx context.Context, tx *ent.Tx, in HandInp
 		}
 
 		builders = append(builders, tx.MatchRecord.Create().
-			SetID(id.NewPrefixed("mr")).
+			SetID(id.New()).
 			SetUserID(e.UserID).
 			SetRoomID(in.RoomID).
 			SetTableID(in.TableID).

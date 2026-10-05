@@ -154,7 +154,7 @@ func (h *Handlers) AdminSetRole(c *gin.Context) {
 
 	role := catalog.Role(req.Role)
 	switch role {
-	case catalog.RolePlayer, catalog.RoleGM, catalog.RoleAdmin:
+	case catalog.RolePlayer, catalog.RoleOperator, catalog.RoleAdmin:
 	default:
 		response.Fail(c, apperr.ErrInvalidParam.WithMessage("未知角色，只能是 player / gm / admin"))
 		return

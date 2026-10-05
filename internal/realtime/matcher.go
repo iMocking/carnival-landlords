@@ -17,11 +17,15 @@ import (
 	"carnival-landlords/internal/pkg/id"
 )
 
-// botUserPrefix 机器人账号 ID 的前缀。
+// 机器人账号 ID 现在由 `id.NewBot()` 生成：**合法的 26 位 ULID，但时间戳字段全零**。
 //
-// 机器人不是真实账号，只有内存中的座位信息。加前缀是为了让
-// 结算、发奖、后台巡检都能一眼看出"这不是人"，从而跳过它。
-const botUserPrefix = "bot_"
+// 这里原先用的是 `"bot_" + suffix`，问题是机器人 ID 会随 WS 快照的
+// `seats[].user_id` 下发给客户端，而客户端的 `Ulid.is_valid()` 只认
+// 「恰好 26 字符 + Crockford 字母表」，`"bot_..."` 两条都不满足，会被判为非法 ID。
+//
+// 换成全零时间戳后就同时满足了两边：客户端校验通过，服务端仍能用 `id.IsBot()`
+// 一眼认出它是机器人（结算、发奖、后台巡检据此跳过）。真实账号的时间戳
+// 永远不会是十个零（那要等到公元 10889 年），所以不会撞车。
 
 // botNicknames 机器人昵称池。刻意不带"机器人"字样：
 // 玩家明确知道对面是 AI 时，赢的成就感会打折。
@@ -29,6 +33,14 @@ var botNicknames = []string{"小智", "小美", "阿飞", "小鱼", "老张", "�
 
 // Ticket 是匹配队列里的一张票。
 type Ticket struct {
+	// ID 票据标识（ULID）。客户端用它在 `GET/DELETE /match/tickets/:id` 上
+	// 表达"取消我这一次匹配"（需求 MATCH-02 / MATCH-03）。
+	//
+	// 为什么需要它、而不是在 URL 里放 user_id：
+	// 语义上"这张票据"才是资源，客户端拿到的也是票据。
+	// 用 user_id 会迫使客户端把"我是谁"编码进 URL，
+	// 而且形状上允许了"改一个 id 就取消别人的匹配"这种试探。
+	ID          string    `json:"id"`
 	UserID      string    `json:"user_id"`
 	Nickname    string    `json:"nickname"`
 	AvatarIndex int       `json:"avatar_index"`
@@ -99,6 +111,10 @@ func (m *Matcher) Enqueue(ctx context.Context, t Ticket) error {
 	if t.EnqueuedAt.IsZero() {
 		t.EnqueuedAt = time.Now()
 	}
+	if t.ID == "" {
+		// 票据 ID 由服务端生成，客户端从 /match/quick 的响应里拿到它。
+		t.ID = id.New()
+	}
 	ok, err := m.redis.SetNX(ctx, ticketKey, t, 5*time.Minute)
 	if err != nil {
 		return apperr.ErrDependency.WithCause(err)
@@ -149,11 +165,49 @@ func (m *Matcher) Status(ctx context.Context, userID string) MatchStatusData {
 	}
 	return MatchStatusData{
 		Status:   "queued",
+		TicketID: t.ID,
 		ModeID:   t.ModeID,
 		Position: int(rank) + 1,
 		Waiting:  int(time.Since(t.EnqueuedAt).Seconds()),
 		Message:  "正在为你寻找对手…",
 	}
+}
+
+// TicketFor 读取当前账号的匹配票据，并校验调用方给出的 ticketID。
+//
+// `ticketID` 为空表示"就按当前账号的票据来"（WS 侧的 op=cancel_match 走这条，
+// 它没有 URL 可以塞 id）。给出 id 时必须与票据一致 ——
+// 这样"拿别人的 ticket id 来取消"只会得到"你不在匹配队列中"，
+// 而不是误伤别人。
+func (m *Matcher) TicketFor(ctx context.Context, userID, ticketID string) (Ticket, error) {
+	var t Ticket
+	err := m.redis.GetJSON(ctx, m.redis.Keys().MatchTicket(userID), &t)
+	if errors.Is(err, redisx.ErrNotFound) {
+		return Ticket{}, apperr.ErrNotMatching
+	}
+	if err != nil {
+		return Ticket{}, apperr.ErrDependency.WithCause(err)
+	}
+	if ticketID != "" && t.ID != ticketID {
+		return Ticket{}, apperr.ErrNotMatching.WithMessage("该匹配票据不属于当前账号")
+	}
+	return t, nil
+}
+
+// CancelTicket 取消指定票据。
+func (m *Matcher) CancelTicket(ctx context.Context, userID, ticketID string) error {
+	if _, err := m.TicketFor(ctx, userID, ticketID); err != nil {
+		return err
+	}
+	return m.Cancel(ctx, userID)
+}
+
+// StatusTicket 查询指定票据的状态。
+func (m *Matcher) StatusTicket(ctx context.Context, userID, ticketID string) (MatchStatusData, error) {
+	if _, err := m.TicketFor(ctx, userID, ticketID); err != nil {
+		return MatchStatusData{}, err
+	}
+	return m.Status(ctx, userID), nil
 }
 
 func (m *Matcher) run(ctx context.Context) {
@@ -310,7 +364,7 @@ func (m *Matcher) reapStale(ctx context.Context) {
 		for _, userID := range stale {
 			_ = m.redis.Raw().ZRem(ctx, queueKey, userID).Err()
 			_ = m.redis.Del(ctx, keys.MatchTicket(userID))
-			m.hub.Notify(userID, ServerMessage{Type: MsgMatchStatus, Data: MatchStatusData{
+			m.hub.Notify(userID, ServerMessage{Type: MsgMatchStatus, Body: MatchStatusData{
 				Status: "canceled", ModeID: mode.ID, Message: "匹配超时，已退出队列",
 			}})
 		}
@@ -322,8 +376,7 @@ func (m *Matcher) reapStale(ctx context.Context) {
 // 机器人只在内存里存在，没有账号行；昵称刻意取自普通昵称池，
 // 玩家不会因为看到"机器人"三个字而失去对局的紧张感。
 func newBotSeat(rank int) (userID, nickname string, avatarIndex, level int) {
-	suffix := id.New()[20:]
-	userID = botUserPrefix + suffix
+	userID = id.NewBot()
 	nickname = botNicknames[rank%len(botNicknames)]
 	avatarIndex = rank % 8
 	level = 1 + rank%20

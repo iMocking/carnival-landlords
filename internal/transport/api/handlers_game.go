@@ -75,7 +75,8 @@ func (h *Handlers) CancelMatch(c *gin.Context) {
 	ctx, cancel := withTimeout(c, 0)
 	defer cancel()
 
-	if err := h.hub.CancelMatch(ctx, authctx.UserID(c)); err != nil {
+	// 票据必须属于调用者：拿别人的 ticket id 只会得到"你不在匹配队列中"。
+	if err := h.hub.CancelMatchTicket(ctx, authctx.UserID(c), c.Param("id")); err != nil {
 		response.Fail(c, err)
 		return
 	}
@@ -93,7 +94,12 @@ func (h *Handlers) MatchStatus(c *gin.Context) {
 	ctx, cancel := withTimeout(c, 0)
 	defer cancel()
 
-	response.OK(c, h.hub.MatchStatus(ctx, authctx.UserID(c)))
+	status, err := h.hub.MatchStatusTicket(ctx, authctx.UserID(c), c.Param("id"))
+	if err != nil {
+		response.Fail(c, err)
+		return
+	}
+	response.OK(c, status)
 }
 
 // CurrentRoom 返回当前所在房间的信息。

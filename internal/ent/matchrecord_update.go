@@ -259,6 +259,41 @@ func (_u *MatchRecordUpdate) AddPointsDelta(v int64) *MatchRecordUpdate {
 	return _u
 }
 
+// SetIsOffline sets the "is_offline" field.
+func (_u *MatchRecordUpdate) SetIsOffline(v bool) *MatchRecordUpdate {
+	_u.mutation.SetIsOffline(v)
+	return _u
+}
+
+// SetNillableIsOffline sets the "is_offline" field if the given value is not nil.
+func (_u *MatchRecordUpdate) SetNillableIsOffline(v *bool) *MatchRecordUpdate {
+	if v != nil {
+		_u.SetIsOffline(*v)
+	}
+	return _u
+}
+
+// SetCreditedPoints sets the "credited_points" field.
+func (_u *MatchRecordUpdate) SetCreditedPoints(v int64) *MatchRecordUpdate {
+	_u.mutation.ResetCreditedPoints()
+	_u.mutation.SetCreditedPoints(v)
+	return _u
+}
+
+// SetNillableCreditedPoints sets the "credited_points" field if the given value is not nil.
+func (_u *MatchRecordUpdate) SetNillableCreditedPoints(v *int64) *MatchRecordUpdate {
+	if v != nil {
+		_u.SetCreditedPoints(*v)
+	}
+	return _u
+}
+
+// AddCreditedPoints adds value to the "credited_points" field.
+func (_u *MatchRecordUpdate) AddCreditedPoints(v int64) *MatchRecordUpdate {
+	_u.mutation.AddCreditedPoints(v)
+	return _u
+}
+
 // SetBombCount sets the "bomb_count" field.
 func (_u *MatchRecordUpdate) SetBombCount(v int) *MatchRecordUpdate {
 	_u.mutation.ResetBombCount()
@@ -405,6 +440,11 @@ func (_u *MatchRecordUpdate) check() error {
 			return &ValidationError{Name: "stake", err: fmt.Errorf(`ent: validator failed for field "MatchRecord.stake": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.CreditedPoints(); ok {
+		if err := matchrecord.CreditedPointsValidator(v); err != nil {
+			return &ValidationError{Name: "credited_points", err: fmt.Errorf(`ent: validator failed for field "MatchRecord.credited_points": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.BombCount(); ok {
 		if err := matchrecord.BombCountValidator(v); err != nil {
 			return &ValidationError{Name: "bomb_count", err: fmt.Errorf(`ent: validator failed for field "MatchRecord.bomb_count": %w`, err)}
@@ -489,6 +529,15 @@ func (_u *MatchRecordUpdate) sqlSave(ctx context.Context) (_node int, err error)
 	}
 	if value, ok := _u.mutation.AddedPointsDelta(); ok {
 		_spec.AddField(matchrecord.FieldPointsDelta, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.IsOffline(); ok {
+		_spec.SetField(matchrecord.FieldIsOffline, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.CreditedPoints(); ok {
+		_spec.SetField(matchrecord.FieldCreditedPoints, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedCreditedPoints(); ok {
+		_spec.AddField(matchrecord.FieldCreditedPoints, field.TypeInt64, value)
 	}
 	if value, ok := _u.mutation.BombCount(); ok {
 		_spec.SetField(matchrecord.FieldBombCount, field.TypeInt, value)
@@ -763,6 +812,41 @@ func (_u *MatchRecordUpdateOne) AddPointsDelta(v int64) *MatchRecordUpdateOne {
 	return _u
 }
 
+// SetIsOffline sets the "is_offline" field.
+func (_u *MatchRecordUpdateOne) SetIsOffline(v bool) *MatchRecordUpdateOne {
+	_u.mutation.SetIsOffline(v)
+	return _u
+}
+
+// SetNillableIsOffline sets the "is_offline" field if the given value is not nil.
+func (_u *MatchRecordUpdateOne) SetNillableIsOffline(v *bool) *MatchRecordUpdateOne {
+	if v != nil {
+		_u.SetIsOffline(*v)
+	}
+	return _u
+}
+
+// SetCreditedPoints sets the "credited_points" field.
+func (_u *MatchRecordUpdateOne) SetCreditedPoints(v int64) *MatchRecordUpdateOne {
+	_u.mutation.ResetCreditedPoints()
+	_u.mutation.SetCreditedPoints(v)
+	return _u
+}
+
+// SetNillableCreditedPoints sets the "credited_points" field if the given value is not nil.
+func (_u *MatchRecordUpdateOne) SetNillableCreditedPoints(v *int64) *MatchRecordUpdateOne {
+	if v != nil {
+		_u.SetCreditedPoints(*v)
+	}
+	return _u
+}
+
+// AddCreditedPoints adds value to the "credited_points" field.
+func (_u *MatchRecordUpdateOne) AddCreditedPoints(v int64) *MatchRecordUpdateOne {
+	_u.mutation.AddCreditedPoints(v)
+	return _u
+}
+
 // SetBombCount sets the "bomb_count" field.
 func (_u *MatchRecordUpdateOne) SetBombCount(v int) *MatchRecordUpdateOne {
 	_u.mutation.ResetBombCount()
@@ -922,6 +1006,11 @@ func (_u *MatchRecordUpdateOne) check() error {
 			return &ValidationError{Name: "stake", err: fmt.Errorf(`ent: validator failed for field "MatchRecord.stake": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.CreditedPoints(); ok {
+		if err := matchrecord.CreditedPointsValidator(v); err != nil {
+			return &ValidationError{Name: "credited_points", err: fmt.Errorf(`ent: validator failed for field "MatchRecord.credited_points": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.BombCount(); ok {
 		if err := matchrecord.BombCountValidator(v); err != nil {
 			return &ValidationError{Name: "bomb_count", err: fmt.Errorf(`ent: validator failed for field "MatchRecord.bomb_count": %w`, err)}
@@ -1023,6 +1112,15 @@ func (_u *MatchRecordUpdateOne) sqlSave(ctx context.Context) (_node *MatchRecord
 	}
 	if value, ok := _u.mutation.AddedPointsDelta(); ok {
 		_spec.AddField(matchrecord.FieldPointsDelta, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.IsOffline(); ok {
+		_spec.SetField(matchrecord.FieldIsOffline, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.CreditedPoints(); ok {
+		_spec.SetField(matchrecord.FieldCreditedPoints, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedCreditedPoints(); ok {
+		_spec.AddField(matchrecord.FieldCreditedPoints, field.TypeInt64, value)
 	}
 	if value, ok := _u.mutation.BombCount(); ok {
 		_spec.SetField(matchrecord.FieldBombCount, field.TypeInt, value)

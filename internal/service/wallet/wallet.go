@@ -395,7 +395,7 @@ func (s *Service) applyInTx(ctx context.Context, tx *ent.Tx, changes []UserChang
 			}
 			balances.Set(delta.Currency, after)
 
-			txID := id.NewPrefixed("tx")
+			txID := id.New()
 			ledger = append(ledger, tx.WalletTransaction.Create().
 				SetID(txID).
 				SetUserID(change.UserID).

@@ -19,6 +19,7 @@ import (
 	"carnival-landlords/internal/service/admin"
 	"carnival-landlords/internal/service/auth"
 	"carnival-landlords/internal/service/mail"
+	"carnival-landlords/internal/service/offline"
 	"carnival-landlords/internal/service/profile"
 	"carnival-landlords/internal/service/prop"
 	"carnival-landlords/internal/service/rank"
@@ -48,6 +49,7 @@ type Handlers struct {
 	rank     *rank.Service
 	admin    *admin.Service
 	props    *prop.Service
+	offline  *offline.Service
 
 	hub *realtime.Hub
 }
@@ -70,6 +72,7 @@ type RouterDeps struct {
 	Rank     *rank.Service
 	Admin    *admin.Service
 	Prop     *prop.Service
+	Offline  *offline.Service
 
 	Hub *realtime.Hub
 }
@@ -102,7 +105,8 @@ func NewRouter(d RouterDeps) (*gin.Engine, *Handlers, error) {
 		cfg: d.Config, version: d.Version, log: d.Logger,
 		db: d.DB, redis: d.Redis, enforcer: d.Enforcer,
 		auth: d.Auth, profile: d.Profile, wallet: d.Wallet,
-		shop: d.Shop, activity: d.Activity, mail: d.Mail,
+		offline: d.Offline,
+		shop:    d.Shop, activity: d.Activity, mail: d.Mail,
 		rank: d.Rank, admin: d.Admin, props: d.Prop,
 		hub: d.Hub,
 	}
@@ -116,6 +120,12 @@ func NewRouter(d RouterDeps) (*gin.Engine, *Handlers, error) {
 		return nil, nil, fmt.Errorf("配置可信代理失败: %w", err)
 	}
 	engine.Use(RequestID(), mw.Recovery(), mw.AccessLog(), mw.CORS())
+
+	// 本地静态资源（现阶段头像走这里；接入对象存储后这一段可以整体去掉）。
+	// 只有配置齐全才挂载：测试里构造零值配置时不能去 Static("", "")。
+	if up := d.Config.Upload; up.URLPrefix != "" && up.PublicDir != "" {
+		engine.Static(up.URLPrefix, up.PublicDir)
+	}
 
 	// 探针与静态目录不限流：健康检查被限流会导致编排系统误判服务不可用。
 	engine.GET("/healthz", h.Healthz)
@@ -132,24 +142,36 @@ func NewRouter(d RouterDeps) (*gin.Engine, *Handlers, error) {
 		{http.MethodPost, "/auth/login/code", h.LoginCode, nil},
 		{http.MethodPost, "/auth/refresh", h.Refresh, nil},
 		{http.MethodPost, "/auth/password/reset", h.ResetPassword, nil},
+		// AUTH-06 设备凭证换会话（D-09）。刻意放在**公开组**：
+		// 它的前提正是"本地还没有有效会话"，要求先登录就自相矛盾了。
+		// 安全性由 game_token 自身保证（audience 与 access/refresh 隔离 + 可吊销）。
+		{http.MethodPost, "/auth/verify", h.VerifyGameToken, nil},
 
-		{http.MethodGet, "/meta/catalog", h.Catalog, nil},
-		{http.MethodGet, "/meta/version", h.Version, nil},
+		{http.MethodGet, "/config/bootstrap", h.Catalog, nil},
+		{http.MethodGet, "/config/version", h.Version, nil},
 
-		{http.MethodGet, "/game/modes", h.Modes, nil},
+		{http.MethodGet, "/config/modes", h.Modes, nil},
+		// 配置分类下发（CFG-04 / 06 / 07 / 08）：内容与 bootstrap 同源，
+		// 只是让客户端能单独拉某一类（换肤不必重拉全部配置）。
+		{http.MethodGet, "/config/skins", h.ConfigSkins, nil},
+		{http.MethodGet, "/config/activities", h.ConfigActivities, nil},
+		{http.MethodGet, "/config/achievements", h.ConfigAchievements, nil},
+		{http.MethodGet, "/config/announcements", h.ConfigAnnouncements, nil},
 
 		// 商城目录与榜单是公开只读数据：让未登录玩家也能"逛一逛"，
 		// 是这类游戏最常见的转化路径。
-		{http.MethodGet, "/shop/tabs", h.ShopTabs, nil},
-		{http.MethodGet, "/shop/goods", h.ShopGoods, nil},
-		{http.MethodGet, "/rank/boards", h.RankBoards, nil},
-		{http.MethodGet, "/rank/:board/top", h.RankTop, nil},
+		{http.MethodGet, "/config/shop", h.ShopTabs, nil},
+		{http.MethodGet, "/shop/catalog", h.ShopGoods, nil},
+		{http.MethodGet, "/leaderboards", h.RankBoards, nil},
+		{http.MethodGet, "/leaderboards/:mode_id", h.RankTop, nil},
+		// 账号级榜的总榜同样公开（与玩法榜一致）；/me 与 /around 需要登录。
+		{http.MethodGet, "/leaderboards/account/:board", h.RankAccountTop, nil},
 	}
 	public := v1.Group("")
 	register(public, publicSpecs)
 
 	// ---------------- 需登录路由
-	playerRoles := []catalog.Role{catalog.RolePlayer, catalog.RoleGM, catalog.RoleAdmin}
+	playerRoles := []catalog.Role{catalog.RolePlayer, catalog.RoleOperator, catalog.RoleAdmin}
 	authedSpecs := []routeSpec{
 		// 账号
 		{http.MethodPost, "/auth/logout", h.Logout, nil},
@@ -159,58 +181,90 @@ func NewRouter(d RouterDeps) (*gin.Engine, *Handlers, error) {
 		{http.MethodDelete, "/auth/sessions/:id", h.RevokeSession, nil},
 
 		// 个人中心
-		{http.MethodGet, "/user/me", h.Me, nil},
-		{http.MethodPatch, "/user/me", h.UpdateMe, nil},
-		{http.MethodGet, "/user/me/settings", h.Settings, nil},
-		{http.MethodPatch, "/user/me/settings", h.UpdateSettings, nil},
-		{http.MethodGet, "/user/me/stats", h.MyStats, nil},
-		{http.MethodGet, "/user/me/history", h.MyHistory, nil},
-		{http.MethodGet, "/user/me/wallet", h.MyWallet, nil},
-		{http.MethodGet, "/user/me/wallet/transactions", h.MyTransactions, nil},
-		{http.MethodGet, "/user/me/props", h.MyProps, nil},
+		{http.MethodGet, "/user/profile", h.Me, nil},
+		{http.MethodPut, "/user/profile", h.UpdateMe, nil},
+		{http.MethodGet, "/user/settings", h.Settings, nil},
+		{http.MethodPut, "/user/settings", h.UpdateSettings, nil},
+		// 在线状态（USER-09）：客户端据此决定是否重连长连接
+		// 自定义头像上传（USER-03）：multipart 字段名 file
+		{http.MethodPost, "/user/avatar", h.UploadAvatar, nil},
+		{http.MethodGet, "/user/online-status", h.OnlineStatus, nil},
+		// 今日计数（REC-05）：与活动中心同一份计算
+		{http.MethodGet, "/user/statistics/daily", h.MyDailyStats, nil},
+		{http.MethodGet, "/user/statistics", h.MyStats, nil},
+		{http.MethodGet, "/matches", h.MyHistory, nil},
+		// 单局战绩详情（REC-02）
+		{http.MethodGet, "/matches/:match_id", h.MyMatchDetail, nil},
+		{http.MethodGet, "/wallet", h.MyWallet, nil},
+		// 改名卡（USER-10）：语义化包装 /inventory/use
+		{http.MethodPost, "/user/rename-card/use", h.UseRenameCard, nil},
+		{http.MethodGet, "/wallet/transactions", h.MyTransactions, nil},
+		{http.MethodGet, "/inventory", h.MyProps, nil},
 
 		// 商城与背包
 		{http.MethodPost, "/shop/purchase", h.Purchase, nil},
-		{http.MethodGet, "/shop/orders", h.Orders, nil},
-		{http.MethodPost, "/shop/orders/:id/cancel", h.CancelOrder, nil},
-		{http.MethodGet, "/shop/skins", h.Skins, nil},
-		{http.MethodPost, "/shop/skins/:id/purchase", h.PurchaseSkin, nil},
-		{http.MethodPost, "/shop/skins/:id/equip", h.EquipSkin, nil},
-		{http.MethodGet, "/shop/inventory", h.Inventory, nil},
-		{http.MethodPost, "/shop/items/:id/use", h.UseItem, nil},
+		{http.MethodGet, "/shop/purchase-records", h.Orders, nil},
+		{http.MethodPost, "/pay/order/:id/cancel", h.CancelOrder, nil},
+		{http.MethodGet, "/skins", h.Skins, nil},
+		{http.MethodPost, "/skins/:skin_id/purchase", h.PurchaseSkin, nil},
+		{http.MethodPost, "/skins/:skin_id/equip", h.EquipSkin, nil},
+		// 批量装备与重置（SKIN-05 / SKIN-04）
+		{http.MethodPost, "/skins/equip-batch", h.EquipSkins, nil},
+		{http.MethodPost, "/skins/reset", h.ResetSkins, nil},
+		// 道具与皮肤背包合并到 GET /inventory（见上面 MyProps 那条）：
+		// 两者本来调的就是同一个 shop.Inventory，拆成两条只是历史遗留。
+		{http.MethodPost, "/inventory/use", h.UseItem, nil},
 
 		// 模拟支付
 		{http.MethodGet, "/pay/channels", h.PayChannels, nil},
-		{http.MethodGet, "/pay/orders/:id", h.OrderDetail, nil},
-		{http.MethodPost, "/pay/orders/:id/mock-pay", h.MockPay, nil},
+		// 模拟充值档位（PAY-01，公开：充值页要能在登录前渲染）
+		{http.MethodGet, "/pay/packages", h.PayPackages, nil},
+		// 下单 / 订单列表（PAY-02 / PAY-04）。
+		// PAY-05 支付回调与 PAY-07 退款**刻意不实现**，原因见 handlers_pay.go 顶部注释。
+		{http.MethodPost, "/pay/order/create", h.CreatePayOrder, nil},
+		{http.MethodGet, "/pay/order/:id", h.OrderDetail, nil},
+		{http.MethodPost, "/pay/order/:id/mock-pay", h.MockPay, nil},
+		// 我的支付订单列表（PAY-04）。与 /shop/purchase-records 同源，见 PayOrders 注释。
+		{http.MethodGet, "/pay/order", h.PayOrders, nil},
 
 		// 活动
-		{http.MethodGet, "/activity/overview", h.ActivityOverview, nil},
-		{http.MethodPost, "/activity/sign-in", h.SignIn, nil},
-		{http.MethodPost, "/activity/tasks/:id/claim", h.ClaimDailyTask, nil},
-		{http.MethodPost, "/activity/achievements/:id/claim", h.ClaimAchievement, nil},
+		{http.MethodGet, "/activity/center", h.ActivityOverview, nil},
+		{http.MethodPost, "/activity/checkin", h.SignIn, nil},
+		{http.MethodPost, "/activity/tasks/:task_id/claim", h.ClaimDailyTask, nil},
+		{http.MethodPost, "/achievements/:id/claim", h.ClaimAchievement, nil},
+		// 成就列表与汇总（ACHV-01 / ACHV-02）
+		{http.MethodGet, "/achievements", h.Achievements, nil},
+		{http.MethodGet, "/achievements/summary", h.AchievementSummary, nil},
 
 		// 邮箱
 		{http.MethodGet, "/mail", h.MailList, nil},
-		{http.MethodGet, "/mail/unread-count", h.MailUnreadCount, nil},
+		{http.MethodGet, "/notifications/unread-count", h.MailUnreadCount, nil},
 		{http.MethodGet, "/mail/:id", h.MailDetail, nil},
-		{http.MethodPost, "/mail/read", h.MailMarkRead, nil},
-		{http.MethodPost, "/mail/read-all", h.MailMarkAllRead, nil},
+		{http.MethodPost, "/notifications/:id/read", h.MailMarkRead, nil},
+		{http.MethodPost, "/notifications/read-all", h.MailMarkAllRead, nil},
 		{http.MethodPost, "/mail/:id/claim", h.MailClaim, nil},
 		{http.MethodPost, "/mail/claim-all", h.MailClaimAll, nil},
 		{http.MethodDelete, "/mail", h.MailDelete, nil},
 
 		// 榜单（自己的名次需要登录）
-		{http.MethodGet, "/rank/:board/me", h.RankMe, nil},
-		{http.MethodGet, "/rank/:board/around", h.RankAround, nil},
+		{http.MethodGet, "/leaderboards/:mode_id/me", h.RankMe, nil},
+		// 账号级榜单独一条路径：与玩法榜是不同维度，不共用 :mode_id（见 handlers_rank.go）
+		{http.MethodGet, "/leaderboards/account/:board/me", h.RankAccountMe, nil},
+		{http.MethodGet, "/leaderboards/account/:board/around", h.RankAccountAround, nil},
+		{http.MethodGet, "/leaderboards/:mode_id/around", h.RankAround, nil},
 
 		// 对局
-		{http.MethodGet, "/game/ws", h.GameWS, nil},
-		{http.MethodPost, "/game/match", h.Match, nil},
-		{http.MethodPost, "/game/match/cancel", h.CancelMatch, nil},
-		{http.MethodGet, "/game/match/status", h.MatchStatus, nil},
-		{http.MethodGet, "/game/room", h.CurrentRoom, nil},
+		{http.MethodGet, "/ws/game", h.GameWS, nil},
+		{http.MethodPost, "/match/quick", h.Match, nil},
+		{http.MethodDelete, "/match/tickets/:id", h.CancelMatch, nil},
+		{http.MethodGet, "/match/tickets/:id", h.MatchStatus, nil},
+		{http.MethodGet, "/rooms/current", h.CurrentRoom, nil},
 		{http.MethodGet, "/meta/stats", h.Stats, nil},
+
+		// 离线进度回传（REC-06）：离线对局的战绩与积分，联网后补报。
+		// 刻意不放在 /game 组下 —— 它不是"实时对局"的一部分，
+		// 而是对**已经打完、本地结算过**的对局做事后入账。
+		{http.MethodPost, "/matches/report", h.ReportOfflineMatches, nil},
 	}
 	authed := v1.Group("")
 	authed.Use(mw.Authenticate(), mw.Authorize())
@@ -239,14 +293,16 @@ func NewRouter(d RouterDeps) (*gin.Engine, *Handlers, error) {
 		{http.MethodDelete, "/policies", h.AdminRemovePolicy, nil},
 	}
 	adminGroup := v1.Group("/admin")
-	adminGroup.Use(mw.Authenticate(), requireRole(catalog.RoleGM, catalog.RoleAdmin), mw.Authorize())
-	adminPolicies := register(adminGroup, adminSpecs)
-	for i := range adminPolicies {
-		// 后台接口的细粒度权限由 seedDefaults 里的角色继承与 GM 白名单决定，
-		// 这里只声明"至少得是 GM"。若把所有后台路由都标成 admin，
-		// GM 就什么都做不了了 —— 那与 Casbin 里已经配好的 GM 白名单矛盾。
-		adminPolicies[i].Roles = []catalog.Role{catalog.RoleGM, catalog.RoleAdmin}
+	adminGroup.Use(mw.Authenticate(), requireRole(catalog.RoleOperator, catalog.RoleAdmin), mw.Authorize())
+	// 逐条路由声明允许的角色。**不要**在这里统一标成 {运营, 管理员} ——
+	// 见 adminOnlyPaths 的注释：Casbin 是允许式的，统一放行等于把整个后台
+	//（含改钱包、改角色、改权限）交给运营。
+	for i := range adminSpecs {
+		if adminSpecs[i].roles == nil {
+			adminSpecs[i].roles = adminRouteRoles(adminSpecs[i].path)
+		}
 	}
+	adminPolicies := register(adminGroup, adminSpecs)
 
 	// ---------------- 同步 Casbin 策略
 	if d.Enforcer != nil {
@@ -272,7 +328,10 @@ func register(g *gin.RouterGroup, specs []routeSpec) []casbin.RoutePolicy {
 	policies := make([]casbin.RoutePolicy, 0, len(specs))
 	for _, spec := range specs {
 		full := prefix + spec.path
-		g.Handle(spec.method, spec.path, spec.handler)
+		// 实体 ID 参数在这里统一校验（见 ulid_param.go）：
+		// 它包在处理器外层，因此排在分组的 Authenticate/Authorize 之后 ——
+		// 未登录的请求仍然先得到 401，不会因为参数格式而泄露路由是否存在。
+		g.Handle(spec.method, spec.path, withEntityIDValidation(spec.path, spec.handler))
 		policies = append(policies, casbin.RoutePolicy{
 			Method: spec.method,
 			Path:   full,

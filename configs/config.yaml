@@ -80,3 +80,18 @@ game:
 log:
   level: info
   format: console
+
+# 本地上传（现阶段头像等文件落在本地磁盘，不对接对象存储）
+#
+# 注意多副本部署时的问题：每个实例只会看到"自己收到的那份文件"，
+# 因此水平扩容前必须换成对象存储/共享存储，或让上传路由固定打到单实例。
+upload:
+  # 静态资源根目录；不存在时启动会自动创建
+  public_dir: ./public
+  # 对外访问前缀（客户端拿到的 URL 形如 /static/avatars/xxx.png）
+  url_prefix: /static
+  avatar_dir: avatars
+  # 单张头像上限 2 MiB
+  max_avatar_bytes: 2097152
+  # 生成绝对 URL 用的前缀（留空则返回相对路径，由客户端自己拼 base）
+  public_base_url: ""

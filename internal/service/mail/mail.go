@@ -28,7 +28,6 @@ package mail
 import (
 	"context"
 	"encoding/json"
-	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -68,10 +67,10 @@ const (
 
 // errMailExpired 邮件已过期。
 //
-// apperr 里定义了 CodeMailExpired（50008）但**没有**对应的预定义错误实例，
-// 而 apperr 是对外契约文件、不归本包改，因此在这里用 apperr.New 补一个。
-// 等 apperr 补上 ErrMailExpired 之后，这里换成引用即可（文案与状态码保持一致）。
-var errMailExpired = apperr.New(apperr.CodeMailExpired, http.StatusBadRequest, "邮件已过期")
+// 早先 apperr 只定义了码值而没有对应的预定义实例，本包只好自己 apperr.New 补一个。
+// apperr 现在已补上 `ErrMailExpired`，这里改成直接引用 —— 保留这个短别名只是为了
+// 不惊动下面几十处 `errMailExpired` 的用法。
+var errMailExpired = apperr.ErrMailExpired
 
 // SendInput 单发一封邮件。
 type SendInput struct {
@@ -284,7 +283,7 @@ func (s *Service) insertBatch(ctx context.Context, targets []string, spec mailSp
 // builder 构造一行待插入的邮件。单发与群发唯一的差别就是收件人。
 func (s *Service) builder(userID string, spec mailSpec) *ent.MailCreate {
 	return s.client.Mail.Create().
-		SetID(id.NewPrefixed("mail")).
+		SetID(id.New()).
 		SetUserID(userID).
 		SetCategory(spec.category).
 		SetSender(spec.sender).

@@ -1,0 +1,386 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/view/pages/login_view.gd" id="1_g2fmh"]
+[ext_resource type="Script" path="res://src/view/widgets/table_backdrop.gd" id="2_7pvsh"]
+[ext_resource type="Script" path="res://src/view/widgets/glossy_box.gd" id="3_lmgwg"]
+
+[sub_resource type="StyleBox" id="StyleBox_bg86h"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 20.0
+content_margin_top = 16.0
+content_margin_right = 20.0
+content_margin_bottom = 16.0
+script = ExtResource("3_lmgwg")
+top_color = Color(0.47843137, 0.11764706, 0.13333334, 0.95)
+bottom_color = Color(0.15686275, 0.02745098, 0.039215688, 0.95)
+border_color = Color(0.8784314, 0.6627451, 0.17254902, 1)
+corner_radius = 20
+gloss_strength = 0.1
+shadow_color = Color(0, 0, 0, 0.46)
+shadow_size = 7.0
+shadow_offset = Vector2(0, 4.2)
+
+[sub_resource type="StyleBox" id="StyleBox_8lf1p"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+script = ExtResource("3_lmgwg")
+top_color = Color(0.23921569, 0.050980393, 0.06666667, 0.86)
+bottom_color = Color(0.14831373, 0.031607844, 0.041333336, 0.86)
+border_color = Color(0.8784314, 0.6627451, 0.17254902, 0.74)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.05
+shadow_color = Color(0, 0, 0, 0.26)
+shadow_size = 3.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_dtpqw"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 8.0
+content_margin_right = 18.0
+content_margin_bottom = 8.0
+script = ExtResource("3_lmgwg")
+top_color = Color(0.23921569, 0.050980393, 0.06666667, 0.92)
+bottom_color = Color(0.14831373, 0.031607844, 0.041333336, 0.92)
+border_color = Color(0.96862745, 0.8117647, 0.37254903, 1)
+corner_radius = 14
+gloss_strength = 0.05
+shadow_color = Color(0, 0, 0, 0.26)
+shadow_size = 3.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_3yi6m"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+script = ExtResource("3_lmgwg")
+top_color = Color(0.9098039, 0.2509804, 0.18431373, 1)
+bottom_color = Color(0.49019608, 0.07058824, 0.08627451, 1)
+border_color = Color(0.96862745, 0.8117647, 0.37254903, 1)
+corner_radius = 15
+gloss_strength = 0.38
+shadow_color = Color(0, 0, 0, 0.42)
+shadow_size = 6.0
+shadow_offset = Vector2(0, 3.6)
+
+[sub_resource type="StyleBox" id="StyleBox_sn8ch"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+script = ExtResource("3_lmgwg")
+top_color = Color(0.8117647, 0.1254902, 0.15294118, 1)
+bottom_color = Color(0.42745098, 0.05882353, 0.07450981, 1)
+border_color = Color(0.37254903, 0.21176471, 0.02745098, 1)
+corner_radius = 15
+gloss_strength = 0.16
+shadow_color = Color(0, 0, 0, 0.24)
+shadow_size = 2.0
+shadow_offset = Vector2(0, 2)
+bottom_shade = 0.2
+
+[sub_resource type="StyleBox" id="StyleBox_542oc"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+script = ExtResource("3_lmgwg")
+top_color = Color(1, 0.41568628, 0.2901961, 1)
+bottom_color = Color(0.65882355, 0.08627451, 0.105882354, 1)
+border_color = Color(1, 0.9529412, 0.76862746, 1)
+corner_radius = 15
+gloss_strength = 0.44
+shadow_color = Color(0, 0, 0, 0.46)
+shadow_size = 7.0
+shadow_offset = Vector2(0, 4.2)
+
+[sub_resource type="StyleBox" id="StyleBox_xhsmi"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+script = ExtResource("3_lmgwg")
+top_color = Color(0.41960785, 0.2901961, 0.28235295, 1)
+bottom_color = Color(0.22745098, 0.14117648, 0.13333334, 1)
+border_color = Color(0.14117648, 0.078431375, 0.07450981, 1)
+corner_radius = 15
+gloss_strength = 0.1
+shadow_color = Color(0, 0, 0, 0.2)
+shadow_size = 3.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_6g87h"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 22.0
+content_margin_top = 13.0
+content_margin_right = 22.0
+content_margin_bottom = 13.0
+script = ExtResource("3_lmgwg")
+top_color = Color(0, 0, 0, 0)
+bottom_color = Color(0, 0, 0, 0)
+border_color = Color(0, 0, 0, 0)
+border_width = 0
+corner_radius = 15
+gloss_strength = 0.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 0.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_13xmt"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_lmgwg")
+top_color = Color(1, 1, 1, 0.07)
+bottom_color = Color(1, 1, 1, 0.03)
+border_color = Color(1, 1, 1, 0.16)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.1
+shadow_color = Color(0, 0, 0, 0.16)
+shadow_size = 3.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_ouqft"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_lmgwg")
+top_color = Color(1, 1, 1, 0.05)
+bottom_color = Color(1, 1, 1, 0.02)
+border_color = Color(0.65882355, 0.44705883, 0.101960786, 1)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.06
+shadow_color = Color(0, 0, 0, 0.1)
+shadow_size = 2.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_380ms"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_lmgwg")
+top_color = Color(1, 1, 1, 0.16)
+bottom_color = Color(1, 1, 1, 0.07)
+border_color = Color(1, 1, 1, 0.3)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.16
+shadow_color = Color(0, 0, 0, 0.2)
+shadow_offset = Vector2(0, 2.4)
+
+[sub_resource type="StyleBox" id="StyleBox_nx4lk"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_lmgwg")
+top_color = Color(1, 1, 1, 0.03)
+bottom_color = Color(1, 1, 1, 0.02)
+border_color = Color(1, 1, 1, 0.07)
+border_width = 1
+corner_radius = 14
+gloss_strength = 0.04
+shadow_color = Color(0, 0, 0, 0.08)
+shadow_size = 2.0
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBox" id="StyleBox_0ey3w"]
+resource_local_to_scene = false
+resource_name = ""
+content_margin_left = 18.0
+content_margin_top = 11.0
+content_margin_right = 18.0
+content_margin_bottom = 11.0
+script = ExtResource("3_lmgwg")
+top_color = Color(0, 0, 0, 0)
+bottom_color = Color(0, 0, 0, 0)
+border_color = Color(0, 0, 0, 0)
+border_width = 0
+corner_radius = 14
+gloss_strength = 0.0
+shadow_color = Color(0, 0, 0, 0)
+shadow_size = 0.0
+shadow_offset = Vector2(0, 2)
+
+[node name="LoginView" type="Control" unique_id=1448303190]
+layout_mode = 3
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1_g2fmh")
+
+[node name="Background" type="Control" parent="." unique_id=88435488]
+anchors_preset = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource("2_7pvsh")
+
+[node name="SafeArea" type="MarginContainer" parent="." unique_id=1770452212]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Root" type="VBoxContainer" parent="SafeArea" unique_id=898494006]
+layout_mode = 2
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="TopSpacer" type="Control" parent="SafeArea/Root" unique_id=1810950008]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="CardFan" type="Control" parent="SafeArea/Root" unique_id=1050795569]
+custom_minimum_size = Vector2(0, 176)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="FanGap" type="Control" parent="SafeArea/Root" unique_id=851865717]
+custom_minimum_size = Vector2(0, 24)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="LogoBox" type="VBoxContainer" parent="SafeArea/Root" unique_id=564838343]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="SafeArea/Root/LogoBox" unique_id=784949566]
+layout_mode = 2
+theme_override_font_sizes/font_size = 58
+theme_override_colors/font_color = Color(0.96862745, 0.8117647, 0.37254903, 1)
+theme_override_colors/font_outline_color = Color(0.2, 0.1, 0.01, 0.95)
+theme_override_constants/outline_size = 8
+text = "斗 地 主"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="SafeArea/Root/LogoBox" unique_id=1530767453]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 0.55)
+theme_override_constants/outline_size = 4
+text = "欢乐斗地主 · 经典三人叫分制 · 单机对战"
+horizontal_alignment = 1
+
+[node name="MidGap" type="Control" parent="SafeArea/Root" unique_id=1860374874]
+custom_minimum_size = Vector2(0, 26)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="FormPanel" type="PanelContainer" parent="SafeArea/Root" unique_id=1023338634]
+custom_minimum_size = Vector2(560, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_styles/panel = SubResource("StyleBox_bg86h")
+
+[node name="Form" type="VBoxContainer" parent="SafeArea/Root/FormPanel" unique_id=162811647]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="FieldLabel" type="Label" parent="SafeArea/Root/FormPanel/Form" unique_id=1076392646]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.8784314, 0.7058824, 0.6039216, 1)
+text = "昵称"
+
+[node name="NicknameEdit" type="LineEdit" parent="SafeArea/Root/FormPanel/Form" unique_id=849245256]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBox_8lf1p")
+theme_override_styles/focus = SubResource("StyleBox_dtpqw")
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 0.95686275, 0.8862745, 1)
+theme_override_colors/font_placeholder_color = Color(1, 0.95686275, 0.8862745, 0.42)
+theme_override_colors/caret_color = Color(0.96862745, 0.8117647, 0.37254903, 1)
+theme_override_colors/selection_color = Color(0.96862745, 0.8117647, 0.37254903, 0.38)
+placeholder_text = "输入昵称（最多 12 字）"
+max_length = 12
+
+[node name="LoginButton" type="Button" parent="SafeArea/Root/FormPanel/Form" unique_id=1314430345]
+custom_minimum_size = Vector2(0, 62)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBox_3yi6m")
+theme_override_styles/pressed = SubResource("StyleBox_sn8ch")
+theme_override_styles/hover = SubResource("StyleBox_542oc")
+theme_override_styles/disabled = SubResource("StyleBox_xhsmi")
+theme_override_styles/focus = SubResource("StyleBox_6g87h")
+theme_override_colors/font_color = Color(1, 0.9647059, 0.9098039, 1)
+theme_override_colors/font_pressed_color = Color(0.9, 0.8682353, 0.8188235, 1)
+theme_override_colors/font_hover_color = Color(1, 0.97105885, 0.9260392, 1)
+theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.42)
+theme_override_font_sizes/font_size = 25
+text = "进入游戏"
+
+[node name="GuestButton" type="Button" parent="SafeArea/Root/FormPanel/Form" unique_id=437509926]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_override_styles/normal = SubResource("StyleBox_13xmt")
+theme_override_styles/pressed = SubResource("StyleBox_ouqft")
+theme_override_styles/hover = SubResource("StyleBox_380ms")
+theme_override_styles/disabled = SubResource("StyleBox_nx4lk")
+theme_override_styles/focus = SubResource("StyleBox_0ey3w")
+theme_override_colors/font_color = Color(0.8784314, 0.7058824, 0.6039216, 1)
+theme_override_colors/font_pressed_color = Color(0.7905882, 0.63529414, 0.5435294, 1)
+theme_override_colors/font_hover_color = Color(0.90031374, 0.7588236, 0.6752157, 1)
+theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.42)
+theme_override_font_sizes/font_size = 18
+text = "游客登录"
+
+[node name="Tip" type="Label" parent="SafeArea/Root/FormPanel/Form" unique_id=2063134051]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(1, 1, 1, 0.45)
+text = "账号数据保存在本机（user://profile.json），清理数据后不可恢复"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="BottomSpacer" type="Control" parent="SafeArea/Root" unique_id=2043742149]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 2
+
+[node name="Version" type="Label" parent="SafeArea/Root" unique_id=57723905]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(1, 1, 1, 0.4)
+text = "v0.4 · 欢乐斗地主美术风格 · 真实扑克牌面"
+horizontal_alignment = 1

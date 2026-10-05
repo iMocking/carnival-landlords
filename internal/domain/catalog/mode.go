@@ -17,12 +17,31 @@ import "sort"
 // Role 平台角色，供 Casbin 使用。
 type Role string
 
-// 平台角色：普通玩家、游戏管理员（可发邮件/封号/改钱包）、超级管理员。
+// 平台角色：**三级身份**，继承关系 admin ⊇ operator ⊇ player。
+//
+//   - RolePlayer（用户）：普通玩家。只能碰自己的资产与对局。
+//   - RoleOperator（运营）：日常运营操作 —— 查玩家、发邮件/公告、巡检房间、
+//     踢人、看统计与审计。**刻意不给**改钱包与改策略：那是最容易被滥用的两个能力。
+//   - RoleAdmin（管理员）：整个后台，含改钱包、改角色、改 Casbin 策略。
+//
+// 这三档是**互斥的单一角色**（一个账号只有一个 role），继承关系由 Casbin 的
+// g 规则表达；`AssignRole` 会先清掉该用户的所有 g 绑定再写新的，
+// 因此不存在"同时是运营又是管理员"的残留。
+//
+// 关于历史命名：这一档曾叫 `gm`（Game Master）。现在统一为 `operator`（运营），
+// 因为"管理员/运营/用户"这三档才是运营侧实际的职责划分，
+// 而 `gm` 与 `admin` 在中文语义上几乎是同义的，容易误判权限边界。
+// 启动时会做一次数据迁移（`users.role='gm'` → `operator` 并重绑 Casbin 角色）。
 const (
-	RolePlayer Role = "player"
-	RoleGM     Role = "gm"
-	RoleAdmin  Role = "admin"
+	RolePlayer   Role = "player"
+	RoleOperator Role = "operator"
+	RoleAdmin    Role = "admin"
 )
+
+// LegacyRoleGM 是历史角色名，仅用于**数据迁移**与兼容判断。
+//
+// 不要在新代码里使用它；新增权限判断一律用 RoleOperator。
+const LegacyRoleGM Role = "gm"
 
 // RewardKind 奖励种类。
 type RewardKind string

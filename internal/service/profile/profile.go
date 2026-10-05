@@ -89,6 +89,21 @@ func (s *Service) UpdateProfile(ctx context.Context, userID string, in UpdatePro
 	return s.Get(ctx, userID)
 }
 
+// SetAvatarURL 写入自定义头像的相对地址（由上传接口调用）。
+//
+// 单独一个方法而不是复用 UpdateProfile：那是**玩家驱动**的输入（客户端能改头像序号），
+// 而头像地址只能由服务端在上传成功后写。混在一起会让"客户端能否自己指定头像 URL"
+// 变成一个需要每次都想一遍的问题 —— 现在它不可能发生。
+func (s *Service) SetAvatarURL(ctx context.Context, userID, url string) error {
+	if _, err := s.client.User.UpdateOneID(userID).SetAvatarURL(url).Save(ctx); err != nil {
+		if ent.IsNotFound(err) {
+			return apperr.ErrAccountNotFound
+		}
+		return apperr.ErrDependency.WithCause(err)
+	}
+	return nil
+}
+
 // SettingsInput 设置更新入参。字段用指针以区分"没传"与"传了 false"。
 type SettingsInput struct {
 	MusicEnabled     *bool   `json:"music_enabled"`
@@ -211,6 +226,29 @@ func (s *Service) History(ctx context.Context, userID, modeID string, page, page
 		return nil, 0, apperr.ErrDependency.WithCause(err)
 	}
 	return rows, int64(total), nil
+}
+
+// MatchDetail 取单局战绩详情（需求 REC-02）。
+//
+// 查询**同时按 user_id 过滤**：match_id 是 ULID，泄漏渠道比想象中多
+// （客户端日志、客服截图、分享链接），只按 id 查会让"知道 id 就能看别人战绩"成立。
+// 多一个 where 条件代价是零，收益是这条路径不再依赖 id 的保密性。
+func (s *Service) MatchDetail(ctx context.Context, userID, matchID string) (*ent.MatchRecord, error) {
+	if matchID == "" {
+		return nil, apperr.ErrInvalidParam.WithMessage("缺少战绩 ID")
+	}
+	row, err := s.client.MatchRecord.Query().
+		Where(matchrecord.IDEQ(matchID), matchrecord.UserIDEQ(userID)).
+		Only(ctx)
+	if err != nil {
+		if ent.IsNotFound(err) {
+			// "不存在"与"不属于你"返回同一个错误：区分开等于告诉调用方
+			// "这个 id 真实存在，只是不是你的"。
+			return nil, apperr.ErrNotFound.WithMessage("战绩不存在")
+		}
+		return nil, apperr.ErrDependency.WithCause(err)
+	}
+	return row, nil
 }
 
 // ModeStat 单个玩法的战绩统计。

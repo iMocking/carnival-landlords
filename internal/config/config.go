@@ -49,6 +49,8 @@ type Config struct {
 	JWT      JWT      `yaml:"jwt"`
 	Mail     Mail     `yaml:"mail"`
 	Game     Game     `yaml:"game"`
+	Offline  Offline  `yaml:"offline"`
+	Upload   Upload   `yaml:"upload"`
 	Log      Log      `yaml:"log"`
 }
 
@@ -63,6 +65,31 @@ type App struct {
 // IsProd 生产环境判定。模拟支付等危险能力一律要求非生产。
 func (a App) IsProd() bool {
 	return strings.EqualFold(a.Env, "prod") || strings.EqualFold(a.Env, "production")
+}
+
+// Upload 是本地文件上传配置。
+//
+// 现阶段**不接对象存储（OSS）**：上传的文件直接落到本地磁盘的 PublicDir 下，
+// 由 HTTP 服务以静态资源形式对外提供。这样做的取舍是明确的：
+//
+//   - 好处：零外部依赖，本地起步与联调不需要任何云账号；
+//   - 代价：**多副本部署会读到不同的文件**（每个实例只有自己收到的那份），
+//     所以水平扩容前必须换成 OSS 或共享存储，或把上传路由粘到单实例。
+//
+// 将来接 OSS 时，只需替换"把字节写到哪里"这一步，接口形状与返回的 URL
+// 字段都不用改 —— 这正是现在就把 URL 写成相对路径的原因。
+type Upload struct {
+	// PublicDir 静态资源根目录。启动时若不存在会创建。
+	PublicDir string `yaml:"public_dir"`
+	// URLPrefix 静态资源对外路径前缀（形如 /static）。
+	URLPrefix string `yaml:"url_prefix"`
+	// AvatarDir 头像在根目录下的子目录名。
+	AvatarDir string `yaml:"avatar_dir"`
+	// MaxAvatarBytes 单张头像大小上限（字节）。
+	MaxAvatarBytes int64 `yaml:"max_avatar_bytes"`
+	// PublicBaseURL 生成绝对 URL 用的前缀（留空则返回相对路径）。
+	// 反向代理/ CDN 场景下由运维填写，代码不猜自己的对外域名。
+	PublicBaseURL string `yaml:"public_base_url"`
 }
 
 // HTTP 是 HTTP 服务配置。
@@ -117,6 +144,17 @@ type JWT struct {
 	RefreshTTL      Duration `yaml:"refresh_ttl"`
 	AccessAudience  string   `yaml:"access_audience"`
 	RefreshAudience string   `yaml:"refresh_audience"`
+	// GameAudience 与 AccessAudience / RefreshAudience **必须不同**：
+	// game_token 是长期设备凭证（默认 1 年），若与 access 共用 audience，
+	// 一个泄漏的 game_token 就不只是"能换会话"，而是**能当 access token 直接调业务接口**，
+	// 且有效期长达一年。audience 隔离让三类令牌无法互相冒用。
+	GameAudience string `yaml:"game_audience"`
+	// GameTTL game_token 有效期。按 D-09 建议 1 年。
+	//
+	// 为什么敢给一年：它的作用是"这台设备上次是谁"，让客户端跳过登录页。
+	// 长期有效与"可吊销"是配套的 —— 纯无状态的长命 JWT 才是危险的，
+	// 而这里每次校验都会查 Redis 里的设备记录并回读账号状态（见 auth.VerifyGameToken）。
+	GameTTL Duration `yaml:"game_ttl"`
 	// MaxActiveSessions 单个账号允许同时在线的会话数，超出踢掉最早的（Redis 里存会话列表）。
 	MaxActiveSessions int `yaml:"max_active_sessions"`
 }
@@ -170,6 +208,23 @@ type Game struct {
 	MaxRooms int `yaml:"max_rooms"`
 }
 
+// Offline 离线进度回传（REC-06）的配置。
+//
+// 为什么单独一段而不是塞进 Game：它是**经济口径**，不是对局规则。
+// 数值调优（每日给多少积分）会随运营变，而对局规则相对稳定，分开放便于各自调整。
+type Offline struct {
+	// PointsDailyCap 每天允许通过离线对局获得的积分上限。
+	//
+	// 这个上限是**唯一的**防刷手段：离线对局由客户端本地权威结算，
+	// 服务端只能事后接收，因此必须把"离线能换来多少线上积分"钉死在这里。
+	// 0 表示完全不允许离线积分入账（用于临时关停该功能）。
+	PointsDailyCap int64 `yaml:"points_daily_cap"`
+	// MaxRecordsPerBatch 单次上报最多接受多少条记录。
+	// 防止一次请求塞进几万条把事务拖死；超出的部分整批拒绝而不是截断 ——
+	// 截断会让客户端以为"剩下的下次再报"，而实际上永远报不上去。
+	MaxRecordsPerBatch int `yaml:"max_records_per_batch"`
+}
+
 // Log 日志配置。
 type Log struct {
 	Level  string `yaml:"level"`  // debug / info / warn / error
@@ -188,7 +243,12 @@ func Default() Config {
 			CORSOrigins:        []string{"*"},
 			RateLimitPerMinute: 600,
 		},
-		Postgres: Postgres{
+		Upload: Upload{
+			PublicDir:      "./public",
+			URLPrefix:      "/static",
+			AvatarDir:      "avatars",
+			MaxAvatarBytes: 2 << 20, // 2 MiB
+		}, Postgres: Postgres{
 			Host: "127.0.0.1", Port: 5432, User: "postgres", Password: "postgres",
 			Database: "carnival_landlords", SSLMode: "disable",
 			MaxOpenConns: 30, MaxIdleConns: 10, ConnMaxLifetime: Duration(time.Hour),
@@ -203,6 +263,8 @@ func Default() Config {
 			RefreshTTL:        Duration(30 * 24 * time.Hour),
 			AccessAudience:    "cl-client",
 			RefreshAudience:   "cl-refresh",
+			GameAudience:      "cl-game",
+			GameTTL:           Duration(365 * 24 * time.Hour),
 			MaxActiveSessions: 3,
 		},
 		Mail: Mail{
@@ -222,6 +284,13 @@ func Default() Config {
 			ReconnectGrace:  Duration(2 * time.Minute),
 			BotEnabled:      true,
 			BotDelay:        Duration(1200 * time.Millisecond),
+		},
+		Offline: Offline{
+			// 每天 300 积分：按"离线 3~5 局 ≈ 一局线上对局的积分"量级起步
+			// （线上农民赢一把 10×倍数，地主 20×倍数）。
+			// 这个数偏保守：先让"离线有正反馈"成立，再按运营需要上调。
+			PointsDailyCap:     300,
+			MaxRecordsPerBatch: 50,
 		},
 		Log: Log{Level: "info", Format: "console"},
 	}
@@ -309,6 +378,8 @@ func applyEnv(cfg *Config) {
 	cfg.JWT.Issuer = env("CL_JWT_ISSUER", cfg.JWT.Issuer)
 	cfg.JWT.AccessTTL = envDuration("CL_JWT_ACCESS_TTL", cfg.JWT.AccessTTL)
 	cfg.JWT.RefreshTTL = envDuration("CL_JWT_REFRESH_TTL", cfg.JWT.RefreshTTL)
+	cfg.JWT.GameAudience = env("CL_JWT_GAME_AUDIENCE", cfg.JWT.GameAudience)
+	cfg.JWT.GameTTL = envDuration("CL_JWT_GAME_TTL", cfg.JWT.GameTTL)
 	cfg.JWT.MaxActiveSessions = envInt("CL_JWT_MAX_ACTIVE_SESSIONS", cfg.JWT.MaxActiveSessions)
 
 	cfg.Mail.Driver = env("CL_MAIL_DRIVER", cfg.Mail.Driver)
@@ -325,6 +396,9 @@ func applyEnv(cfg *Config) {
 	cfg.Game.TurnTimeout = envDuration("CL_GAME_TURN_TIMEOUT", cfg.Game.TurnTimeout)
 	cfg.Game.BotEnabled = envBool("CL_GAME_BOT_ENABLED", cfg.Game.BotEnabled)
 	cfg.Game.MaxRooms = envInt("CL_GAME_MAX_ROOMS", cfg.Game.MaxRooms)
+
+	cfg.Offline.PointsDailyCap = envInt64("CL_OFFLINE_POINTS_DAILY_CAP", cfg.Offline.PointsDailyCap)
+	cfg.Offline.MaxRecordsPerBatch = envInt("CL_OFFLINE_MAX_RECORDS_PER_BATCH", cfg.Offline.MaxRecordsPerBatch)
 
 	cfg.Log.Level = env("CL_LOG_LEVEL", cfg.Log.Level)
 	cfg.Log.Format = env("CL_LOG_FORMAT", cfg.Log.Format)

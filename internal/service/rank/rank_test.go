@@ -34,7 +34,7 @@ func newTestService(t *testing.T, users map[string]*ent.User) *Service {
 	require.NoError(t, err)
 	t.Cleanup(func() { _ = client.Close() })
 
-	s := New(nil, client, zap.NewNop())
+	s := New(nil, nil, client, zap.NewNop())
 	s.load = func(_ context.Context, ids []string) (map[string]*ent.User, error) {
 		out := make(map[string]*ent.User, len(ids))
 		for _, id := range ids {
@@ -299,7 +299,7 @@ func TestUpdateAll(t *testing.T) {
 
 	// 参数与依赖缺失。
 	require.Error(t, s.UpdateAll(ctx, nil))
-	err := New(nil, nil, zap.NewNop()).UpdateAll(ctx, u)
+	err := New(nil, nil, nil, zap.NewNop()).UpdateAll(ctx, u)
 	require.Equal(t, apperr.CodeDependency, apperr.From(err).Code)
 }
 
@@ -326,7 +326,7 @@ func TestBoardValidation(t *testing.T) {
 // TestNilDependencies 没有 Redis / 没有数据库时要返回依赖错误，不能 panic。
 func TestNilDependencies(t *testing.T) {
 	ctx := context.Background()
-	s := New(nil, nil, zap.NewNop())
+	s := New(nil, nil, nil, zap.NewNop())
 
 	require.Equal(t, apperr.CodeDependency, apperr.From(s.Update(ctx, "01AAA", BoardPoints, 1)).Code)
 	_, err := s.Top(ctx, BoardPoints, 10)
@@ -345,7 +345,7 @@ func TestNilDependencies(t *testing.T) {
 	require.NoError(t, err)
 	t.Cleanup(func() { _ = client.Close() })
 
-	noDB := New(nil, client, zap.NewNop())
+	noDB := New(nil, nil, client, zap.NewNop())
 	top, err := noDB.Top(ctx, BoardPoints, 10)
 	require.NoError(t, err)
 	require.Empty(t, top)

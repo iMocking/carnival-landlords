@@ -20,8 +20,14 @@ COMPOSE := docker compose -f docker-compose.yml
 #		make smoke BASE_URL=http://10.0.0.5:8080
 BASE_URL ?= http://127.0.0.1:8080
 
-.PHONY: help run build generate migrate test test-race test-integration vet fmt fmt-check lint \
-        compose-up compose-down logs psql redis-cli smoke
+# 本机 API 的监听地址：优先跟随环境变量 CL_HTTP_ADDR，否则用 :8080。
+# 端口被占用时可以换一个，两种写法等价：
+#               make run HTTP_ADDR=:8081
+#               CL_HTTP_ADDR=:8081 make run
+HTTP_ADDR ?= $(or $(CL_HTTP_ADDR),:8080)
+
+.PHONY: help run dev build generate migrate test test-race test-integration vet fmt fmt-check lint \
+        compose-up compose-down compose-stop-api deps-up logs psql redis-cli smoke
 
 # ---------------------------------------------------------------- 帮助
 
@@ -31,12 +37,15 @@ help: ## 显示全部可用目标
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-18s\033[0m %s\n", $$1, $$2}'
 	@echo ""
-	@echo "用法示例：make run / make compose-up / make test-integration"
+	@echo "用法示例：make dev（推荐）/ make run / make compose-up / make test-integration"
 
 # ---------------------------------------------------------------- 运行与构建
 
-run: ## 本地直接运行 API（读 configs/config.yaml + CL_* 环境变量）
-	$(GO) run ./cmd/api
+run: ## 本机运行 API（读 configs/config.yaml + CL_*；HTTP_ADDR 可换端口）
+	CL_HTTP_ADDR=$(HTTP_ADDR) $(GO) run ./cmd/api
+
+dev: deps-up ## 日常开发推荐：只起 PG/Redis，再跑本机 API（不占用 8080 的 api 容器）
+	$(MAKE) run
 
 build: ## 编译 api 与 migrate 两个二进制到 bin/
 	@mkdir -p $(BIN_DIR)
@@ -103,8 +112,14 @@ lint: ## 静态检查 + 格式检查
 
 # ---------------------------------------------------------------- 本地依赖栈
 
-compose-up: ## 启动 compose 里的 PostgreSQL / Redis / API
+compose-up: ## 启动 compose 全套 PostgreSQL / Redis / API（与 make run 二选一）
 	$(COMPOSE) up -d
+
+deps-up: ## 只启动 compose 里的 PostgreSQL / Redis（本机 go run 开发用）
+	$(COMPOSE) up -d postgres redis
+
+compose-stop-api: ## 停掉 compose 里的 API 容器，释放 8080（保留 PG/Redis）
+	$(COMPOSE) stop api
 
 compose-down: ## 停止并移除 compose 栈（具名卷保留，数据不丢）
 	$(COMPOSE) down

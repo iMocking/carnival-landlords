@@ -315,6 +315,8 @@ var (
 		{Name: "stake", Type: field.TypeInt64, Default: 0},
 		{Name: "gold_delta", Type: field.TypeInt64, Default: 0},
 		{Name: "points_delta", Type: field.TypeInt64, Default: 0},
+		{Name: "is_offline", Type: field.TypeBool, Default: false},
+		{Name: "credited_points", Type: field.TypeInt64, Default: 0},
 		{Name: "bomb_count", Type: field.TypeInt, Default: 0},
 		{Name: "play_count", Type: field.TypeInt, Default: 0},
 		{Name: "opponent_names", Type: field.TypeJSON},
@@ -329,7 +331,7 @@ var (
 			{
 				Name:    "matchrecord_user_id_played_at",
 				Unique:  false,
-				Columns: []*schema.Column{MatchRecordsColumns[3], MatchRecordsColumns[19]},
+				Columns: []*schema.Column{MatchRecordsColumns[3], MatchRecordsColumns[21]},
 			},
 			{
 				Name:    "matchrecord_user_id_mode_id",
@@ -337,9 +339,19 @@ var (
 				Columns: []*schema.Column{MatchRecordsColumns[3], MatchRecordsColumns[7]},
 			},
 			{
+				Name:    "matchrecord_mode_id_played_at",
+				Unique:  false,
+				Columns: []*schema.Column{MatchRecordsColumns[7], MatchRecordsColumns[21]},
+			},
+			{
 				Name:    "matchrecord_hand_id",
 				Unique:  false,
 				Columns: []*schema.Column{MatchRecordsColumns[6]},
+			},
+			{
+				Name:    "matchrecord_user_id_is_offline_played_at",
+				Unique:  false,
+				Columns: []*schema.Column{MatchRecordsColumns[3], MatchRecordsColumns[16], MatchRecordsColumns[21]},
 			},
 		},
 	}
@@ -459,6 +471,7 @@ var (
 		{Name: "password_hash", Type: field.TypeString},
 		{Name: "nickname", Type: field.TypeString, Unique: true},
 		{Name: "avatar_index", Type: field.TypeInt, Default: 0},
+		{Name: "avatar_url", Type: field.TypeString, Default: ""},
 		{Name: "role", Type: field.TypeString, Default: "player"},
 		{Name: "status", Type: field.TypeString, Default: "active"},
 		{Name: "ban_reason", Type: field.TypeString, Default: ""},
@@ -469,6 +482,7 @@ var (
 		{Name: "gold", Type: field.TypeInt64, Default: 0},
 		{Name: "diamonds", Type: field.TypeInt64, Default: 0},
 		{Name: "points", Type: field.TypeInt64, Default: 0},
+		{Name: "offline_points", Type: field.TypeInt64, Default: 0},
 		{Name: "games", Type: field.TypeInt64, Default: 0},
 		{Name: "wins", Type: field.TypeInt64, Default: 0},
 		{Name: "landlord_games", Type: field.TypeInt64, Default: 0},
@@ -500,27 +514,27 @@ var (
 			{
 				Name:    "user_role",
 				Unique:  false,
-				Columns: []*schema.Column{UsersColumns[7]},
+				Columns: []*schema.Column{UsersColumns[8]},
 			},
 			{
 				Name:    "user_status",
 				Unique:  false,
-				Columns: []*schema.Column{UsersColumns[8]},
+				Columns: []*schema.Column{UsersColumns[9]},
 			},
 			{
 				Name:    "user_points",
 				Unique:  false,
-				Columns: []*schema.Column{UsersColumns[16]},
+				Columns: []*schema.Column{UsersColumns[17]},
 			},
 			{
 				Name:    "user_gold",
 				Unique:  false,
-				Columns: []*schema.Column{UsersColumns[14]},
+				Columns: []*schema.Column{UsersColumns[15]},
 			},
 			{
 				Name:    "user_vip_expire_at",
 				Unique:  false,
-				Columns: []*schema.Column{UsersColumns[11]},
+				Columns: []*schema.Column{UsersColumns[12]},
 			},
 		},
 	}

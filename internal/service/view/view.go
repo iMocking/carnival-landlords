@@ -68,10 +68,12 @@ type VIP struct {
 
 // User 是对外暴露的玩家视图。
 type User struct {
-	ID          string     `json:"id"`
-	Email       string     `json:"email"`
-	Nickname    string     `json:"nickname"`
-	AvatarIndex int        `json:"avatar_index"`
+	ID          string `json:"id"`
+	Email       string `json:"email"`
+	Nickname    string `json:"nickname"`
+	AvatarIndex int    `json:"avatar_index"`
+	// AvatarURL 自定义头像的相对地址；为空表示用 AvatarIndex 绘制的预设头像。
+	AvatarURL   string     `json:"avatar_url,omitempty"`
 	Role        string     `json:"role"`
 	Status      string     `json:"status"`
 	Wallet      Wallet     `json:"wallet"`
@@ -85,9 +87,11 @@ type User struct {
 
 // Brief 是只含展示所需字段的轻量视图（排行榜、好友列表用）。
 type Brief struct {
-	ID          string  `json:"id"`
-	Nickname    string  `json:"nickname"`
+	ID       string `json:"id"`
+	Nickname string `json:"nickname"`
+	// AvatarIndex 预设头像序号；AvatarURL 非空时应优先使用自定义头像。
 	AvatarIndex int     `json:"avatar_index"`
+	AvatarURL   string  `json:"avatar_url,omitempty"`
 	Level       int     `json:"level"`
 	Points      int64   `json:"points"`
 	Gold        int64   `json:"gold"`
@@ -105,6 +109,7 @@ func From(u *ent.User) User {
 		Email:       u.Email,
 		Nickname:    u.Nickname,
 		AvatarIndex: u.AvatarIndex,
+		AvatarURL:   u.AvatarURL,
 		Role:        u.Role,
 		Status:      u.Status,
 		Wallet: Wallet{
@@ -140,6 +145,7 @@ func BriefFrom(u *ent.User) Brief {
 		ID:          u.ID,
 		Nickname:    u.Nickname,
 		AvatarIndex: u.AvatarIndex,
+		AvatarURL:   u.AvatarURL,
 		Level:       u.Level,
 		Points:      u.Points,
 		Gold:        u.Gold,

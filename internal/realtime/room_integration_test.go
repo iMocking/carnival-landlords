@@ -143,7 +143,7 @@ func TestBotBidScoreIsBounded(t *testing.T) {
 		{UserID: "u2", Nickname: "乙", IsBot: true},
 		{UserID: "u3", Nickname: "丙", IsBot: true},
 	}
-	table, err := game.NewTable(id.NewPrefixed("table"), game.DefaultConfig(catalog.DefaultMode()), seats, 42)
+	table, err := game.NewTable(id.New(), game.DefaultConfig(catalog.DefaultMode()), seats, 42)
 	require.NoError(t, err)
 	require.NoError(t, table.StartHand())
 
@@ -154,15 +154,22 @@ func TestBotBidScoreIsBounded(t *testing.T) {
 	}
 }
 
-// TestNewBotSeatIsMarkedAsBot 保证机器人 ID 一定带前缀。
+// TestNewBotSeatIsMarkedAsBot 保证机器人 ID **既可识别、又合法**。
 //
-// 前缀是"结算跳过机器人""发奖跳过机器人""后台巡检区分人机"的唯一依据，
-// 一旦生成逻辑改了而前缀丢了，后果是机器人被当成真人去查账号行并报错。
+// 这里必须同时断言两件事，缺一不可：
+//   - `IsBotUser`：结算跳过机器人、发奖跳过机器人、后台巡检区分人机，全靠它；
+//   - `id.Valid`：机器人 ID 会随 WS 快照的 seats[].user_id 下发给客户端，
+//     而客户端的 `Ulid.is_valid()` 只认「恰好 26 字符 + Crockford 字母表」。
+//
+// 早先用 `"bot_"` 前缀只满足了第一条，客户端会把它判为非法 ID。
+// 现在换成"时间戳全零的合法 ULID"，两条同时成立 —— 这个测试就是防它回退。
 func TestNewBotSeatIsMarkedAsBot(t *testing.T) {
 	seen := make(map[string]struct{})
 	for i := 0; i < 50; i++ {
 		userID, nickname, avatar, level := newBotSeat(i)
-		require.True(t, IsBotUser(userID), "机器人 ID 必须带前缀：%s", userID)
+		require.True(t, IsBotUser(userID), "机器人 ID 必须能被识别：%s", userID)
+		require.True(t, id.Valid(userID), "机器人 ID 必须是合法 ULID（客户端会严格校验）：%s", userID)
+		require.Len(t, userID, 26, "ULID 长度必须是 26：%s", userID)
 		require.NotEmpty(t, nickname)
 		require.GreaterOrEqual(t, avatar, 0)
 		require.Greater(t, level, 0)

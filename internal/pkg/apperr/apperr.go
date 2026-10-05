@@ -24,6 +24,26 @@ type Code int
 //	5xxxx 任务与活动
 //	6xxxx 对局与房间
 //	9xxxx 系统
+//
+// # 这个分段就是**唯一权威**，不再向需求的 8xxxx 方案靠拢
+//
+// 需求方曾建议新增 `8xxxx` 业务段，但那会与这里的分段语义冲突
+// （例如这边 60001 是"房间不存在"，需求是 81001）。已决定：
+// **保留本分段，由客户端把它的错误码表同步过来**（`Catalog()` 就是给客户端的那张表）。
+//
+// # 四条已删除的码，不要加回来
+//
+//   - `30005 报名费不够`：报名费不足实际返回 **30001（金币不足）**，
+//     只是文案里写清"报名费 X + 最低携带 Y，你当前有 Z"。
+//     玩家需要的是"差多少"，而不是"另一种不足"。
+//   - `40004 道具已过期`：道具目前没有"过期"这个实际状态，没有任何地方返回它。
+//   - `50005 成就不满足条件`：成就未达成复用的是任务那套表达，没有单独返回过它。
+//   - `60013 无法重连`：这种情况用 `60003 不在房间中` 表达已经够用。
+//
+// 判定标准很简单：**永远不会被返回的码不该出现在对外码表里**。
+// 留着它，客户端就会写一个永不触发的分支。
+// 这也是 `Catalog()` 存在的意义 —— 客户端按表写分支，表里有的就一定可能收到。
+// 这几条由 `catalog_test.go` 的 TestRemovedCodesStayRemoved 守着。
 const (
 	CodeOK Code = 0
 
@@ -49,17 +69,15 @@ const (
 	CodeNicknameTaken    Code = 20011 // 昵称已被占用
 
 	// ---------- 3xxxx 钱包与经济 ----------
-	CodeInsufficientGold      Code = 30001 // 金币不足
-	CodeInsufficientDiamond   Code = 30002 // 钻石不足
-	CodeWalletFrozen          Code = 30003 // 钱包被冻结
-	CodeWalletConcurrent      Code = 30004 // 钱包并发冲突，请重试
-	CodeEntryFeeNotAffordable Code = 30005 // 报名费不够，无法进入该玩法
+	CodeInsufficientGold    Code = 30001 // 金币不足
+	CodeInsufficientDiamond Code = 30002 // 钻石不足
+	CodeWalletFrozen        Code = 30003 // 钱包被冻结
+	CodeWalletConcurrent    Code = 30004 // 钱包并发冲突，请重试
 
 	// ---------- 4xxxx 商城与背包 ----------
 	CodeGoodNotFound      Code = 40001 // 商品不存在或已下架
 	CodeItemNotOwned      Code = 40002 // 背包中没有该道具
 	CodeItemNotUsable     Code = 40003 // 该道具当前不可使用
-	CodeItemExpired       Code = 40004 // 道具已过期
 	CodeOrderNotFound     Code = 40005 // 订单不存在
 	CodeOrderAlreadyPaid  Code = 40006 // 订单已支付
 	CodePayChannelBlocked Code = 40007 // 当前环境不允许该支付通道
@@ -70,25 +88,23 @@ const (
 	CodeTaskNotCompleted   Code = 50002 // 任务未达成
 	CodeTaskAlreadyClaimed Code = 50003 // 任务奖励已领取
 	CodeSignedInToday      Code = 50004 // 今日已签到
-	CodeAchievementLocked  Code = 50005 // 成就不满足条件
 	CodeMailNotFound       Code = 50006 // 邮件不存在
 	CodeMailAlreadyClaimed Code = 50007 // 邮件附件已领取
 	CodeMailExpired        Code = 50008 // 邮件已过期
 
 	// ---------- 6xxxx 对局与房间 ----------
-	CodeRoomNotFound        Code = 60001 // 房间不存在
-	CodeRoomFull            Code = 60002 // 房间已满
-	CodeNotInRoom           Code = 60003 // 不在房间内
-	CodeNotYourTurn         Code = 60004 // 未轮到你操作
-	CodeInvalidPattern      Code = 60005 // 牌型不合法
-	CodePatternTooWeak      Code = 60006 // 打不过上家
-	CodeCardsNotInHand      Code = 60007 // 手牌中没有这些牌
-	CodePhaseMismatch       Code = 60008 // 当前阶段不允许该操作
-	CodeAlreadyMatching     Code = 60009 // 已在匹配队列中
-	CodeNotMatching         Code = 60010 // 不在匹配队列中
-	CodeModeNotFound        Code = 60011 // 玩法不存在
-	CodeSettlementFailed    Code = 60012 // 结算失败
-	CodeReconnectNotAllowed Code = 60013 // 无法重连（座位已释放）
+	CodeRoomNotFound     Code = 60001 // 房间不存在
+	CodeRoomFull         Code = 60002 // 房间已满
+	CodeNotInRoom        Code = 60003 // 不在房间内
+	CodeNotYourTurn      Code = 60004 // 未轮到你操作
+	CodeInvalidPattern   Code = 60005 // 牌型不合法
+	CodePatternTooWeak   Code = 60006 // 打不过上家
+	CodeCardsNotInHand   Code = 60007 // 手牌中没有这些牌
+	CodePhaseMismatch    Code = 60008 // 当前阶段不允许该操作
+	CodeAlreadyMatching  Code = 60009 // 已在匹配队列中
+	CodeNotMatching      Code = 60010 // 不在匹配队列中
+	CodeModeNotFound     Code = 60011 // 玩法不存在
+	CodeSettlementFailed Code = 60012 // 结算失败
 
 	// ---------- 9xxxx 系统 ----------
 	CodeInternal       Code = 90001 // 服务内部错误
@@ -185,6 +201,10 @@ var (
 	ErrSignedInToday      = &Error{Code: CodeSignedInToday, Message: "今日已经签到过了", Status: http.StatusConflict}
 	ErrMailNotFound       = &Error{Code: CodeMailNotFound, Message: "邮件不存在", Status: http.StatusNotFound}
 	ErrMailAlreadyClaimed = &Error{Code: CodeMailAlreadyClaimed, Message: "邮件附件已领取", Status: http.StatusConflict}
+	// ErrMailExpired 原先只在 mail 包里用 apperr.New 手工构造，
+	// 于是它不出现在预定义清单里（对外码表也就漏了一条）。
+	// 收敛到这里，`Catalog()` 才能声称自己完整。
+	ErrMailExpired = &Error{Code: CodeMailExpired, Message: "邮件已过期", Status: http.StatusBadRequest}
 
 	// 6xxxx
 	ErrRoomNotFound     = &Error{Code: CodeRoomNotFound, Message: "房间不存在", Status: http.StatusNotFound}

@@ -182,7 +182,7 @@ func (g *Granter) GrantTx(ctx context.Context, tx *ent.Tx, userID string, reward
 	// 3) 皮肤：写拥有关系，冲突即已拥有（幂等）。
 	for _, skinID := range skins {
 		err := tx.SkinOwnership.Create().
-			SetID(id.NewPrefixed("skin")).
+			SetID(id.New()).
 			SetUserID(userID).
 			SetSkinID(skinID).
 			SetSource(source).
@@ -217,7 +217,7 @@ func (g *Granter) AddItemTx(ctx context.Context, tx *ent.Tx, userID, itemID stri
 
 	if ent.IsNotFound(err) {
 		create := tx.InventoryItem.Create().
-			SetID(id.NewPrefixed("inv")).
+			SetID(id.New()).
 			SetUserID(userID).
 			SetItemID(itemID).
 			SetCount(count)

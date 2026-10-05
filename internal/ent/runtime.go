@@ -443,14 +443,24 @@ func init() {
 	matchrecordDescPointsDelta := matchrecordFields[13].Descriptor()
 	// matchrecord.DefaultPointsDelta holds the default value on creation for the points_delta field.
 	matchrecord.DefaultPointsDelta = matchrecordDescPointsDelta.Default.(int64)
+	// matchrecordDescIsOffline is the schema descriptor for is_offline field.
+	matchrecordDescIsOffline := matchrecordFields[14].Descriptor()
+	// matchrecord.DefaultIsOffline holds the default value on creation for the is_offline field.
+	matchrecord.DefaultIsOffline = matchrecordDescIsOffline.Default.(bool)
+	// matchrecordDescCreditedPoints is the schema descriptor for credited_points field.
+	matchrecordDescCreditedPoints := matchrecordFields[15].Descriptor()
+	// matchrecord.DefaultCreditedPoints holds the default value on creation for the credited_points field.
+	matchrecord.DefaultCreditedPoints = matchrecordDescCreditedPoints.Default.(int64)
+	// matchrecord.CreditedPointsValidator is a validator for the "credited_points" field. It is called by the builders before save.
+	matchrecord.CreditedPointsValidator = matchrecordDescCreditedPoints.Validators[0].(func(int64) error)
 	// matchrecordDescBombCount is the schema descriptor for bomb_count field.
-	matchrecordDescBombCount := matchrecordFields[14].Descriptor()
+	matchrecordDescBombCount := matchrecordFields[16].Descriptor()
 	// matchrecord.DefaultBombCount holds the default value on creation for the bomb_count field.
 	matchrecord.DefaultBombCount = matchrecordDescBombCount.Default.(int)
 	// matchrecord.BombCountValidator is a validator for the "bomb_count" field. It is called by the builders before save.
 	matchrecord.BombCountValidator = matchrecordDescBombCount.Validators[0].(func(int) error)
 	// matchrecordDescPlayCount is the schema descriptor for play_count field.
-	matchrecordDescPlayCount := matchrecordFields[15].Descriptor()
+	matchrecordDescPlayCount := matchrecordFields[17].Descriptor()
 	// matchrecord.DefaultPlayCount holds the default value on creation for the play_count field.
 	matchrecord.DefaultPlayCount = matchrecordDescPlayCount.Default.(int)
 	// matchrecord.PlayCountValidator is a validator for the "play_count" field. It is called by the builders before save.
@@ -625,118 +635,128 @@ func init() {
 	user.DefaultAvatarIndex = userDescAvatarIndex.Default.(int)
 	// user.AvatarIndexValidator is a validator for the "avatar_index" field. It is called by the builders before save.
 	user.AvatarIndexValidator = userDescAvatarIndex.Validators[0].(func(int) error)
+	// userDescAvatarURL is the schema descriptor for avatar_url field.
+	userDescAvatarURL := userFields[5].Descriptor()
+	// user.DefaultAvatarURL holds the default value on creation for the avatar_url field.
+	user.DefaultAvatarURL = userDescAvatarURL.Default.(string)
 	// userDescRole is the schema descriptor for role field.
-	userDescRole := userFields[5].Descriptor()
+	userDescRole := userFields[6].Descriptor()
 	// user.DefaultRole holds the default value on creation for the role field.
 	user.DefaultRole = userDescRole.Default.(string)
 	// userDescStatus is the schema descriptor for status field.
-	userDescStatus := userFields[6].Descriptor()
+	userDescStatus := userFields[7].Descriptor()
 	// user.DefaultStatus holds the default value on creation for the status field.
 	user.DefaultStatus = userDescStatus.Default.(string)
 	// userDescBanReason is the schema descriptor for ban_reason field.
-	userDescBanReason := userFields[7].Descriptor()
+	userDescBanReason := userFields[8].Descriptor()
 	// user.DefaultBanReason holds the default value on creation for the ban_reason field.
 	user.DefaultBanReason = userDescBanReason.Default.(string)
 	// userDescLevel is the schema descriptor for level field.
-	userDescLevel := userFields[10].Descriptor()
+	userDescLevel := userFields[11].Descriptor()
 	// user.DefaultLevel holds the default value on creation for the level field.
 	user.DefaultLevel = userDescLevel.Default.(int)
 	// user.LevelValidator is a validator for the "level" field. It is called by the builders before save.
 	user.LevelValidator = userDescLevel.Validators[0].(func(int) error)
 	// userDescExp is the schema descriptor for exp field.
-	userDescExp := userFields[11].Descriptor()
+	userDescExp := userFields[12].Descriptor()
 	// user.DefaultExp holds the default value on creation for the exp field.
 	user.DefaultExp = userDescExp.Default.(int64)
 	// user.ExpValidator is a validator for the "exp" field. It is called by the builders before save.
 	user.ExpValidator = userDescExp.Validators[0].(func(int64) error)
 	// userDescGold is the schema descriptor for gold field.
-	userDescGold := userFields[12].Descriptor()
+	userDescGold := userFields[13].Descriptor()
 	// user.DefaultGold holds the default value on creation for the gold field.
 	user.DefaultGold = userDescGold.Default.(int64)
 	// user.GoldValidator is a validator for the "gold" field. It is called by the builders before save.
 	user.GoldValidator = userDescGold.Validators[0].(func(int64) error)
 	// userDescDiamonds is the schema descriptor for diamonds field.
-	userDescDiamonds := userFields[13].Descriptor()
+	userDescDiamonds := userFields[14].Descriptor()
 	// user.DefaultDiamonds holds the default value on creation for the diamonds field.
 	user.DefaultDiamonds = userDescDiamonds.Default.(int64)
 	// user.DiamondsValidator is a validator for the "diamonds" field. It is called by the builders before save.
 	user.DiamondsValidator = userDescDiamonds.Validators[0].(func(int64) error)
 	// userDescPoints is the schema descriptor for points field.
-	userDescPoints := userFields[14].Descriptor()
+	userDescPoints := userFields[15].Descriptor()
 	// user.DefaultPoints holds the default value on creation for the points field.
 	user.DefaultPoints = userDescPoints.Default.(int64)
 	// user.PointsValidator is a validator for the "points" field. It is called by the builders before save.
 	user.PointsValidator = userDescPoints.Validators[0].(func(int64) error)
+	// userDescOfflinePoints is the schema descriptor for offline_points field.
+	userDescOfflinePoints := userFields[16].Descriptor()
+	// user.DefaultOfflinePoints holds the default value on creation for the offline_points field.
+	user.DefaultOfflinePoints = userDescOfflinePoints.Default.(int64)
+	// user.OfflinePointsValidator is a validator for the "offline_points" field. It is called by the builders before save.
+	user.OfflinePointsValidator = userDescOfflinePoints.Validators[0].(func(int64) error)
 	// userDescGames is the schema descriptor for games field.
-	userDescGames := userFields[15].Descriptor()
+	userDescGames := userFields[17].Descriptor()
 	// user.DefaultGames holds the default value on creation for the games field.
 	user.DefaultGames = userDescGames.Default.(int64)
 	// user.GamesValidator is a validator for the "games" field. It is called by the builders before save.
 	user.GamesValidator = userDescGames.Validators[0].(func(int64) error)
 	// userDescWins is the schema descriptor for wins field.
-	userDescWins := userFields[16].Descriptor()
+	userDescWins := userFields[18].Descriptor()
 	// user.DefaultWins holds the default value on creation for the wins field.
 	user.DefaultWins = userDescWins.Default.(int64)
 	// user.WinsValidator is a validator for the "wins" field. It is called by the builders before save.
 	user.WinsValidator = userDescWins.Validators[0].(func(int64) error)
 	// userDescLandlordGames is the schema descriptor for landlord_games field.
-	userDescLandlordGames := userFields[17].Descriptor()
+	userDescLandlordGames := userFields[19].Descriptor()
 	// user.DefaultLandlordGames holds the default value on creation for the landlord_games field.
 	user.DefaultLandlordGames = userDescLandlordGames.Default.(int64)
 	// user.LandlordGamesValidator is a validator for the "landlord_games" field. It is called by the builders before save.
 	user.LandlordGamesValidator = userDescLandlordGames.Validators[0].(func(int64) error)
 	// userDescLandlordWins is the schema descriptor for landlord_wins field.
-	userDescLandlordWins := userFields[18].Descriptor()
+	userDescLandlordWins := userFields[20].Descriptor()
 	// user.DefaultLandlordWins holds the default value on creation for the landlord_wins field.
 	user.DefaultLandlordWins = userDescLandlordWins.Default.(int64)
 	// user.LandlordWinsValidator is a validator for the "landlord_wins" field. It is called by the builders before save.
 	user.LandlordWinsValidator = userDescLandlordWins.Validators[0].(func(int64) error)
 	// userDescBombsTotal is the schema descriptor for bombs_total field.
-	userDescBombsTotal := userFields[19].Descriptor()
+	userDescBombsTotal := userFields[21].Descriptor()
 	// user.DefaultBombsTotal holds the default value on creation for the bombs_total field.
 	user.DefaultBombsTotal = userDescBombsTotal.Default.(int64)
 	// user.BombsTotalValidator is a validator for the "bombs_total" field. It is called by the builders before save.
 	user.BombsTotalValidator = userDescBombsTotal.Validators[0].(func(int64) error)
 	// userDescMaxMultiplier is the schema descriptor for max_multiplier field.
-	userDescMaxMultiplier := userFields[20].Descriptor()
+	userDescMaxMultiplier := userFields[22].Descriptor()
 	// user.DefaultMaxMultiplier holds the default value on creation for the max_multiplier field.
 	user.DefaultMaxMultiplier = userDescMaxMultiplier.Default.(int)
 	// user.MaxMultiplierValidator is a validator for the "max_multiplier" field. It is called by the builders before save.
 	user.MaxMultiplierValidator = userDescMaxMultiplier.Validators[0].(func(int) error)
 	// userDescMaxStreak is the schema descriptor for max_streak field.
-	userDescMaxStreak := userFields[21].Descriptor()
+	userDescMaxStreak := userFields[23].Descriptor()
 	// user.DefaultMaxStreak holds the default value on creation for the max_streak field.
 	user.DefaultMaxStreak = userDescMaxStreak.Default.(int)
 	// user.MaxStreakValidator is a validator for the "max_streak" field. It is called by the builders before save.
 	user.MaxStreakValidator = userDescMaxStreak.Validators[0].(func(int) error)
 	// userDescCurrentStreak is the schema descriptor for current_streak field.
-	userDescCurrentStreak := userFields[22].Descriptor()
+	userDescCurrentStreak := userFields[24].Descriptor()
 	// user.DefaultCurrentStreak holds the default value on creation for the current_streak field.
 	user.DefaultCurrentStreak = userDescCurrentStreak.Default.(int)
 	// user.CurrentStreakValidator is a validator for the "current_streak" field. It is called by the builders before save.
 	user.CurrentStreakValidator = userDescCurrentStreak.Validators[0].(func(int) error)
 	// userDescMusicEnabled is the schema descriptor for music_enabled field.
-	userDescMusicEnabled := userFields[23].Descriptor()
+	userDescMusicEnabled := userFields[25].Descriptor()
 	// user.DefaultMusicEnabled holds the default value on creation for the music_enabled field.
 	user.DefaultMusicEnabled = userDescMusicEnabled.Default.(bool)
 	// userDescSfxEnabled is the schema descriptor for sfx_enabled field.
-	userDescSfxEnabled := userFields[24].Descriptor()
+	userDescSfxEnabled := userFields[26].Descriptor()
 	// user.DefaultSfxEnabled holds the default value on creation for the sfx_enabled field.
 	user.DefaultSfxEnabled = userDescSfxEnabled.Default.(bool)
 	// userDescTtsEnabled is the schema descriptor for tts_enabled field.
-	userDescTtsEnabled := userFields[25].Descriptor()
+	userDescTtsEnabled := userFields[27].Descriptor()
 	// user.DefaultTtsEnabled holds the default value on creation for the tts_enabled field.
 	user.DefaultTtsEnabled = userDescTtsEnabled.Default.(bool)
 	// userDescVibrateEnabled is the schema descriptor for vibrate_enabled field.
-	userDescVibrateEnabled := userFields[26].Descriptor()
+	userDescVibrateEnabled := userFields[28].Descriptor()
 	// user.DefaultVibrateEnabled holds the default value on creation for the vibrate_enabled field.
 	user.DefaultVibrateEnabled = userDescVibrateEnabled.Default.(bool)
 	// userDescQuickHintEnabled is the schema descriptor for quick_hint_enabled field.
-	userDescQuickHintEnabled := userFields[27].Descriptor()
+	userDescQuickHintEnabled := userFields[29].Descriptor()
 	// user.DefaultQuickHintEnabled holds the default value on creation for the quick_hint_enabled field.
 	user.DefaultQuickHintEnabled = userDescQuickHintEnabled.Default.(bool)
 	// userDescCardSpeed is the schema descriptor for card_speed field.
-	userDescCardSpeed := userFields[28].Descriptor()
+	userDescCardSpeed := userFields[30].Descriptor()
 	// user.DefaultCardSpeed holds the default value on creation for the card_speed field.
 	user.DefaultCardSpeed = userDescCardSpeed.Default.(int)
 	// user.CardSpeedValidator is a validator for the "card_speed" field. It is called by the builders before save.
@@ -756,7 +776,7 @@ func init() {
 		}
 	}()
 	// userDescHintLevel is the schema descriptor for hint_level field.
-	userDescHintLevel := userFields[29].Descriptor()
+	userDescHintLevel := userFields[31].Descriptor()
 	// user.DefaultHintLevel holds the default value on creation for the hint_level field.
 	user.DefaultHintLevel = userDescHintLevel.Default.(int)
 	// user.HintLevelValidator is a validator for the "hint_level" field. It is called by the builders before save.
@@ -776,23 +796,23 @@ func init() {
 		}
 	}()
 	// userDescAutoSortHand is the schema descriptor for auto_sort_hand field.
-	userDescAutoSortHand := userFields[30].Descriptor()
+	userDescAutoSortHand := userFields[32].Descriptor()
 	// user.DefaultAutoSortHand holds the default value on creation for the auto_sort_hand field.
 	user.DefaultAutoSortHand = userDescAutoSortHand.Default.(bool)
 	// userDescTableSkinID is the schema descriptor for table_skin_id field.
-	userDescTableSkinID := userFields[31].Descriptor()
+	userDescTableSkinID := userFields[33].Descriptor()
 	// user.DefaultTableSkinID holds the default value on creation for the table_skin_id field.
 	user.DefaultTableSkinID = userDescTableSkinID.Default.(string)
 	// userDescCardSkinID is the schema descriptor for card_skin_id field.
-	userDescCardSkinID := userFields[32].Descriptor()
+	userDescCardSkinID := userFields[34].Descriptor()
 	// user.DefaultCardSkinID holds the default value on creation for the card_skin_id field.
 	user.DefaultCardSkinID = userDescCardSkinID.Default.(string)
 	// userDescLastLoginIP is the schema descriptor for last_login_ip field.
-	userDescLastLoginIP := userFields[34].Descriptor()
+	userDescLastLoginIP := userFields[36].Descriptor()
 	// user.DefaultLastLoginIP holds the default value on creation for the last_login_ip field.
 	user.DefaultLastLoginIP = userDescLastLoginIP.Default.(string)
 	// userDescVersion is the schema descriptor for version field.
-	userDescVersion := userFields[35].Descriptor()
+	userDescVersion := userFields[37].Descriptor()
 	// user.DefaultVersion holds the default value on creation for the version field.
 	user.DefaultVersion = userDescVersion.Default.(int64)
 	wallettransactionMixin := schema.WalletTransaction{}.Mixin()

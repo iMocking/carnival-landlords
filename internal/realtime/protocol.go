@@ -109,8 +109,14 @@ type ServerMessage struct {
 	Type string `json:"type"`
 	// Seq 回带客户端的序号。
 	Seq int64 `json:"seq,omitempty"`
-	// Data 消息体，随 Type 变化。
-	Data any `json:"data,omitempty"`
+	// Body 消息体，随 Type 变化。
+	//
+	// 字段名是 `body`，与 HTTP 信封一致（决策 D-01）。
+	// 早期这里叫 `data`，而客户端契约文件（apps/client/docs/server-api-catalog.json）
+	// 的 WS 信封当时写的也是 `data` —— 两套协议各用一套字段名。
+	// 现在统一为 `body`：客户端还没有任何 WS 代码，是唯一无痛统一的时刻，
+	// 而且"同一个概念在两个协议里叫两个名字"迟早会被写错。
+	Body any `json:"body,omitempty"`
 	// Code / Message 仅在 Type = error 时有意义。
 	Code    int    `json:"code,omitempty"`
 	Message string `json:"message,omitempty"`
@@ -132,8 +138,11 @@ type HelloData struct {
 // MatchStatusData 匹配状态。
 type MatchStatusData struct {
 	Status string `json:"status"` // queued / matched / canceled / timeout
-	ModeID string `json:"mode_id,omitempty"`
-	RoomID string `json:"room_id,omitempty"`
+	// TicketID 本次匹配的票据标识。客户端用它调
+	// `GET/DELETE /match/tickets/:id`（需求 MATCH-02 / MATCH-03）。
+	TicketID string `json:"ticket_id,omitempty"`
+	ModeID   string `json:"mode_id,omitempty"`
+	RoomID   string `json:"room_id,omitempty"`
 	// Position 队列中的位置（1 开始）。
 	Position int `json:"position,omitempty"`
 	// Waiting 已等待秒数。

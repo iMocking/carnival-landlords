@@ -27,22 +27,43 @@ WebSocket（`internal/realtime`）承载实时对局。
 
 前置：Go 1.26（根 `go.mod` 写的是 `go 1.26.0`）、Docker（含 compose）、`make`。
 
+**两条路二选一，不要同时用**（两者都要占用宿主 8080）：
+
 ```bash
-# 1) 起本地依赖栈：PostgreSQL + Redis + API（镜像内含二进制）
+# 方式 A：整套容器（PostgreSQL + Redis + API，镜像内含二进制）
 make compose-up          # 等价于 docker compose -f docker-compose.yml up -d
 
-# 2) 或者只起 PG/Redis，用本机 go run 跑 API（改代码即时生效，日常开发推荐）
-docker compose -f docker-compose.yml up -d postgres redis
-make run                 # 等价于 go run ./cmd/api
+# 方式 B：本机跑 API（改代码即时生效，日常开发推荐）
+make dev                 # = 只起 PG/Redis，再本机 go run ./cmd/api
+# 也可以拆开执行：
+#   make deps-up         # 只起 PG/Redis
+#   make run             # 等价于 CL_HTTP_ADDR=:8080 go run ./cmd/api
+#   make run HTTP_ADDR=:8081   # 8080 被占用时换一个端口
 
-# 3) 健康检查
+# 健康检查
 curl http://127.0.0.1:8080/healthz
 
-# 4) 验证码登录：开发环境不需要 SMTP
-#    先请求验证码，响应体 data.dev_code 就是明文验证码（仅非生产环境返回）；
+# 验证码登录：开发环境不需要 SMTP
+#    先请求验证码，响应体 body.dev_code 就是明文验证码（仅非生产环境返回）；
 #    如果走的是 compose 里的 api 容器，也可以直接翻日志：
 #        docker compose -f docker-compose.yml logs -f api | grep 验证码
 ```
+
+> **端口被占用（`bind: Only one usage of each socket address`）怎么修**
+> 你多半是先 `make compose-up`（它把 `cl-api` 容器发布到了 8080），又直接
+> `make run` / `go run ./cmd/api`。任选其一即可：
+>
+> ```bash
+> # 本机 go run（推荐）：先停掉容器里的 API（PG/Redis 保留），再跑本机 API
+> make compose-stop-api
+> make dev
+>
+> # 或者不动容器，只把本机 API 换到 8081（健康检查也跟着换到 8081）
+> make run HTTP_ADDR=:8081
+> ```
+>
+> 如果只是想用容器里的 API，那就不必本机 `go run`，直接访问
+> `http://127.0.0.1:8080/healthz` 即可。
 
 `.env.example` 列了常用环境变量，可以复制为 `.env` 后手动注入
 （服务端只读进程环境变量，**不会自动加载 `.env`**；用 `dotenv -f .env -- go run ./cmd/api`
@@ -52,14 +73,17 @@ curl http://127.0.0.1:8080/healthz
 
 | 目标 | 作用 |
 | --- | --- |
-| `make run` | 本机运行 API |
+| `make dev` | 日常开发推荐：只起 PG/Redis，再本机运行 API（不占 8080 的 api 容器） |
+| `make run` | 本机运行 API（`HTTP_ADDR=:8081` 可换端口） |
+| `make deps-up` | 只启动 compose 里的 PG/Redis（本机 `go run` 用） |
 | `make build` | 编译 api / migrate 到 `bin/` |
 | `make migrate` | 显式执行数据库迁移（生产用这个，不要开 auto_migrate） |
 | `make generate` | 重新生成 ent 代码（推荐经由 Makefile：它带上了 `sql/upsert,sql/lock` 两个必需 feature） |
 | `make test` / `make test-race` | 跑单元测试（后者带竞态检测） |
 | `make test-integration` | 跑需要真实 PostgreSQL/Redis 的集成测试（会自建临时账号并清理） |
 | `make lint` | `go vet` + `gofmt` 格式检查 |
-| `make compose-up` / `make compose-down` | 起停本地依赖栈 |
+| `make compose-up` / `make compose-down` | 起停本地全套容器栈（含 API） |
+| `make compose-stop-api` | 停掉 compose 的 API 容器，释放 8080（保留 PG/Redis） |
 | `make logs` | 跟随 API 容器日志（开发环境的验证码打在这里） |
 | `make psql` / `make redis-cli` | 进 PG / Redis 的交互 shell |
 | `make smoke` | 跑端到端冒烟脚本（`scripts/smoke.ps1`，会先自愈脚本的 UTF-8 BOM） |
@@ -516,7 +540,7 @@ Casbin 的策略存储表，结构照抄官方约定的 `casbin_rule(ptype, v0..
 
 **4. `CL_MAIL_DRIVER=log` 会把验证码打进日志。**
 这是刻意的：它的唯一用途就是让开发者本地没有 SMTP 也能把登录流程走通
-（同时非生产环境会把验证码放在响应的 `data.dev_code` 里）。
+（同时非生产环境会把验证码放在响应的 `body.dev_code` 里）。
 但**生产必须换成 `smtp`** —— 否则任何能翻日志的人都能登录别人的账号
 （`mailer.logSender.Send` 的注释里也写了这条）。
 
@@ -568,8 +592,7 @@ PowerShell 上暴露，最难排查。
 
 ```bash
 make compose-up                       # 或者只起 postgres 与 redis
-CL_INTEGRATION=1 go test ./internal/service/settlement/... -v -count=1
-CL_INTEGRATION=1 go test ./internal/realtime/... -v -count=1
+CL_INTEGRATION=1 go test ./internal/service/... ./internal/realtime/... -v -count=1
 ```
 
 它们验证的是"落库之后账还是不是平的"这类**纯单测验证不了**的性质：
@@ -585,8 +608,142 @@ CL_INTEGRATION=1 go test ./internal/realtime/... -v -count=1
 这三个用例都在 dev 库里创建临时账号并在结束时清理（按 `user_id` / `table_id` 精确删除）。
 **不要在生产库上开 `CL_INTEGRATION=1`。**
 
+注意：**多个测试包会并行执行，也就会并行调用 `pg.Migrate`**。
+并发 DDL 会互相死锁（实测 `drop index ... ERROR: deadlock detected (SQLSTATE 40P01)`），
+表现为"某个包随机失败，单独跑又通过"。`pg.Migrate` 现在用 PostgreSQL 咨询锁
+（`pg_advisory_lock`）把迁移串行化，因此直接 `CL_INTEGRATION=1 go test ./...` 是安全的 ——
+不必再用 `-p 1` 规避。
+
+这个锁不只是为了测试：**多实例同时启动**（滚动发布、扩容）会遇到同一个死锁，
+而且失败的实例会直接起不来。
+
 关于依赖版本：仓库里的 `pgx/v5`、`go-redis/v9`、`casbin/v2`、`ent` 都被
 `go build ./...` 覆盖，因此 `go mod tidy` 不会误删它们。
 若某次 `go get` 之后出现 `no required module provides package`，
 直接 `go mod tidy` 即可恢复（`go get` 会剪掉"当前构建用不到"的直接依赖，
 这是它已知的行为，不是仓库配置坏了）。
+
+**12. ID 一律用纯 ULID，不要加业务前缀。**
+服务端曾经有 `id.NewPrefixed("ord")` → `"ord_01HQ..."`，好处是日志里一眼能看出类型。
+**它已被删除**，因为客户端对 ID 做严格校验
+（`apps/client/src/core/ulid.gd` 的 `Ulid.is_valid()`：**恰好 26 字符**，
+且每个字符都在 Crockford 字母表 `0123456789ABCDEFGHJKMNPQRSTVWXYZ` 内）：
+
+| 形态 | 长度 | 客户端校验 |
+| --- | --- | --- |
+| `01M46HY2Q9KHJNEDT05ANPYFR4` | 26 | 通过 |
+| `ord_01M46HY2Q9KHJNEDT05ANPYFR4` | 30 | **失败**（含下划线，长度也不对） |
+
+后果不是"报个错"，而是客户端把 ID 判为非法后触发兜底或按未登录处理 ——
+表现为资产 / 战绩挂错、莫名要求重新登录，而服务端日志与存档看起来完全正常。
+
+相关的两条约定：
+
+- **实体 ID（运行时生成）** → 26 位 ULID，用 `id.New()`；
+- **目录键（编译期固定）** → 保持原字符串
+  （`mode_classic` / `table_classic` / `item_hint_pack` / `task_games`）。
+  **它们本来就不是 ULID，也不该改成 ULID** ——
+  实体 ID 的入参校验表见 `internal/transport/api/ulid_param.go`，
+  目录键路由刻意不在表里。
+
+机器人账号是个特例：它的 ID 也要下发给客户端，因此必须是合法 ULID，
+但服务端仍需能识别它。做法是 `id.NewBot()` 生成**时间戳字段全零**的 ULID
+（真实账号的时间戳是当前年份量级，不可能以十个零开头），用 `id.IsBot()` 判定。
+`internal/pkg/id/id_test.go` 里有一条测试专门钉住"带前缀的 ID 会被客户端拒收"这件事，
+以免将来有人觉得前缀更好排查又把它加回来。
+
+**13. 消耗道具前必须检查数量，因为「数量为 0 的行仍然存在」。**
+道具用掉最后一个时只是把 `inventory_items.count` 减到 0，**不删行**。
+于是"是否拥有"（行存在）与"还能不能用"（数量 > 0）是两件事，
+只判断前者会让扣减把 count 写成 `-1`，撞上 schema 的 `NonNegative` 检查约束，
+最终被包成 `ErrDependency` —— 客户端看到的是
+**`90002 依赖服务不可用`（HTTP 503）**，而正确提示是"你没有该道具"。
+
+实测表现：玩家用光改名卡后再点一次，界面显示"服务开小差了，请稍后再试"，
+于是他会一直重试，而该做的是去商城买一张。这条路径**每个按次消耗的道具都会走**
+（提示符、换牌卡、幸运宝箱），不是改名卡独有的。
+`internal/service/shop/shop.go` 的 `UseItem` 里已补上 `row.Count <= 0` 的判断，
+冒烟脚本也把断言收紧成"必须返回 4xx"（见"改名卡流程"一步）。
+
+**14. ent 的 `OnConflict().Ignore()` 必须带冲突目标，否则整条 SQL 被拒。**
+不带目标的写法会生成 `ON CONFLICT DO UPDATE`，PostgreSQL 要求它带推断或约束名：
+
+```
+ERROR: ON CONFLICT DO UPDATE requires inference specification or constraint name (SQLSTATE 42601)
+```
+
+错误被包成 `ErrDependency` 后，客户端看到的是 **`90002 依赖服务不可用`** ——
+从错误码完全看不出是 SQL 语法问题。买皮肤就因此坏了一段时间，
+而**此前没有任何测试走过那条路径**，所以一直没暴露。
+
+正确写法（冲突目标要写**真正会冲突的那组列**，不是随手写主键）：
+
+```go
+OnConflict(sql.ConflictColumns(skinownership.FieldUserID, skinownership.FieldSkinID), sql.DoNothing()).
+    Exec(ctx)
+```
+
+顺带一条教训：中间件日志只记录状态码、**不记录 `WithCause` 的原因**，
+所以这类"被包了一层的依赖错误"靠日志查不出来。
+定位方式是写一个直接调用该服务方法的集成测试，把 `err` 原样打出来 ——
+一分钟就能看到根因。`internal/service/shop/skin_integration_test.go` 就是它的正式版。
+
+## 种子数据（`cmd/seed`）
+
+新环境是空的：没人能登录、没有战绩、排行榜是空的。这个命令把"一套能立刻点得动、
+且各页面对得上"的数据一次造出来。
+
+```bash
+go run ./cmd/seed                          # 3 类账号 + 6 个测试玩家 + 数据
+go run ./cmd/seed -players 12 -matches 20  # 调数量
+go run ./cmd/seed -accounts-only           # 只建账号
+go run ./cmd/seed -reset-password          # 把已存在种子账号的密码也重设
+```
+
+| 账号 | 角色 |
+| --- | --- |
+| `admin@carnival.local` | admin |
+| `operator@carnival.local` | operator |
+| `player1..N@carnival.local` | player |
+
+默认密码 `Seed@123456`（生产环境会被拒绝执行，除非显式 `-force`）。
+
+每个测试玩家会得到：虚拟币（走账本，账单页立刻有流水）、两件道具与一款皮肤
+（走**真实购买路径**，因此订单页/背包页/商城互相印证）、一封带附件的欢迎邮件、
+若干条对局记录，并把累计统计与当天计数一并写好 —— 战绩页、统计页、成就页
+看到的是同一件事。
+
+**它可反复执行**：账号按邮箱判重，钱包走确定性幂等键，战绩/每日统计用确定性
+ULID 主键。连跑三次数据量不变（已实测）。
+
+### 两个必须知道的点
+
+1. **顺序**：建议"先迁移、跑 seed、再启动 API"。Casbin 的策略在 API 进程里是
+   **内存索引**，不会随数据库变化自动更新；如果 API 已经在跑，seed 写入的角色绑定
+   它看不到，表现为种子出来的运营账号**能登录但处处 403**（权限其实配对是对的）。
+   补救：`docker compose restart api`。命令结束时会自己检测并提示。
+2. **不要在生产用**。它创建的是**已知密码**的账号。默认已拒绝，`-force` 只为
+   本地演示这类场景保留。
+
+**15. ent 做"插入或忽略"必须用 `CreateBulk`，用 `Create().OnConflict().DoNothing()` 会在真冲突时报错。**
+后者的 SQL 带 `RETURNING`，而记录被跳过时没有任何行返回，`Exec` 直接报
+`sql: no rows in result set`。症状极有辨识度：**第一次跑成功、第二次跑必失败** ——
+恰好是"幂等"最该成立的时候（种子脚本就这么中过一枪）。
+正确写法：
+
+```go
+if err := client.MatchRecord.CreateBulk(create).
+    OnConflict(sql.ConflictColumns(matchrecord.FieldID), sql.DoNothing()).
+    Exec(ctx); err != nil { ... }
+```
+
+注意冲突目标要写**真正会冲突的那组列**；不写目标的 `OnConflict().DoNothing()` 同样会走
+带 `RETURNING` 的 upsert 路径。
+
+**16. Casbin 的策略在 API 进程里是内存索引，外部进程改了数据库它不会知道。**
+`cmd/seed` 是独立进程，它写入的"用户 -> 角色"绑定对**正在运行的** API 不可见，
+表现为种子出来的运营账号**登录成功但处处 403**（而权限其实配对是对的，查数据库一切正常，
+很容易被误判成权限体系有 bug）。补救是重启 API 让它重新加载策略。
+
+因此建议的顺序是：**迁移 -> 跑 seed -> 启动 API**。`cmd/seed` 结束时会自己探测
+`/readyz` 并提示是否需要重启。

@@ -42,6 +42,10 @@ func (MatchRecord) Fields() []ent.Field {
 		field.Int64("gold_delta").Default(0).
 			Comment("金币实际增减（已按输家余额上限截断，可能小于名义值）"),
 		field.Int64("points_delta").Default(0).Comment("积分增减"),
+		field.Bool("is_offline").Default(false).
+			Comment("是否来自离线对局（客户端本地权威结算、联网后回传，见 REC-06）"),
+		field.Int64("credited_points").Default(0).NonNegative().
+			Comment("离线回传时**服务端实际发放**的积分（受每日上限截断，可能小于 points_delta；线上对局恒为 0）"),
 		field.Int("bomb_count").Default(0).NonNegative().Comment("本局打出的炸弹数"),
 		field.Int("play_count").Default(0).NonNegative().Comment("本局出牌手数"),
 		field.JSON("opponent_names", []string{}).Comment("对手昵称，展示用"),
@@ -55,6 +59,12 @@ func (MatchRecord) Indexes() []ent.Index {
 		// "我的战绩"：按玩家 + 时间倒序翻页。
 		index.Fields("user_id", "played_at"),
 		index.Fields("user_id", "mode_id"),
+		// 按玩法聚合的**跨用户**查询（玩法排行榜：GROUP BY user_id WHERE mode_id=?）。
+		// 上面那两个索引都以 user_id 打头，对"某玩法下所有人的得分"这种查询
+		// 完全用不上；没有这个索引时排行榜会退化成全表扫描。
+		index.Fields("mode_id", "played_at"),
 		index.Fields("hand_id"),
+		// 离线回传要按"玩家 + 当天 + 是否离线"累加已发放积分来算剩余额度。
+		index.Fields("user_id", "is_offline", "played_at"),
 	}
 }

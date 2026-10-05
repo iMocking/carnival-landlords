@@ -83,6 +83,20 @@ func (_c *UserCreate) SetNillableAvatarIndex(v *int) *UserCreate {
 	return _c
 }
 
+// SetAvatarURL sets the "avatar_url" field.
+func (_c *UserCreate) SetAvatarURL(v string) *UserCreate {
+	_c.mutation.SetAvatarURL(v)
+	return _c
+}
+
+// SetNillableAvatarURL sets the "avatar_url" field if the given value is not nil.
+func (_c *UserCreate) SetNillableAvatarURL(v *string) *UserCreate {
+	if v != nil {
+		_c.SetAvatarURL(*v)
+	}
+	return _c
+}
+
 // SetRole sets the "role" field.
 func (_c *UserCreate) SetRole(v string) *UserCreate {
 	_c.mutation.SetRole(v)
@@ -219,6 +233,20 @@ func (_c *UserCreate) SetPoints(v int64) *UserCreate {
 func (_c *UserCreate) SetNillablePoints(v *int64) *UserCreate {
 	if v != nil {
 		_c.SetPoints(*v)
+	}
+	return _c
+}
+
+// SetOfflinePoints sets the "offline_points" field.
+func (_c *UserCreate) SetOfflinePoints(v int64) *UserCreate {
+	_c.mutation.SetOfflinePoints(v)
+	return _c
+}
+
+// SetNillableOfflinePoints sets the "offline_points" field if the given value is not nil.
+func (_c *UserCreate) SetNillableOfflinePoints(v *int64) *UserCreate {
+	if v != nil {
+		_c.SetOfflinePoints(*v)
 	}
 	return _c
 }
@@ -570,6 +598,10 @@ func (_c *UserCreate) defaults() {
 		v := user.DefaultAvatarIndex
 		_c.mutation.SetAvatarIndex(v)
 	}
+	if _, ok := _c.mutation.AvatarURL(); !ok {
+		v := user.DefaultAvatarURL
+		_c.mutation.SetAvatarURL(v)
+	}
 	if _, ok := _c.mutation.Role(); !ok {
 		v := user.DefaultRole
 		_c.mutation.SetRole(v)
@@ -601,6 +633,10 @@ func (_c *UserCreate) defaults() {
 	if _, ok := _c.mutation.Points(); !ok {
 		v := user.DefaultPoints
 		_c.mutation.SetPoints(v)
+	}
+	if _, ok := _c.mutation.OfflinePoints(); !ok {
+		v := user.DefaultOfflinePoints
+		_c.mutation.SetOfflinePoints(v)
 	}
 	if _, ok := _c.mutation.Games(); !ok {
 		v := user.DefaultGames
@@ -719,6 +755,9 @@ func (_c *UserCreate) check() error {
 			return &ValidationError{Name: "avatar_index", err: fmt.Errorf(`ent: validator failed for field "User.avatar_index": %w`, err)}
 		}
 	}
+	if _, ok := _c.mutation.AvatarURL(); !ok {
+		return &ValidationError{Name: "avatar_url", err: errors.New(`ent: missing required field "User.avatar_url"`)}
+	}
 	if _, ok := _c.mutation.Role(); !ok {
 		return &ValidationError{Name: "role", err: errors.New(`ent: missing required field "User.role"`)}
 	}
@@ -766,6 +805,14 @@ func (_c *UserCreate) check() error {
 	if v, ok := _c.mutation.Points(); ok {
 		if err := user.PointsValidator(v); err != nil {
 			return &ValidationError{Name: "points", err: fmt.Errorf(`ent: validator failed for field "User.points": %w`, err)}
+		}
+	}
+	if _, ok := _c.mutation.OfflinePoints(); !ok {
+		return &ValidationError{Name: "offline_points", err: errors.New(`ent: missing required field "User.offline_points"`)}
+	}
+	if v, ok := _c.mutation.OfflinePoints(); ok {
+		if err := user.OfflinePointsValidator(v); err != nil {
+			return &ValidationError{Name: "offline_points", err: fmt.Errorf(`ent: validator failed for field "User.offline_points": %w`, err)}
 		}
 	}
 	if _, ok := _c.mutation.Games(); !ok {
@@ -938,6 +985,10 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.SetField(user.FieldAvatarIndex, field.TypeInt, value)
 		_node.AvatarIndex = value
 	}
+	if value, ok := _c.mutation.AvatarURL(); ok {
+		_spec.SetField(user.FieldAvatarURL, field.TypeString, value)
+		_node.AvatarURL = value
+	}
 	if value, ok := _c.mutation.Role(); ok {
 		_spec.SetField(user.FieldRole, field.TypeString, value)
 		_node.Role = value
@@ -977,6 +1028,10 @@ func (_c *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.Points(); ok {
 		_spec.SetField(user.FieldPoints, field.TypeInt64, value)
 		_node.Points = value
+	}
+	if value, ok := _c.mutation.OfflinePoints(); ok {
+		_spec.SetField(user.FieldOfflinePoints, field.TypeInt64, value)
+		_node.OfflinePoints = value
 	}
 	if value, ok := _c.mutation.Games(); ok {
 		_spec.SetField(user.FieldGames, field.TypeInt64, value)
@@ -1180,6 +1235,18 @@ func (u *UserUpsert) AddAvatarIndex(v int) *UserUpsert {
 	return u
 }
 
+// SetAvatarURL sets the "avatar_url" field.
+func (u *UserUpsert) SetAvatarURL(v string) *UserUpsert {
+	u.Set(user.FieldAvatarURL, v)
+	return u
+}
+
+// UpdateAvatarURL sets the "avatar_url" field to the value that was provided on create.
+func (u *UserUpsert) UpdateAvatarURL() *UserUpsert {
+	u.SetExcluded(user.FieldAvatarURL)
+	return u
+}
+
 // SetRole sets the "role" field.
 func (u *UserUpsert) SetRole(v string) *UserUpsert {
 	u.Set(user.FieldRole, v)
@@ -1339,6 +1406,24 @@ func (u *UserUpsert) UpdatePoints() *UserUpsert {
 // AddPoints adds v to the "points" field.
 func (u *UserUpsert) AddPoints(v int64) *UserUpsert {
 	u.Add(user.FieldPoints, v)
+	return u
+}
+
+// SetOfflinePoints sets the "offline_points" field.
+func (u *UserUpsert) SetOfflinePoints(v int64) *UserUpsert {
+	u.Set(user.FieldOfflinePoints, v)
+	return u
+}
+
+// UpdateOfflinePoints sets the "offline_points" field to the value that was provided on create.
+func (u *UserUpsert) UpdateOfflinePoints() *UserUpsert {
+	u.SetExcluded(user.FieldOfflinePoints)
+	return u
+}
+
+// AddOfflinePoints adds v to the "offline_points" field.
+func (u *UserUpsert) AddOfflinePoints(v int64) *UserUpsert {
+	u.Add(user.FieldOfflinePoints, v)
 	return u
 }
 
@@ -1794,6 +1879,20 @@ func (u *UserUpsertOne) UpdateAvatarIndex() *UserUpsertOne {
 	})
 }
 
+// SetAvatarURL sets the "avatar_url" field.
+func (u *UserUpsertOne) SetAvatarURL(v string) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetAvatarURL(v)
+	})
+}
+
+// UpdateAvatarURL sets the "avatar_url" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateAvatarURL() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateAvatarURL()
+	})
+}
+
 // SetRole sets the "role" field.
 func (u *UserUpsertOne) SetRole(v string) *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
@@ -1980,6 +2079,27 @@ func (u *UserUpsertOne) AddPoints(v int64) *UserUpsertOne {
 func (u *UserUpsertOne) UpdatePoints() *UserUpsertOne {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdatePoints()
+	})
+}
+
+// SetOfflinePoints sets the "offline_points" field.
+func (u *UserUpsertOne) SetOfflinePoints(v int64) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.SetOfflinePoints(v)
+	})
+}
+
+// AddOfflinePoints adds v to the "offline_points" field.
+func (u *UserUpsertOne) AddOfflinePoints(v int64) *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.AddOfflinePoints(v)
+	})
+}
+
+// UpdateOfflinePoints sets the "offline_points" field to the value that was provided on create.
+func (u *UserUpsertOne) UpdateOfflinePoints() *UserUpsertOne {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateOfflinePoints()
 	})
 }
 
@@ -2656,6 +2776,20 @@ func (u *UserUpsertBulk) UpdateAvatarIndex() *UserUpsertBulk {
 	})
 }
 
+// SetAvatarURL sets the "avatar_url" field.
+func (u *UserUpsertBulk) SetAvatarURL(v string) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetAvatarURL(v)
+	})
+}
+
+// UpdateAvatarURL sets the "avatar_url" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateAvatarURL() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateAvatarURL()
+	})
+}
+
 // SetRole sets the "role" field.
 func (u *UserUpsertBulk) SetRole(v string) *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
@@ -2842,6 +2976,27 @@ func (u *UserUpsertBulk) AddPoints(v int64) *UserUpsertBulk {
 func (u *UserUpsertBulk) UpdatePoints() *UserUpsertBulk {
 	return u.Update(func(s *UserUpsert) {
 		s.UpdatePoints()
+	})
+}
+
+// SetOfflinePoints sets the "offline_points" field.
+func (u *UserUpsertBulk) SetOfflinePoints(v int64) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.SetOfflinePoints(v)
+	})
+}
+
+// AddOfflinePoints adds v to the "offline_points" field.
+func (u *UserUpsertBulk) AddOfflinePoints(v int64) *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.AddOfflinePoints(v)
+	})
+}
+
+// UpdateOfflinePoints sets the "offline_points" field to the value that was provided on create.
+func (u *UserUpsertBulk) UpdateOfflinePoints() *UserUpsertBulk {
+	return u.Update(func(s *UserUpsert) {
+		s.UpdateOfflinePoints()
 	})
 }
 

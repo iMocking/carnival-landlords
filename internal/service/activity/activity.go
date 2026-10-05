@@ -132,7 +132,7 @@ func ensureDailyStatTx(ctx context.Context, tx *ent.Tx, userID, date string) (*e
 	}
 
 	row, err = tx.DailyStat.Create().
-		SetID(id.NewPrefixed("ds")).
+		SetID(id.New()).
 		SetUserID(userID).
 		SetDate(date).
 		Save(ctx)
@@ -407,7 +407,7 @@ func (s *Service) ClaimDailyTask(ctx context.Context, userID, taskID string) (Cl
 
 		// 2) 写领取凭证。唯一索引是防重复领取的最终防线。
 		err = tx.DailyTaskClaim.Create().
-			SetID(id.NewPrefixed("dtc")).
+			SetID(id.New()).
 			SetUserID(userID).
 			SetDate(date).
 			SetTaskID(task.ID).
@@ -479,7 +479,7 @@ func (s *Service) ClaimSignIn(ctx context.Context, userID string) (ClaimResult, 
 		}
 
 		err = tx.SignInRecord.Create().
-			SetID(id.NewPrefixed("sign")).
+			SetID(id.New()).
 			SetUserID(userID).
 			SetDate(date).
 			SetDayIndex(day).
@@ -539,7 +539,7 @@ func (s *Service) ClaimAchievement(ctx context.Context, userID, achievementID st
 		}
 
 		err = tx.AchievementClaim.Create().
-			SetID(id.NewPrefixed("ac")).
+			SetID(id.New()).
 			SetUserID(userID).
 			SetAchievementID(def.ID).
 			SetReward(map[string]any{

@@ -209,6 +209,34 @@ func (_c *MatchRecordCreate) SetNillablePointsDelta(v *int64) *MatchRecordCreate
 	return _c
 }
 
+// SetIsOffline sets the "is_offline" field.
+func (_c *MatchRecordCreate) SetIsOffline(v bool) *MatchRecordCreate {
+	_c.mutation.SetIsOffline(v)
+	return _c
+}
+
+// SetNillableIsOffline sets the "is_offline" field if the given value is not nil.
+func (_c *MatchRecordCreate) SetNillableIsOffline(v *bool) *MatchRecordCreate {
+	if v != nil {
+		_c.SetIsOffline(*v)
+	}
+	return _c
+}
+
+// SetCreditedPoints sets the "credited_points" field.
+func (_c *MatchRecordCreate) SetCreditedPoints(v int64) *MatchRecordCreate {
+	_c.mutation.SetCreditedPoints(v)
+	return _c
+}
+
+// SetNillableCreditedPoints sets the "credited_points" field if the given value is not nil.
+func (_c *MatchRecordCreate) SetNillableCreditedPoints(v *int64) *MatchRecordCreate {
+	if v != nil {
+		_c.SetCreditedPoints(*v)
+	}
+	return _c
+}
+
 // SetBombCount sets the "bomb_count" field.
 func (_c *MatchRecordCreate) SetBombCount(v int) *MatchRecordCreate {
 	_c.mutation.SetBombCount(v)
@@ -338,6 +366,14 @@ func (_c *MatchRecordCreate) defaults() {
 		v := matchrecord.DefaultPointsDelta
 		_c.mutation.SetPointsDelta(v)
 	}
+	if _, ok := _c.mutation.IsOffline(); !ok {
+		v := matchrecord.DefaultIsOffline
+		_c.mutation.SetIsOffline(v)
+	}
+	if _, ok := _c.mutation.CreditedPoints(); !ok {
+		v := matchrecord.DefaultCreditedPoints
+		_c.mutation.SetCreditedPoints(v)
+	}
 	if _, ok := _c.mutation.BombCount(); !ok {
 		v := matchrecord.DefaultBombCount
 		_c.mutation.SetBombCount(v)
@@ -429,6 +465,17 @@ func (_c *MatchRecordCreate) check() error {
 	}
 	if _, ok := _c.mutation.PointsDelta(); !ok {
 		return &ValidationError{Name: "points_delta", err: errors.New(`ent: missing required field "MatchRecord.points_delta"`)}
+	}
+	if _, ok := _c.mutation.IsOffline(); !ok {
+		return &ValidationError{Name: "is_offline", err: errors.New(`ent: missing required field "MatchRecord.is_offline"`)}
+	}
+	if _, ok := _c.mutation.CreditedPoints(); !ok {
+		return &ValidationError{Name: "credited_points", err: errors.New(`ent: missing required field "MatchRecord.credited_points"`)}
+	}
+	if v, ok := _c.mutation.CreditedPoints(); ok {
+		if err := matchrecord.CreditedPointsValidator(v); err != nil {
+			return &ValidationError{Name: "credited_points", err: fmt.Errorf(`ent: validator failed for field "MatchRecord.credited_points": %w`, err)}
+		}
 	}
 	if _, ok := _c.mutation.BombCount(); !ok {
 		return &ValidationError{Name: "bomb_count", err: errors.New(`ent: missing required field "MatchRecord.bomb_count"`)}
@@ -547,6 +594,14 @@ func (_c *MatchRecordCreate) createSpec() (*MatchRecord, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.PointsDelta(); ok {
 		_spec.SetField(matchrecord.FieldPointsDelta, field.TypeInt64, value)
 		_node.PointsDelta = value
+	}
+	if value, ok := _c.mutation.IsOffline(); ok {
+		_spec.SetField(matchrecord.FieldIsOffline, field.TypeBool, value)
+		_node.IsOffline = value
+	}
+	if value, ok := _c.mutation.CreditedPoints(); ok {
+		_spec.SetField(matchrecord.FieldCreditedPoints, field.TypeInt64, value)
+		_node.CreditedPoints = value
 	}
 	if value, ok := _c.mutation.BombCount(); ok {
 		_spec.SetField(matchrecord.FieldBombCount, field.TypeInt, value)
@@ -817,6 +872,36 @@ func (u *MatchRecordUpsert) UpdatePointsDelta() *MatchRecordUpsert {
 // AddPointsDelta adds v to the "points_delta" field.
 func (u *MatchRecordUpsert) AddPointsDelta(v int64) *MatchRecordUpsert {
 	u.Add(matchrecord.FieldPointsDelta, v)
+	return u
+}
+
+// SetIsOffline sets the "is_offline" field.
+func (u *MatchRecordUpsert) SetIsOffline(v bool) *MatchRecordUpsert {
+	u.Set(matchrecord.FieldIsOffline, v)
+	return u
+}
+
+// UpdateIsOffline sets the "is_offline" field to the value that was provided on create.
+func (u *MatchRecordUpsert) UpdateIsOffline() *MatchRecordUpsert {
+	u.SetExcluded(matchrecord.FieldIsOffline)
+	return u
+}
+
+// SetCreditedPoints sets the "credited_points" field.
+func (u *MatchRecordUpsert) SetCreditedPoints(v int64) *MatchRecordUpsert {
+	u.Set(matchrecord.FieldCreditedPoints, v)
+	return u
+}
+
+// UpdateCreditedPoints sets the "credited_points" field to the value that was provided on create.
+func (u *MatchRecordUpsert) UpdateCreditedPoints() *MatchRecordUpsert {
+	u.SetExcluded(matchrecord.FieldCreditedPoints)
+	return u
+}
+
+// AddCreditedPoints adds v to the "credited_points" field.
+func (u *MatchRecordUpsert) AddCreditedPoints(v int64) *MatchRecordUpsert {
+	u.Add(matchrecord.FieldCreditedPoints, v)
 	return u
 }
 
@@ -1166,6 +1251,41 @@ func (u *MatchRecordUpsertOne) AddPointsDelta(v int64) *MatchRecordUpsertOne {
 func (u *MatchRecordUpsertOne) UpdatePointsDelta() *MatchRecordUpsertOne {
 	return u.Update(func(s *MatchRecordUpsert) {
 		s.UpdatePointsDelta()
+	})
+}
+
+// SetIsOffline sets the "is_offline" field.
+func (u *MatchRecordUpsertOne) SetIsOffline(v bool) *MatchRecordUpsertOne {
+	return u.Update(func(s *MatchRecordUpsert) {
+		s.SetIsOffline(v)
+	})
+}
+
+// UpdateIsOffline sets the "is_offline" field to the value that was provided on create.
+func (u *MatchRecordUpsertOne) UpdateIsOffline() *MatchRecordUpsertOne {
+	return u.Update(func(s *MatchRecordUpsert) {
+		s.UpdateIsOffline()
+	})
+}
+
+// SetCreditedPoints sets the "credited_points" field.
+func (u *MatchRecordUpsertOne) SetCreditedPoints(v int64) *MatchRecordUpsertOne {
+	return u.Update(func(s *MatchRecordUpsert) {
+		s.SetCreditedPoints(v)
+	})
+}
+
+// AddCreditedPoints adds v to the "credited_points" field.
+func (u *MatchRecordUpsertOne) AddCreditedPoints(v int64) *MatchRecordUpsertOne {
+	return u.Update(func(s *MatchRecordUpsert) {
+		s.AddCreditedPoints(v)
+	})
+}
+
+// UpdateCreditedPoints sets the "credited_points" field to the value that was provided on create.
+func (u *MatchRecordUpsertOne) UpdateCreditedPoints() *MatchRecordUpsertOne {
+	return u.Update(func(s *MatchRecordUpsert) {
+		s.UpdateCreditedPoints()
 	})
 }
 
@@ -1692,6 +1812,41 @@ func (u *MatchRecordUpsertBulk) AddPointsDelta(v int64) *MatchRecordUpsertBulk {
 func (u *MatchRecordUpsertBulk) UpdatePointsDelta() *MatchRecordUpsertBulk {
 	return u.Update(func(s *MatchRecordUpsert) {
 		s.UpdatePointsDelta()
+	})
+}
+
+// SetIsOffline sets the "is_offline" field.
+func (u *MatchRecordUpsertBulk) SetIsOffline(v bool) *MatchRecordUpsertBulk {
+	return u.Update(func(s *MatchRecordUpsert) {
+		s.SetIsOffline(v)
+	})
+}
+
+// UpdateIsOffline sets the "is_offline" field to the value that was provided on create.
+func (u *MatchRecordUpsertBulk) UpdateIsOffline() *MatchRecordUpsertBulk {
+	return u.Update(func(s *MatchRecordUpsert) {
+		s.UpdateIsOffline()
+	})
+}
+
+// SetCreditedPoints sets the "credited_points" field.
+func (u *MatchRecordUpsertBulk) SetCreditedPoints(v int64) *MatchRecordUpsertBulk {
+	return u.Update(func(s *MatchRecordUpsert) {
+		s.SetCreditedPoints(v)
+	})
+}
+
+// AddCreditedPoints adds v to the "credited_points" field.
+func (u *MatchRecordUpsertBulk) AddCreditedPoints(v int64) *MatchRecordUpsertBulk {
+	return u.Update(func(s *MatchRecordUpsert) {
+		s.AddCreditedPoints(v)
+	})
+}
+
+// UpdateCreditedPoints sets the "credited_points" field to the value that was provided on create.
+func (u *MatchRecordUpsertBulk) UpdateCreditedPoints() *MatchRecordUpsertBulk {
+	return u.Update(func(s *MatchRecordUpsert) {
+		s.UpdateCreditedPoints()
 	})
 }
 

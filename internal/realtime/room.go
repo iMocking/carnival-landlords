@@ -161,13 +161,13 @@ func newRoom(hub *Hub, mode catalog.Mode, cfg config.Game, seats [game.SeatCount
 	_ = seedRand
 
 	tableCfg := game.DefaultConfig(mode)
-	table, err := game.NewTable(id.NewPrefixed("table"), tableCfg, seats, seed)
+	table, err := game.NewTable(id.New(), tableCfg, seats, seed)
 	if err != nil {
 		return nil, err
 	}
 
 	r := &Room{
-		id:        id.NewPrefixed("room"),
+		id:        id.New(),
 		mode:      mode,
 		cfg:       cfg,
 		table:     table,
@@ -376,7 +376,7 @@ func (r *Room) handleKick(ctx context.Context, cmd roomCommand, timer *time.Time
 		return
 	}
 	if seat.conn != nil {
-		seat.conn.Send(ServerMessage{Type: MsgRoomClosed, Data: RoomClosedData{
+		seat.conn.Send(ServerMessage{Type: MsgRoomClosed, Body: RoomClosedData{
 			RoomID: r.id, Reason: "kicked", Message: "你已被管理员请离房间",
 		}})
 	}
@@ -442,7 +442,7 @@ func (r *Room) handleInput(ctx context.Context, cmd roomCommand, timer *time.Tim
 		err = r.handleUseProp(ctx, seat, msg, timer)
 	case OpLeave:
 		r.broadcastNotice(fmt.Sprintf("%s 离开了牌桌", seat.Nickname), seat.Seat)
-		conn.Send(ServerMessage{Type: MsgRoomClosed, Data: RoomClosedData{RoomID: r.id, Reason: "left", Message: "你已离开房间"}})
+		conn.Send(ServerMessage{Type: MsgRoomClosed, Body: RoomClosedData{RoomID: r.id, Reason: "left", Message: "你已离开房间"}})
 		r.shutdown(ctx, "玩家离开")
 	default:
 		err = apperr.ErrInvalidParam.WithMessage("未知操作 %q", msg.Op)
@@ -460,7 +460,7 @@ func (r *Room) handleInput(ctx context.Context, cmd roomCommand, timer *time.Tim
 func (r *Room) handleHint(ctx context.Context, seat *Seat, msg ClientMessage) {
 	move, ok := r.table.Hint(seat.Seat)
 	if !ok {
-		seat.send(ServerMessage{Type: MsgNotice, Data: NoticeData{Level: "warn", Text: "没有能出的牌"}})
+		seat.send(ServerMessage{Type: MsgNotice, Body: NoticeData{Level: "warn", Text: "没有能出的牌"}})
 		return
 	}
 	// 客户端可以传 item_id = item_hint_pack 表示"用提示符换一次强力提示"。
@@ -472,7 +472,7 @@ func (r *Room) handleHint(ctx context.Context, seat *Seat, msg ClientMessage) {
 			return
 		}
 	}
-	seat.send(ServerMessage{Type: MsgSnapshot, Data: map[string]any{
+	seat.send(ServerMessage{Type: MsgSnapshot, Body: map[string]any{
 		"hint": map[string]any{
 			"cards":      move.Pattern.Cards,
 			"kind":       move.Pattern.Kind,
@@ -522,7 +522,7 @@ func (r *Room) handleChat(seat *Seat, msg ClientMessage) {
 		Seat: seat.Seat, UserID: seat.UserID, Nickname: seat.Nickname,
 		Kind: kind, Value: value, At: time.Now().UnixMilli(),
 	}
-	r.broadcast(ServerMessage{Type: MsgChat, Data: payload})
+	r.broadcast(ServerMessage{Type: MsgChat, Body: payload})
 }
 
 // ---------------- 超时与自动行动
@@ -717,7 +717,7 @@ func (r *Room) maybeFinishHand(ctx context.Context, timer *time.Timer) {
 		return
 	}
 
-	handID := id.NewPrefixed("hand")
+	handID := id.New()
 	r.handID = handID
 
 	seats := [game.SeatCount]game.SeatInfo{}
@@ -750,7 +750,7 @@ func (r *Room) maybeFinishHand(ctx context.Context, timer *time.Timer) {
 			if r.log != nil {
 				r.log.Error("结算失败", zap.String("room_id", r.id), zap.String("hand_id", handID), zap.Error(err))
 			}
-			r.broadcast(ServerMessage{Type: MsgNotice, Data: NoticeData{
+			r.broadcast(ServerMessage{Type: MsgNotice, Body: NoticeData{
 				Level: "error", Text: "本局结算失败，请联系客服", Seconds: 8,
 			}})
 		} else {
@@ -778,7 +778,7 @@ func (r *Room) maybeFinishHand(ctx context.Context, timer *time.Timer) {
 		if s == nil || s.conn == nil {
 			continue
 		}
-		s.send(ServerMessage{Type: MsgSettled, Data: SettledData{
+		s.send(ServerMessage{Type: MsgSettled, Body: SettledData{
 			HandID: handID, Result: result, Players: outcome.Players, Balances: s.LastBalance,
 		}})
 	}
@@ -825,7 +825,7 @@ func (r *Room) finalize(ctx context.Context) {
 		if s == nil || s.conn == nil {
 			continue
 		}
-		s.send(ServerMessage{Type: MsgRoomClosed, Data: RoomClosedData{
+		s.send(ServerMessage{Type: MsgRoomClosed, Body: RoomClosedData{
 			RoomID: r.id, Reason: "finished",
 			Message:   "本场对局已结束",
 			Standings: standings,
@@ -884,7 +884,7 @@ func (r *Room) shutdown(ctx context.Context, reason string) {
 func (r *Room) broadcastEvents() {
 	events := r.table.DrainEvents()
 	for _, evt := range events {
-		r.broadcast(ServerMessage{Type: MsgEvent, Data: evt})
+		r.broadcast(ServerMessage{Type: MsgEvent, Body: evt})
 	}
 }
 
@@ -898,7 +898,7 @@ func (r *Room) broadcast(msg ServerMessage) {
 }
 
 func (r *Room) broadcastNotice(text string, seat int) {
-	r.broadcast(ServerMessage{Type: MsgNotice, Data: NoticeData{Level: "info", Text: text, Seat: seat}})
+	r.broadcast(ServerMessage{Type: MsgNotice, Body: NoticeData{Level: "info", Text: text, Seat: seat}})
 }
 
 func (s *Seat) send(msg ServerMessage) {
@@ -918,7 +918,7 @@ func (r *Room) sendSnapshot(_ context.Context, seat *Seat) {
 		opts = append(opts, game.WithRankCounter(true))
 	}
 	snap := r.table.Snapshot(seat.Seat, opts...)
-	seat.send(ServerMessage{Type: MsgSnapshot, Data: snap})
+	seat.send(ServerMessage{Type: MsgSnapshot, Body: snap})
 }
 
 // refreshInfo 刷新对外快照。由 actor 调用。

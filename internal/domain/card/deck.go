@@ -21,12 +21,12 @@ func Build() []Card {
 	cards := make([]Card, 0, DeckSize)
 	for rank := RankThree; rank <= RankTwo; rank++ {
 		for _, suit := range []Suit{Spade, Heart, Club, Diamond} {
-			cards = append(cards, Card{ID: id.NewPrefixed("c"), Suit: suit, Rank: rank})
+			cards = append(cards, Card{ID: id.New(), Suit: suit, Rank: rank})
 		}
 	}
 	cards = append(cards,
-		Card{ID: id.NewPrefixed("c"), Suit: Joker, Rank: RankSmallJoker},
-		Card{ID: id.NewPrefixed("c"), Suit: Joker, Rank: RankBigJoker},
+		Card{ID: id.New(), Suit: Joker, Rank: RankSmallJoker},
+		Card{ID: id.New(), Suit: Joker, Rank: RankBigJoker},
 	)
 	return cards
 }

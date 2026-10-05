@@ -1,0 +1,48 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="狂欢斗地主"
+config/description="狂欢斗地主 · 欢乐斗地主美术风格 · 真实扑克牌面"
+config/version="1.0.3"
+run/main_scene="res://src/view/app_root.tscn"
+config/quit_on_go_back=false
+config/features=PackedStringArray("4.7", "Mobile")
+config/icon="res://icon.svg"
+config/windows_native_icon="res://icon.ico"
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+window/handheld/orientation=4
+
+[gui]
+
+theme/custom="res://assets/themes/harmony_os_theme.tres"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"
+renderer/rendering_method="mobile"
+textures/vram_compression/import_etc2_astc=true
+
+[network]
+
+; 联机服务端根地址（含 /api/v1）。留空表示纯离线运行；联调时可在这里、
+; 环境变量 CARNIVAL_API_BASE_URL，或 user://network.json 里配置（优先级见 NetworkConfig）。
+base_url="http://127.0.0.1:8080/api/v1"

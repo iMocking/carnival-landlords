@@ -48,6 +48,9 @@ type registerRequest struct {
 	Password string `json:"password" binding:"required"`
 	Nickname string `json:"nickname" binding:"required"`
 	Code     string `json:"code" binding:"required"`
+	// DeviceID 可选。用于把长期设备凭证（game_token）绑定到这台设备；
+	// 留空时服务端会自己生成并在响应里回传，客户端保存即可。
+	DeviceID string `json:"device_id"`
 }
 
 // Register 邮箱 + 密码注册。
@@ -65,6 +68,7 @@ func (h *Handlers) Register(c *gin.Context) {
 	result, err := h.auth.Register(ctx, auth.RegisterInput{
 		Email: req.Email, Password: req.Password, Nickname: req.Nickname, Code: req.Code,
 		IP: c.ClientIP(), UserAgent: c.GetHeader("User-Agent"),
+		DeviceID: req.DeviceID,
 	})
 	if err != nil {
 		response.Fail(c, err)
@@ -78,6 +82,7 @@ func (h *Handlers) Register(c *gin.Context) {
 type loginPasswordRequest struct {
 	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
+	DeviceID string `json:"device_id"`
 }
 
 // LoginPassword 邮箱 + 密码登录。
@@ -92,7 +97,7 @@ func (h *Handlers) LoginPassword(c *gin.Context) {
 	ctx, cancel := withTimeout(c, 0)
 	defer cancel()
 
-	result, err := h.auth.LoginPassword(ctx, req.Email, req.Password, c.ClientIP(), c.GetHeader("User-Agent"))
+	result, err := h.auth.LoginPassword(ctx, req.Email, req.Password, c.ClientIP(), c.GetHeader("User-Agent"), req.DeviceID)
 	if err != nil {
 		response.Fail(c, err)
 		return
@@ -101,8 +106,9 @@ func (h *Handlers) LoginPassword(c *gin.Context) {
 }
 
 type loginCodeRequest struct {
-	Email string `json:"email" binding:"required"`
-	Code  string `json:"code" binding:"required"`
+	Email    string `json:"email" binding:"required"`
+	Code     string `json:"code" binding:"required"`
+	DeviceID string `json:"device_id"`
 }
 
 // LoginCode 验证码登录；邮箱未注册时自动建号。
@@ -117,7 +123,7 @@ func (h *Handlers) LoginCode(c *gin.Context) {
 	ctx, cancel := withTimeout(c, 0)
 	defer cancel()
 
-	result, err := h.auth.LoginCode(ctx, req.Email, req.Code, c.ClientIP(), c.GetHeader("User-Agent"))
+	result, err := h.auth.LoginCode(ctx, req.Email, req.Code, c.ClientIP(), c.GetHeader("User-Agent"), req.DeviceID)
 	if err != nil {
 		response.Fail(c, err)
 		return

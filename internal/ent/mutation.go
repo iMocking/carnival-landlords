@@ -7523,6 +7523,9 @@ type MatchRecordMutation struct {
 	addgold_delta        *int64
 	points_delta         *int64
 	addpoints_delta      *int64
+	is_offline           *bool
+	credited_points      *int64
+	addcredited_points   *int64
 	bomb_count           *int
 	addbomb_count        *int
 	play_count           *int
@@ -8300,6 +8303,98 @@ func (m *MatchRecordMutation) ResetPointsDelta() {
 	m.addpoints_delta = nil
 }
 
+// SetIsOffline sets the "is_offline" field.
+func (m *MatchRecordMutation) SetIsOffline(b bool) {
+	m.is_offline = &b
+}
+
+// IsOffline returns the value of the "is_offline" field in the mutation.
+func (m *MatchRecordMutation) IsOffline() (r bool, exists bool) {
+	v := m.is_offline
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldIsOffline returns the old "is_offline" field's value of the MatchRecord entity.
+// If the MatchRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MatchRecordMutation) OldIsOffline(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldIsOffline is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldIsOffline requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldIsOffline: %w", err)
+	}
+	return oldValue.IsOffline, nil
+}
+
+// ResetIsOffline resets all changes to the "is_offline" field.
+func (m *MatchRecordMutation) ResetIsOffline() {
+	m.is_offline = nil
+}
+
+// SetCreditedPoints sets the "credited_points" field.
+func (m *MatchRecordMutation) SetCreditedPoints(i int64) {
+	m.credited_points = &i
+	m.addcredited_points = nil
+}
+
+// CreditedPoints returns the value of the "credited_points" field in the mutation.
+func (m *MatchRecordMutation) CreditedPoints() (r int64, exists bool) {
+	v := m.credited_points
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreditedPoints returns the old "credited_points" field's value of the MatchRecord entity.
+// If the MatchRecord object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *MatchRecordMutation) OldCreditedPoints(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreditedPoints is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreditedPoints requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreditedPoints: %w", err)
+	}
+	return oldValue.CreditedPoints, nil
+}
+
+// AddCreditedPoints adds i to the "credited_points" field.
+func (m *MatchRecordMutation) AddCreditedPoints(i int64) {
+	if m.addcredited_points != nil {
+		*m.addcredited_points += i
+	} else {
+		m.addcredited_points = &i
+	}
+}
+
+// AddedCreditedPoints returns the value that was added to the "credited_points" field in this mutation.
+func (m *MatchRecordMutation) AddedCreditedPoints() (r int64, exists bool) {
+	v := m.addcredited_points
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetCreditedPoints resets all changes to the "credited_points" field.
+func (m *MatchRecordMutation) ResetCreditedPoints() {
+	m.credited_points = nil
+	m.addcredited_points = nil
+}
+
 // SetBombCount sets the "bomb_count" field.
 func (m *MatchRecordMutation) SetBombCount(i int) {
 	m.bomb_count = &i
@@ -8533,7 +8628,7 @@ func (m *MatchRecordMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *MatchRecordMutation) Fields() []string {
-	fields := make([]string, 0, 19)
+	fields := make([]string, 0, 21)
 	if m.created_at != nil {
 		fields = append(fields, matchrecord.FieldCreatedAt)
 	}
@@ -8578,6 +8673,12 @@ func (m *MatchRecordMutation) Fields() []string {
 	}
 	if m.points_delta != nil {
 		fields = append(fields, matchrecord.FieldPointsDelta)
+	}
+	if m.is_offline != nil {
+		fields = append(fields, matchrecord.FieldIsOffline)
+	}
+	if m.credited_points != nil {
+		fields = append(fields, matchrecord.FieldCreditedPoints)
 	}
 	if m.bomb_count != nil {
 		fields = append(fields, matchrecord.FieldBombCount)
@@ -8629,6 +8730,10 @@ func (m *MatchRecordMutation) Field(name string) (ent.Value, bool) {
 		return m.GoldDelta()
 	case matchrecord.FieldPointsDelta:
 		return m.PointsDelta()
+	case matchrecord.FieldIsOffline:
+		return m.IsOffline()
+	case matchrecord.FieldCreditedPoints:
+		return m.CreditedPoints()
 	case matchrecord.FieldBombCount:
 		return m.BombCount()
 	case matchrecord.FieldPlayCount:
@@ -8676,6 +8781,10 @@ func (m *MatchRecordMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldGoldDelta(ctx)
 	case matchrecord.FieldPointsDelta:
 		return m.OldPointsDelta(ctx)
+	case matchrecord.FieldIsOffline:
+		return m.OldIsOffline(ctx)
+	case matchrecord.FieldCreditedPoints:
+		return m.OldCreditedPoints(ctx)
 	case matchrecord.FieldBombCount:
 		return m.OldBombCount(ctx)
 	case matchrecord.FieldPlayCount:
@@ -8798,6 +8907,20 @@ func (m *MatchRecordMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetPointsDelta(v)
 		return nil
+	case matchrecord.FieldIsOffline:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetIsOffline(v)
+		return nil
+	case matchrecord.FieldCreditedPoints:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreditedPoints(v)
+		return nil
 	case matchrecord.FieldBombCount:
 		v, ok := value.(int)
 		if !ok {
@@ -8852,6 +8975,9 @@ func (m *MatchRecordMutation) AddedFields() []string {
 	if m.addpoints_delta != nil {
 		fields = append(fields, matchrecord.FieldPointsDelta)
 	}
+	if m.addcredited_points != nil {
+		fields = append(fields, matchrecord.FieldCreditedPoints)
+	}
 	if m.addbomb_count != nil {
 		fields = append(fields, matchrecord.FieldBombCount)
 	}
@@ -8878,6 +9004,8 @@ func (m *MatchRecordMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedGoldDelta()
 	case matchrecord.FieldPointsDelta:
 		return m.AddedPointsDelta()
+	case matchrecord.FieldCreditedPoints:
+		return m.AddedCreditedPoints()
 	case matchrecord.FieldBombCount:
 		return m.AddedBombCount()
 	case matchrecord.FieldPlayCount:
@@ -8932,6 +9060,13 @@ func (m *MatchRecordMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddPointsDelta(v)
+		return nil
+	case matchrecord.FieldCreditedPoints:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddCreditedPoints(v)
 		return nil
 	case matchrecord.FieldBombCount:
 		v, ok := value.(int)
@@ -9018,6 +9153,12 @@ func (m *MatchRecordMutation) ResetField(name string) error {
 		return nil
 	case matchrecord.FieldPointsDelta:
 		m.ResetPointsDelta()
+		return nil
+	case matchrecord.FieldIsOffline:
+		m.ResetIsOffline()
+		return nil
+	case matchrecord.FieldCreditedPoints:
+		m.ResetCreditedPoints()
 		return nil
 	case matchrecord.FieldBombCount:
 		m.ResetBombCount()
@@ -11638,6 +11779,7 @@ type UserMutation struct {
 	nickname           *string
 	avatar_index       *int
 	addavatar_index    *int
+	avatar_url         *string
 	role               *string
 	status             *string
 	ban_reason         *string
@@ -11653,6 +11795,8 @@ type UserMutation struct {
 	adddiamonds        *int64
 	points             *int64
 	addpoints          *int64
+	offline_points     *int64
+	addoffline_points  *int64
 	games              *int64
 	addgames           *int64
 	wins               *int64
@@ -12029,6 +12173,42 @@ func (m *UserMutation) AddedAvatarIndex() (r int, exists bool) {
 func (m *UserMutation) ResetAvatarIndex() {
 	m.avatar_index = nil
 	m.addavatar_index = nil
+}
+
+// SetAvatarURL sets the "avatar_url" field.
+func (m *UserMutation) SetAvatarURL(s string) {
+	m.avatar_url = &s
+}
+
+// AvatarURL returns the value of the "avatar_url" field in the mutation.
+func (m *UserMutation) AvatarURL() (r string, exists bool) {
+	v := m.avatar_url
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAvatarURL returns the old "avatar_url" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldAvatarURL(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAvatarURL is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAvatarURL requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAvatarURL: %w", err)
+	}
+	return oldValue.AvatarURL, nil
+}
+
+// ResetAvatarURL resets all changes to the "avatar_url" field.
+func (m *UserMutation) ResetAvatarURL() {
+	m.avatar_url = nil
 }
 
 // SetRole sets the "role" field.
@@ -12515,6 +12695,62 @@ func (m *UserMutation) AddedPoints() (r int64, exists bool) {
 func (m *UserMutation) ResetPoints() {
 	m.points = nil
 	m.addpoints = nil
+}
+
+// SetOfflinePoints sets the "offline_points" field.
+func (m *UserMutation) SetOfflinePoints(i int64) {
+	m.offline_points = &i
+	m.addoffline_points = nil
+}
+
+// OfflinePoints returns the value of the "offline_points" field in the mutation.
+func (m *UserMutation) OfflinePoints() (r int64, exists bool) {
+	v := m.offline_points
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldOfflinePoints returns the old "offline_points" field's value of the User entity.
+// If the User object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UserMutation) OldOfflinePoints(ctx context.Context) (v int64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldOfflinePoints is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldOfflinePoints requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldOfflinePoints: %w", err)
+	}
+	return oldValue.OfflinePoints, nil
+}
+
+// AddOfflinePoints adds i to the "offline_points" field.
+func (m *UserMutation) AddOfflinePoints(i int64) {
+	if m.addoffline_points != nil {
+		*m.addoffline_points += i
+	} else {
+		m.addoffline_points = &i
+	}
+}
+
+// AddedOfflinePoints returns the value that was added to the "offline_points" field in this mutation.
+func (m *UserMutation) AddedOfflinePoints() (r int64, exists bool) {
+	v := m.addoffline_points
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetOfflinePoints resets all changes to the "offline_points" field.
+func (m *UserMutation) ResetOfflinePoints() {
+	m.offline_points = nil
+	m.addoffline_points = nil
 }
 
 // SetGames sets the "games" field.
@@ -13540,7 +13776,7 @@ func (m *UserMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 37)
+	fields := make([]string, 0, 39)
 	if m.created_at != nil {
 		fields = append(fields, user.FieldCreatedAt)
 	}
@@ -13558,6 +13794,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.avatar_index != nil {
 		fields = append(fields, user.FieldAvatarIndex)
+	}
+	if m.avatar_url != nil {
+		fields = append(fields, user.FieldAvatarURL)
 	}
 	if m.role != nil {
 		fields = append(fields, user.FieldRole)
@@ -13588,6 +13827,9 @@ func (m *UserMutation) Fields() []string {
 	}
 	if m.points != nil {
 		fields = append(fields, user.FieldPoints)
+	}
+	if m.offline_points != nil {
+		fields = append(fields, user.FieldOfflinePoints)
 	}
 	if m.games != nil {
 		fields = append(fields, user.FieldGames)
@@ -13672,6 +13914,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Nickname()
 	case user.FieldAvatarIndex:
 		return m.AvatarIndex()
+	case user.FieldAvatarURL:
+		return m.AvatarURL()
 	case user.FieldRole:
 		return m.Role()
 	case user.FieldStatus:
@@ -13692,6 +13936,8 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 		return m.Diamonds()
 	case user.FieldPoints:
 		return m.Points()
+	case user.FieldOfflinePoints:
+		return m.OfflinePoints()
 	case user.FieldGames:
 		return m.Games()
 	case user.FieldWins:
@@ -13755,6 +14001,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldNickname(ctx)
 	case user.FieldAvatarIndex:
 		return m.OldAvatarIndex(ctx)
+	case user.FieldAvatarURL:
+		return m.OldAvatarURL(ctx)
 	case user.FieldRole:
 		return m.OldRole(ctx)
 	case user.FieldStatus:
@@ -13775,6 +14023,8 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 		return m.OldDiamonds(ctx)
 	case user.FieldPoints:
 		return m.OldPoints(ctx)
+	case user.FieldOfflinePoints:
+		return m.OldOfflinePoints(ctx)
 	case user.FieldGames:
 		return m.OldGames(ctx)
 	case user.FieldWins:
@@ -13868,6 +14118,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetAvatarIndex(v)
 		return nil
+	case user.FieldAvatarURL:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAvatarURL(v)
+		return nil
 	case user.FieldRole:
 		v, ok := value.(string)
 		if !ok {
@@ -13937,6 +14194,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetPoints(v)
+		return nil
+	case user.FieldOfflinePoints:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetOfflinePoints(v)
 		return nil
 	case user.FieldGames:
 		v, ok := value.(int64)
@@ -14111,6 +14375,9 @@ func (m *UserMutation) AddedFields() []string {
 	if m.addpoints != nil {
 		fields = append(fields, user.FieldPoints)
 	}
+	if m.addoffline_points != nil {
+		fields = append(fields, user.FieldOfflinePoints)
+	}
 	if m.addgames != nil {
 		fields = append(fields, user.FieldGames)
 	}
@@ -14164,6 +14431,8 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedDiamonds()
 	case user.FieldPoints:
 		return m.AddedPoints()
+	case user.FieldOfflinePoints:
+		return m.AddedOfflinePoints()
 	case user.FieldGames:
 		return m.AddedGames()
 	case user.FieldWins:
@@ -14236,6 +14505,13 @@ func (m *UserMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddPoints(v)
+		return nil
+	case user.FieldOfflinePoints:
+		v, ok := value.(int64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddOfflinePoints(v)
 		return nil
 	case user.FieldGames:
 		v, ok := value.(int64)
@@ -14380,6 +14656,9 @@ func (m *UserMutation) ResetField(name string) error {
 	case user.FieldAvatarIndex:
 		m.ResetAvatarIndex()
 		return nil
+	case user.FieldAvatarURL:
+		m.ResetAvatarURL()
+		return nil
 	case user.FieldRole:
 		m.ResetRole()
 		return nil
@@ -14409,6 +14688,9 @@ func (m *UserMutation) ResetField(name string) error {
 		return nil
 	case user.FieldPoints:
 		m.ResetPoints()
+		return nil
+	case user.FieldOfflinePoints:
+		m.ResetOfflinePoints()
 		return nil
 	case user.FieldGames:
 		m.ResetGames()

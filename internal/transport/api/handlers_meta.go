@@ -16,7 +16,7 @@ import (
 func realtimeNotice(text string) realtime.ServerMessage {
 	return realtime.ServerMessage{
 		Type: realtime.MsgNotice,
-		Data: realtime.NoticeData{Level: "warn", Text: text, Seconds: 5},
+		Body: realtime.NoticeData{Level: "warn", Text: text, Seconds: 5},
 	}
 }
 
@@ -140,14 +140,18 @@ func (h *Handlers) Catalog(c *gin.Context) {
 	}
 
 	response.OK(c, gin.H{
-		"modes":        catalog.Modes(),
-		"shop_tabs":    tabViews,
-		"items":        itemViews,
-		"skins":        catalog.Skins(),
-		"banners":      catalog.Banners,
-		"sign_in":      catalog.SignInRewards,
-		"daily_tasks":  catalog.DailyTasks,
-		"achievements": catalog.Achievements,
+		// ConfigVersion 让客户端判断"本地缓存的配置还能不能用"（需求 CFG-01
+		// 明确要求"一次拉全部配置 + 版本号"）。它是内容哈希，改动任何一处目录
+		// 都会自动换新，因此不需要有人记得去手动改版本号。
+		"config_version": catalog.Version(),
+		"modes":          catalog.Modes(),
+		"shop_tabs":      tabViews,
+		"items":          itemViews,
+		"skins":          catalog.Skins(),
+		"banners":        catalog.Banners,
+		"sign_in":        catalog.SignInRewards,
+		"daily_tasks":    catalog.DailyTasks,
+		"achievements":   catalog.Achievements,
 		"level_rule": gin.H{
 			"exp_per_level": catalog.ExpPerLevel,
 			"max_level":     catalog.MaxLevel,
@@ -171,14 +175,78 @@ func tabTitle(tab catalog.GoodTab) string {
 
 // Version 返回服务端版本与协议版本。
 //
-// GET /api/v1/meta/version
+// GET /api/v1/config/version
+//
+// 注意它同时带 `config_version`：客户端即使只调这个轻量接口，
+// 也能判断"要不要重新拉一遍 /config/bootstrap"。
+// 只给服务端版本号是不够的 —— 服务端可能没发版，但运营改了商品目录。
 func (h *Handlers) Version(c *gin.Context) {
 	response.OK(c, gin.H{
 		"service":        h.cfg.App.Name,
 		"version":        h.version,
 		"env":            h.cfg.App.Env,
 		"protocol":       1,
+		"config_version": catalog.Version(),
 		"server_time_ms": time.Now().UnixMilli(),
+	})
+}
+
+// ---------------- 配置分类下发（需求 CFG-04 / CFG-06 / CFG-07 / CFG-08）
+//
+// 这些内容本来就都在 `/config/bootstrap` 里。单独再开一组接口，
+// 是因为客户端有几处只关心其中一类：
+//   - 商城/皮肤页只想拿皮肤目录（换肤后热更新，不该重拉全部配置）；
+//   - 活动中心只想拿活动类数据；
+//   - 公告要能单独刷新。
+//
+// 因此这里刻意**复用同一份目录数据**，不另建一套 ——
+// 两份数据源是做容易漂移的地方（改了 bootstrap 忘了改子接口，
+// 客户端就会看到"大厅有、活动页没有"）。
+
+// ConfigSkins 皮肤目录。
+//
+// GET /api/v1/config/skins
+func (h *Handlers) ConfigSkins(c *gin.Context) {
+	response.OK(c, gin.H{
+		"config_version": catalog.Version(),
+		"items":          catalog.Skins(),
+	})
+}
+
+// ConfigActivities 活动类目录：签到奖励 + 每日任务 + 活动横幅。
+//
+// GET /api/v1/config/activities
+func (h *Handlers) ConfigActivities(c *gin.Context) {
+	response.OK(c, gin.H{
+		"config_version": catalog.Version(),
+		"sign_in":        catalog.SignInRewards,
+		"daily_tasks":    catalog.DailyTasks,
+		"banners":        catalog.Banners,
+	})
+}
+
+// ConfigAchievements 成就目录。
+//
+// GET /api/v1/config/achievements
+func (h *Handlers) ConfigAchievements(c *gin.Context) {
+	response.OK(c, gin.H{
+		"config_version": catalog.Version(),
+		"items":          catalog.Achievements,
+	})
+}
+
+// ConfigAnnouncements 公告 / 活动横幅。
+//
+// GET /api/v1/config/announcements
+//
+// 目前公告与活动横幅是同一份数据（`catalog.Banners`）。
+// 需求把它们列成两个接口，这里如实返回同一份而不是编造两份内容 ——
+// 真要做成独立的两套（例如公告带生效时间与富文本），
+// 应该先在目录里建模，而不是先开接口。
+func (h *Handlers) ConfigAnnouncements(c *gin.Context) {
+	response.OK(c, gin.H{
+		"config_version": catalog.Version(),
+		"items":          catalog.Banners,
 	})
 }
 
@@ -186,12 +254,12 @@ func (h *Handlers) Version(c *gin.Context) {
 //
 // GET /api/v1/meta/stats
 func (h *Handlers) Stats(c *gin.Context) {
-	data := gin.H{
+	body := gin.H{
 		"rooms": 0, "online": 0,
 	}
 	if h.hub != nil {
-		data["rooms"] = h.hub.RoomCount()
-		data["online"] = h.hub.OnlineCount()
+		body["rooms"] = h.hub.RoomCount()
+		body["online"] = h.hub.OnlineCount()
 	}
-	response.OK(c, data)
+	response.OK(c, body)
 }

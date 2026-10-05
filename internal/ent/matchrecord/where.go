@@ -139,6 +139,16 @@ func PointsDelta(v int64) predicate.MatchRecord {
 	return predicate.MatchRecord(sql.FieldEQ(FieldPointsDelta, v))
 }
 
+// IsOffline applies equality check predicate on the "is_offline" field. It's identical to IsOfflineEQ.
+func IsOffline(v bool) predicate.MatchRecord {
+	return predicate.MatchRecord(sql.FieldEQ(FieldIsOffline, v))
+}
+
+// CreditedPoints applies equality check predicate on the "credited_points" field. It's identical to CreditedPointsEQ.
+func CreditedPoints(v int64) predicate.MatchRecord {
+	return predicate.MatchRecord(sql.FieldEQ(FieldCreditedPoints, v))
+}
+
 // BombCount applies equality check predicate on the "bomb_count" field. It's identical to BombCountEQ.
 func BombCount(v int) predicate.MatchRecord {
 	return predicate.MatchRecord(sql.FieldEQ(FieldBombCount, v))
@@ -872,6 +882,56 @@ func PointsDeltaLT(v int64) predicate.MatchRecord {
 // PointsDeltaLTE applies the LTE predicate on the "points_delta" field.
 func PointsDeltaLTE(v int64) predicate.MatchRecord {
 	return predicate.MatchRecord(sql.FieldLTE(FieldPointsDelta, v))
+}
+
+// IsOfflineEQ applies the EQ predicate on the "is_offline" field.
+func IsOfflineEQ(v bool) predicate.MatchRecord {
+	return predicate.MatchRecord(sql.FieldEQ(FieldIsOffline, v))
+}
+
+// IsOfflineNEQ applies the NEQ predicate on the "is_offline" field.
+func IsOfflineNEQ(v bool) predicate.MatchRecord {
+	return predicate.MatchRecord(sql.FieldNEQ(FieldIsOffline, v))
+}
+
+// CreditedPointsEQ applies the EQ predicate on the "credited_points" field.
+func CreditedPointsEQ(v int64) predicate.MatchRecord {
+	return predicate.MatchRecord(sql.FieldEQ(FieldCreditedPoints, v))
+}
+
+// CreditedPointsNEQ applies the NEQ predicate on the "credited_points" field.
+func CreditedPointsNEQ(v int64) predicate.MatchRecord {
+	return predicate.MatchRecord(sql.FieldNEQ(FieldCreditedPoints, v))
+}
+
+// CreditedPointsIn applies the In predicate on the "credited_points" field.
+func CreditedPointsIn(vs ...int64) predicate.MatchRecord {
+	return predicate.MatchRecord(sql.FieldIn(FieldCreditedPoints, vs...))
+}
+
+// CreditedPointsNotIn applies the NotIn predicate on the "credited_points" field.
+func CreditedPointsNotIn(vs ...int64) predicate.MatchRecord {
+	return predicate.MatchRecord(sql.FieldNotIn(FieldCreditedPoints, vs...))
+}
+
+// CreditedPointsGT applies the GT predicate on the "credited_points" field.
+func CreditedPointsGT(v int64) predicate.MatchRecord {
+	return predicate.MatchRecord(sql.FieldGT(FieldCreditedPoints, v))
+}
+
+// CreditedPointsGTE applies the GTE predicate on the "credited_points" field.
+func CreditedPointsGTE(v int64) predicate.MatchRecord {
+	return predicate.MatchRecord(sql.FieldGTE(FieldCreditedPoints, v))
+}
+
+// CreditedPointsLT applies the LT predicate on the "credited_points" field.
+func CreditedPointsLT(v int64) predicate.MatchRecord {
+	return predicate.MatchRecord(sql.FieldLT(FieldCreditedPoints, v))
+}
+
+// CreditedPointsLTE applies the LTE predicate on the "credited_points" field.
+func CreditedPointsLTE(v int64) predicate.MatchRecord {
+	return predicate.MatchRecord(sql.FieldLTE(FieldCreditedPoints, v))
 }
 
 // BombCountEQ applies the EQ predicate on the "bomb_count" field.

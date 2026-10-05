@@ -47,7 +47,7 @@ func (h *Handlers) ClaimDailyTask(c *gin.Context) {
 	ctx, cancel := withTimeout(c, 0)
 	defer cancel()
 
-	result, err := h.activity.ClaimDailyTask(ctx, authctx.UserID(c), c.Param("id"))
+	result, err := h.activity.ClaimDailyTask(ctx, authctx.UserID(c), c.Param("task_id"))
 	if err != nil {
 		response.Fail(c, err)
 		return

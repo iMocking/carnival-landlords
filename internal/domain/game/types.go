@@ -44,7 +44,8 @@ type Event struct {
 	// Seat 事件相关的座位；-1 表示与具体座位无关（系统播报）。
 	Seat int       `json:"seat"`
 	At   time.Time `json:"at"`
-	Data any       `json:"data,omitempty"`
+	// Body 事件载荷。字段名与 HTTP 信封、WS 帧统一为 `body`（决策 D-01）。
+	Body any `json:"body,omitempty"`
 }
 
 // ---------------- 事件载荷

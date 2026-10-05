@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="狂欢斗地主运营后台">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#131c31" />
+      <stop offset="1" stop-color="#05070f" />
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd77a" />
+      <stop offset="1" stop-color="#e6a419" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#bg)" />
+  <rect x="15" y="13" width="22" height="32" rx="4.5" fill="#e8394a" opacity="0.85" transform="rotate(-14 26 29)" />
+  <rect x="25" y="17" width="22" height="32" rx="4.5" fill="#f4f1e8" transform="rotate(10 36 33)" />
+  <path d="M37 25.5 44 32.5 37 39.5 30 32.5z" fill="url(#gold)" />
+</svg>

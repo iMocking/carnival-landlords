@@ -97,6 +97,20 @@ func (_u *UserUpdate) AddAvatarIndex(v int) *UserUpdate {
 	return _u
 }
 
+// SetAvatarURL sets the "avatar_url" field.
+func (_u *UserUpdate) SetAvatarURL(v string) *UserUpdate {
+	_u.mutation.SetAvatarURL(v)
+	return _u
+}
+
+// SetNillableAvatarURL sets the "avatar_url" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableAvatarURL(v *string) *UserUpdate {
+	if v != nil {
+		_u.SetAvatarURL(*v)
+	}
+	return _u
+}
+
 // SetRole sets the "role" field.
 func (_u *UserUpdate) SetRole(v string) *UserUpdate {
 	_u.mutation.SetRole(v)
@@ -281,6 +295,27 @@ func (_u *UserUpdate) SetNillablePoints(v *int64) *UserUpdate {
 // AddPoints adds value to the "points" field.
 func (_u *UserUpdate) AddPoints(v int64) *UserUpdate {
 	_u.mutation.AddPoints(v)
+	return _u
+}
+
+// SetOfflinePoints sets the "offline_points" field.
+func (_u *UserUpdate) SetOfflinePoints(v int64) *UserUpdate {
+	_u.mutation.ResetOfflinePoints()
+	_u.mutation.SetOfflinePoints(v)
+	return _u
+}
+
+// SetNillableOfflinePoints sets the "offline_points" field if the given value is not nil.
+func (_u *UserUpdate) SetNillableOfflinePoints(v *int64) *UserUpdate {
+	if v != nil {
+		_u.SetOfflinePoints(*v)
+	}
+	return _u
+}
+
+// AddOfflinePoints adds value to the "offline_points" field.
+func (_u *UserUpdate) AddOfflinePoints(v int64) *UserUpdate {
+	_u.mutation.AddOfflinePoints(v)
 	return _u
 }
 
@@ -744,6 +779,11 @@ func (_u *UserUpdate) check() error {
 			return &ValidationError{Name: "points", err: fmt.Errorf(`ent: validator failed for field "User.points": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.OfflinePoints(); ok {
+		if err := user.OfflinePointsValidator(v); err != nil {
+			return &ValidationError{Name: "offline_points", err: fmt.Errorf(`ent: validator failed for field "User.offline_points": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Games(); ok {
 		if err := user.GamesValidator(v); err != nil {
 			return &ValidationError{Name: "games", err: fmt.Errorf(`ent: validator failed for field "User.games": %w`, err)}
@@ -827,6 +867,9 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	if value, ok := _u.mutation.AddedAvatarIndex(); ok {
 		_spec.AddField(user.FieldAvatarIndex, field.TypeInt, value)
 	}
+	if value, ok := _u.mutation.AvatarURL(); ok {
+		_spec.SetField(user.FieldAvatarURL, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.Role(); ok {
 		_spec.SetField(user.FieldRole, field.TypeString, value)
 	}
@@ -877,6 +920,12 @@ func (_u *UserUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if value, ok := _u.mutation.AddedPoints(); ok {
 		_spec.AddField(user.FieldPoints, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.OfflinePoints(); ok {
+		_spec.SetField(user.FieldOfflinePoints, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedOfflinePoints(); ok {
+		_spec.AddField(user.FieldOfflinePoints, field.TypeInt64, value)
 	}
 	if value, ok := _u.mutation.Games(); ok {
 		_spec.SetField(user.FieldGames, field.TypeInt64, value)
@@ -1066,6 +1115,20 @@ func (_u *UserUpdateOne) AddAvatarIndex(v int) *UserUpdateOne {
 	return _u
 }
 
+// SetAvatarURL sets the "avatar_url" field.
+func (_u *UserUpdateOne) SetAvatarURL(v string) *UserUpdateOne {
+	_u.mutation.SetAvatarURL(v)
+	return _u
+}
+
+// SetNillableAvatarURL sets the "avatar_url" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableAvatarURL(v *string) *UserUpdateOne {
+	if v != nil {
+		_u.SetAvatarURL(*v)
+	}
+	return _u
+}
+
 // SetRole sets the "role" field.
 func (_u *UserUpdateOne) SetRole(v string) *UserUpdateOne {
 	_u.mutation.SetRole(v)
@@ -1250,6 +1313,27 @@ func (_u *UserUpdateOne) SetNillablePoints(v *int64) *UserUpdateOne {
 // AddPoints adds value to the "points" field.
 func (_u *UserUpdateOne) AddPoints(v int64) *UserUpdateOne {
 	_u.mutation.AddPoints(v)
+	return _u
+}
+
+// SetOfflinePoints sets the "offline_points" field.
+func (_u *UserUpdateOne) SetOfflinePoints(v int64) *UserUpdateOne {
+	_u.mutation.ResetOfflinePoints()
+	_u.mutation.SetOfflinePoints(v)
+	return _u
+}
+
+// SetNillableOfflinePoints sets the "offline_points" field if the given value is not nil.
+func (_u *UserUpdateOne) SetNillableOfflinePoints(v *int64) *UserUpdateOne {
+	if v != nil {
+		_u.SetOfflinePoints(*v)
+	}
+	return _u
+}
+
+// AddOfflinePoints adds value to the "offline_points" field.
+func (_u *UserUpdateOne) AddOfflinePoints(v int64) *UserUpdateOne {
+	_u.mutation.AddOfflinePoints(v)
 	return _u
 }
 
@@ -1726,6 +1810,11 @@ func (_u *UserUpdateOne) check() error {
 			return &ValidationError{Name: "points", err: fmt.Errorf(`ent: validator failed for field "User.points": %w`, err)}
 		}
 	}
+	if v, ok := _u.mutation.OfflinePoints(); ok {
+		if err := user.OfflinePointsValidator(v); err != nil {
+			return &ValidationError{Name: "offline_points", err: fmt.Errorf(`ent: validator failed for field "User.offline_points": %w`, err)}
+		}
+	}
 	if v, ok := _u.mutation.Games(); ok {
 		if err := user.GamesValidator(v); err != nil {
 			return &ValidationError{Name: "games", err: fmt.Errorf(`ent: validator failed for field "User.games": %w`, err)}
@@ -1826,6 +1915,9 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	if value, ok := _u.mutation.AddedAvatarIndex(); ok {
 		_spec.AddField(user.FieldAvatarIndex, field.TypeInt, value)
 	}
+	if value, ok := _u.mutation.AvatarURL(); ok {
+		_spec.SetField(user.FieldAvatarURL, field.TypeString, value)
+	}
 	if value, ok := _u.mutation.Role(); ok {
 		_spec.SetField(user.FieldRole, field.TypeString, value)
 	}
@@ -1876,6 +1968,12 @@ func (_u *UserUpdateOne) sqlSave(ctx context.Context) (_node *User, err error) {
 	}
 	if value, ok := _u.mutation.AddedPoints(); ok {
 		_spec.AddField(user.FieldPoints, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.OfflinePoints(); ok {
+		_spec.SetField(user.FieldOfflinePoints, field.TypeInt64, value)
+	}
+	if value, ok := _u.mutation.AddedOfflinePoints(); ok {
+		_spec.AddField(user.FieldOfflinePoints, field.TypeInt64, value)
 	}
 	if value, ok := _u.mutation.Games(); ok {
 		_spec.SetField(user.FieldGames, field.TypeInt64, value)

@@ -34,7 +34,7 @@ type Principal struct {
 
 // IsGM 是否具备后台权限。
 func (p *Principal) IsGM() bool {
-	return p != nil && (p.Role == catalog.RoleGM || p.Role == catalog.RoleAdmin)
+	return p != nil && (p.Role == catalog.RoleOperator || p.Role == catalog.RoleAdmin)
 }
 
 // Set 把调用者写入请求上下文。

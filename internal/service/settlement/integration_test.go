@@ -58,7 +58,7 @@ func setup(t *testing.T) (*ent.Client, *sql.DB, *wallet.Service, *settlement.Ser
 
 	rdb, err := redisx.New(ctx, cfg.Redis, log)
 	require.NoError(t, err, "连接 Redis 失败（是否已 docker compose up -d redis？）")
-	require.NoError(t, pg.Migrate(ctx, pgClient.Client, log))
+	require.NoError(t, pg.Migrate(ctx, pgClient.Client, pgClient.DB, log))
 
 	walletSvc := wallet.New(pgClient.Client, rdb, log)
 	granter := reward.New(walletSvc)
@@ -212,7 +212,7 @@ func TestSettleKeepsLedgerBalanced(t *testing.T) {
 	}
 
 	mode := catalog.DefaultMode()
-	table, err := game.NewTable(id.NewPrefixed("table"), game.DefaultConfig(mode), seats, 20260101)
+	table, err := game.NewTable(id.New(), game.DefaultConfig(mode), seats, 20260101)
 	require.NoError(t, err)
 
 	playFullHand(t, table)
@@ -221,8 +221,8 @@ func TestSettleKeepsLedgerBalanced(t *testing.T) {
 	require.NotNil(t, result)
 
 	outcome, err := settler.Settle(ctx, settlement.HandInput{
-		HandID:    id.NewPrefixed("hand"),
-		RoomID:    id.NewPrefixed("room"),
+		HandID:    id.New(),
+		RoomID:    id.New(),
 		TableID:   table.ID(),
 		Mode:      mode,
 		Seed:      table.Seed(),
@@ -281,7 +281,7 @@ func TestSettleKeepsLedgerBalanced(t *testing.T) {
 
 	// ---- 断言 4：重复结算必须幂等（不会二次加钱）
 	second, err := settler.Settle(ctx, settlement.HandInput{
-		HandID: outcome.HandID, RoomID: id.NewPrefixed("room"), TableID: table.ID(),
+		HandID: outcome.HandID, RoomID: id.New(), TableID: table.ID(),
 		Mode: mode, Seed: table.Seed(), StartedAt: table.HandStartedAt(),
 		Result: result, Seats: seats, Actions: table.History(),
 	})
@@ -323,14 +323,14 @@ func TestSettleCapsLossAtBalance(t *testing.T) {
 	}
 
 	mode := catalog.DefaultMode()
-	table, err := game.NewTable(id.NewPrefixed("table"), game.DefaultConfig(mode), seats, 777)
+	table, err := game.NewTable(id.New(), game.DefaultConfig(mode), seats, 777)
 	require.NoError(t, err)
 	playFullHand(t, table)
 	result := table.Result()
 	require.NotNil(t, result)
 
 	outcome, err := settler.Settle(ctx, settlement.HandInput{
-		HandID: id.NewPrefixed("hand"), RoomID: id.NewPrefixed("room"), TableID: table.ID(),
+		HandID: id.New(), RoomID: id.New(), TableID: table.ID(),
 		Mode: mode, Seed: table.Seed(), StartedAt: table.HandStartedAt(),
 		Result: result, Seats: seats, Actions: table.History(),
 	})

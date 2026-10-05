@@ -1,0 +1,455 @@
+/*
+ * 全局样式：设计令牌 + 少量可复用的组件类。
+ *
+ * 说明（很重要，改样式前先读）：
+ *   1. 主题令牌走 Tailwind v4 的 @theme，因此 --color-ink-850 既能在 CSS 里
+ *      用 var() 引用，也能直接用 bg-ink-850 / text-gold-400 这类工具类。
+ *   2. 组件类写在**原生 @layer components** 里，不用 @apply。
+ *      原因是层叠优先级：Tailwind 的工具类在 @layer utilities 中，
+ *      而**未分层的普通 CSS 永远压过任何分层样式** —— 若把 .cl-btn 写成未分层
+ *      的普通类，模板里 `class="cl-btn px-6"` 的 px-6 会失效，且现象极其难查。
+ *      放进 components 层后，工具类仍然可以随意覆盖组件类。
+ *   3. 组件类只负责"一个后台控件长什么样"，布局一律留给模板里的工具类。
+ */
+
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    'PingFang SC', 'HarmonyOS Sans SC', 'Microsoft YaHei', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
+  --font-mono:
+    ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+
+  /* 深靛蓝底：后台长时间盯屏，低亮度底 + 高对比文字的疲劳感最低 */
+  --color-ink-950: #05070f;
+  --color-ink-900: #090e1a;
+  --color-ink-850: #0d1424;
+  --color-ink-800: #121a2e;
+  --color-ink-700: #1b2540;
+  --color-ink-600: #27324f;
+  --color-ink-500: #3a4666;
+  --color-ink-400: #5b6889;
+  --color-ink-300: #8b96b3;
+  --color-ink-200: #b8c0d4;
+  --color-ink-100: #e2e6f0;
+
+  /* 金：主操作色，对齐游戏里的金币与"狂欢"调性 */
+  --color-gold-200: #ffe9b0;
+  --color-gold-300: #ffd77a;
+  --color-gold-400: #f7c14b;
+  --color-gold-500: #e6a419;
+  --color-gold-600: #b87c0c;
+
+  /* 红：危险操作（封禁、踢人、扣款） */
+  --color-carnival-400: #ff6b7a;
+  --color-carnival-500: #e8394a;
+  --color-carnival-600: #c02436;
+
+  /* 绿：健康 / 成功 / 在线 */
+  --color-felt-400: #34d399;
+  --color-felt-500: #10b981;
+  --color-felt-600: #059669;
+
+  --shadow-panel: 0 18px 40px -28px rgb(0 0 0 / 0.95);
+  --shadow-pop: 0 24px 60px -20px rgb(0 0 0 / 0.85);
+
+  --animate-rise: rise 0.26s ease-out both;
+  --animate-shimmer: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes shimmer {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--color-ink-950);
+    color: var(--color-ink-100);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* 后台背景：两团极淡的光晕，避免整屏纯色显得像没做完 */
+  #app {
+    min-height: 100vh;
+    background-image:
+      radial-gradient(60rem 40rem at 12% -8%, rgb(247 193 75 / 0.07), transparent 60%),
+      radial-gradient(50rem 36rem at 100% 0%, rgb(232 57 74 / 0.07), transparent 55%);
+  }
+
+  ::selection {
+    background: var(--color-gold-400);
+    color: var(--color-ink-950);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold-400);
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-ink-600);
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-500);
+    background-clip: content-box;
+  }
+}
+
+@layer components {
+  /* ---------------- 容器 ---------------- */
+
+  .cl-card {
+    background-color: color-mix(in oklab, var(--color-ink-850) 88%, transparent);
+    border: 1px solid var(--color-ink-700);
+    border-radius: 14px;
+    box-shadow: var(--shadow-panel);
+    backdrop-filter: blur(6px);
+  }
+
+  .cl-card-body {
+    padding: 1.15rem 1.25rem;
+  }
+
+  .cl-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-ink-700), transparent);
+  }
+
+  /* ---------------- 文字 ---------------- */
+
+  .cl-title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    color: var(--color-ink-100);
+  }
+
+  .cl-subtitle {
+    font-size: 0.8125rem;
+    color: var(--color-ink-300);
+  }
+
+  .cl-label {
+    display: block;
+    margin-bottom: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-ink-200);
+  }
+
+  .cl-hint {
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--color-ink-400);
+  }
+
+  .cl-mono {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------------- 按钮 ---------------- */
+
+  .cl-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    height: 2.25rem;
+    padding: 0 0.875rem;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+      background-color 0.16s ease,
+      border-color 0.16s ease,
+      color 0.16s ease,
+      transform 0.12s ease,
+      opacity 0.16s ease;
+    user-select: none;
+  }
+
+  .cl-btn:active:not(:disabled) {
+    transform: translateY(1px);
+  }
+
+  .cl-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .cl-btn--primary {
+    background-image: linear-gradient(180deg, var(--color-gold-300), var(--color-gold-500));
+    color: #2a1c00;
+    border-color: var(--color-gold-500);
+  }
+
+  .cl-btn--primary:hover:not(:disabled) {
+    background-image: linear-gradient(180deg, var(--color-gold-200), var(--color-gold-400));
+  }
+
+  .cl-btn--danger {
+    background-color: color-mix(in oklab, var(--color-carnival-500) 22%, transparent);
+    border-color: color-mix(in oklab, var(--color-carnival-500) 55%, transparent);
+    color: var(--color-carnival-400);
+  }
+
+  .cl-btn--danger:hover:not(:disabled) {
+    background-color: color-mix(in oklab, var(--color-carnival-500) 34%, transparent);
+    color: #ffe3e6;
+  }
+
+  .cl-btn--ghost {
+    background-color: transparent;
+    border-color: var(--color-ink-600);
+    color: var(--color-ink-200);
+  }
+
+  .cl-btn--ghost:hover:not(:disabled) {
+    background-color: var(--color-ink-800);
+    border-color: var(--color-ink-500);
+    color: var(--color-ink-100);
+  }
+
+  .cl-btn--subtle {
+    background-color: var(--color-ink-700);
+    border-color: var(--color-ink-600);
+    color: var(--color-ink-100);
+  }
+
+  .cl-btn--subtle:hover:not(:disabled) {
+    background-color: var(--color-ink-600);
+  }
+
+  .cl-btn--sm {
+    height: 1.875rem;
+    padding: 0 0.6875rem;
+    font-size: 0.75rem;
+    border-radius: 8px;
+  }
+
+  .cl-btn--xs {
+    height: 1.625rem;
+    padding: 0 0.5rem;
+    font-size: 0.6875rem;
+    border-radius: 7px;
+    gap: 0.25rem;
+  }
+
+  .cl-btn--block {
+    width: 100%;
+  }
+
+  /* ---------------- 表单 ---------------- */
+
+  .cl-input,
+  .cl-select,
+  .cl-textarea {
+    width: 100%;
+    background-color: var(--color-ink-900);
+    border: 1px solid var(--color-ink-600);
+    border-radius: 9px;
+    color: var(--color-ink-100);
+    font-size: 0.8125rem;
+    transition:
+      border-color 0.16s ease,
+      box-shadow 0.16s ease,
+      background-color 0.16s ease;
+  }
+
+  .cl-input,
+  .cl-select {
+    height: 2.25rem;
+    padding: 0 0.6875rem;
+  }
+
+  .cl-textarea {
+    padding: 0.5rem 0.6875rem;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 5.5rem;
+  }
+
+  .cl-input::placeholder,
+  .cl-textarea::placeholder {
+    color: var(--color-ink-400);
+  }
+
+  .cl-input:hover,
+  .cl-select:hover,
+  .cl-textarea:hover {
+    border-color: var(--color-ink-500);
+  }
+
+  .cl-input:focus,
+  .cl-select:focus,
+  .cl-textarea:focus {
+    outline: none;
+    border-color: var(--color-gold-400);
+    box-shadow: 0 0 0 3px rgb(247 193 75 / 0.16);
+    background-color: var(--color-ink-850);
+  }
+
+  .cl-input:disabled,
+  .cl-select:disabled,
+  .cl-textarea:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+
+  .cl-select {
+    appearance: none;
+    padding-right: 2rem;
+    background-image: linear-gradient(45deg, transparent 50%, var(--color-ink-300) 50%),
+      linear-gradient(135deg, var(--color-ink-300) 50%, transparent 50%);
+    background-position:
+      calc(100% - 1.1rem) calc(50% + 1px),
+      calc(100% - 0.75rem) calc(50% + 1px);
+    background-size:
+      5px 5px,
+      5px 5px;
+    background-repeat: no-repeat;
+  }
+
+  .cl-select option {
+    background-color: var(--color-ink-850);
+    color: var(--color-ink-100);
+  }
+
+  .cl-checkbox {
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--color-gold-400);
+    cursor: pointer;
+  }
+
+  /* ---------------- 表格 ---------------- */
+
+  .cl-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.8125rem;
+  }
+
+  .cl-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--color-ink-900);
+    border-bottom: 1px solid var(--color-ink-700);
+    padding: 0.625rem 0.875rem;
+    text-align: left;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-ink-300);
+    white-space: nowrap;
+  }
+
+  .cl-table tbody td {
+    padding: 0.625rem 0.875rem;
+    border-bottom: 1px solid color-mix(in oklab, var(--color-ink-700) 55%, transparent);
+    color: var(--color-ink-200);
+    vertical-align: middle;
+  }
+
+  .cl-table tbody tr {
+    transition: background-color 0.12s ease;
+  }
+
+  .cl-table tbody tr:hover {
+    background-color: color-mix(in oklab, var(--color-ink-800) 75%, transparent);
+  }
+
+  .cl-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* ---------------- 徽标 ---------------- */
+
+  .cl-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    height: 1.25rem;
+    padding: 0 0.4375rem;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  /* ---------------- 其它 ---------------- */
+
+  .cl-stat-value {
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .cl-skeleton {
+    background-color: var(--color-ink-700);
+    border-radius: 6px;
+    animation: var(--animate-shimmer);
+  }
+
+  .cl-scroll-y {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .cl-focus-ring:focus-visible {
+    outline: 2px solid var(--color-gold-400);
+    outline-offset: 2px;
+  }
+}

@@ -131,7 +131,7 @@ func (h *Handlers) PurchaseSkin(c *gin.Context) {
 	ctx, cancel := withTimeout(c, 0)
 	defer cancel()
 
-	skin, balances, err := h.shop.PurchaseSkin(ctx, authctx.UserID(c), c.Param("id"))
+	skin, balances, err := h.shop.PurchaseSkin(ctx, authctx.UserID(c), c.Param("skin_id"))
 	if err != nil {
 		response.Fail(c, err)
 		return
@@ -146,7 +146,7 @@ func (h *Handlers) EquipSkin(c *gin.Context) {
 	ctx, cancel := withTimeout(c, 0)
 	defer cancel()
 
-	skin, err := h.shop.EquipSkin(ctx, authctx.UserID(c), c.Param("id"))
+	skin, err := h.shop.EquipSkin(ctx, authctx.UserID(c), c.Param("skin_id"))
 	if err != nil {
 		response.Fail(c, err)
 		return
@@ -172,26 +172,29 @@ func (h *Handlers) Inventory(c *gin.Context) {
 }
 
 type useItemRequest struct {
+	// ItemID 要使用的道具（需求 INV-02）。
+	//
+	// 道具改从**请求体**传，而不是放在路径里：路径里的 id 位置被保留给实体 ID
+	//（订单、邮件这类运行时生成的对象），道具是**目录键**（item_hint_pack），
+	// 两者混在同一个位置会让"这一段的 id 该不该按 ULID 校验"变得没法回答。
+	ItemID string `json:"item_id" binding:"required"`
 	// Arg 的含义随道具效果而变：改名卡传新昵称，其余忽略。
 	Arg string `json:"arg"`
 }
 
 // UseItem 使用道具。
 //
-// POST /api/v1/shop/items/:id/use
+// POST /api/v1/inventory/use
 func (h *Handlers) UseItem(c *gin.Context) {
 	var req useItemRequest
-	// 请求体可选：幸运宝箱之类的道具不需要参数。
-	if c.Request.ContentLength > 0 {
-		if err := bindJSON(c, &req); err != nil {
-			response.Fail(c, err)
-			return
-		}
+	if err := bindJSON(c, &req); err != nil {
+		response.Fail(c, err)
+		return
 	}
 	ctx, cancel := withTimeout(c, 0)
 	defer cancel()
 
-	result, err := h.shop.UseItem(ctx, authctx.UserID(c), c.Param("id"), req.Arg)
+	result, err := h.shop.UseItem(ctx, authctx.UserID(c), req.ItemID, req.Arg)
 	if err != nil {
 		response.Fail(c, err)
 		return

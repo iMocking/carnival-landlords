@@ -56,6 +56,20 @@ func (k Keys) Session(userID, sessionID string) string {
 // 取 score 最小的成员即可，不需要额外记录时间。
 func (k Keys) UserSessions(userID string) string { return k.build("sess", "u", userID) }
 
+// ---------------- 设备凭证（game_token，D-09）
+
+// Device 单台设备的凭证记录，值为 token.Device 的 JSON。
+func (k Keys) Device(userID, deviceID string) string {
+	return k.build("dev", userID, deviceID)
+}
+
+// UserDevices 某用户的设备 ID 集合（SET）。
+//
+// 用 SET 而不是会话那样的 ZSET：设备**没有**"最多 N 台"的裁剪需求 ——
+// 玩家换手机不该把旧设备的免重登凭证挤掉。它的规模由玩家实际拥有几台设备决定，
+// 因此只需要一个可枚举的集合，用于"封号 / 改密码时一次性全部吊销"。
+func (k Keys) UserDevices(userID string) string { return k.build("dev", "u", userID) }
+
 // ---------------- 匹配
 
 // MatchQueue 某个玩法的匹配队列（ZSET，score = 入队时间戳）。

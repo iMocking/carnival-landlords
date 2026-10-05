@@ -3,7 +3,6 @@ package realtime
 import (
 	"context"
 	"net/http"
-	"strings"
 	"sync"
 	"time"
 
@@ -160,7 +159,7 @@ func (h *Hub) ServeWS(c *gin.Context) {
 		hello.InRoom = true
 		hello.RoomID = room.ID()
 	}
-	conn.Send(ServerMessage{Type: MsgHello, Data: hello})
+	conn.Send(ServerMessage{Type: MsgHello, Body: hello})
 
 	if room != nil {
 		room.Attach(conn)
@@ -174,7 +173,7 @@ func (h *Hub) register(conn *Conn) {
 	h.mu.Lock()
 	// 同账号再连：把旧连接踢掉，保证"一个账号一条有效连接"。
 	if old, ok := h.conns[conn.UserID()]; ok && old != conn {
-		old.Send(ServerMessage{Type: MsgNotice, Data: NoticeData{
+		old.Send(ServerMessage{Type: MsgNotice, Body: NoticeData{
 			Level: "warn", Text: "你的账号在其它设备登录，本连接已断开", Seconds: 5,
 		}})
 		old.Close()
@@ -216,10 +215,10 @@ func (h *Hub) handle(conn *Conn, msg ClientMessage) {
 			conn.Send(ServerMessage{Type: MsgError, Seq: msg.Seq, Code: errorCode(err), Message: errorMessage(err)})
 			return
 		}
-		conn.Send(ServerMessage{Type: MsgMatchStatus, Seq: msg.Seq, Data: MatchStatusData{Status: "canceled", Message: "已取消匹配"}})
+		conn.Send(ServerMessage{Type: MsgMatchStatus, Seq: msg.Seq, Body: MatchStatusData{Status: "canceled", Message: "已取消匹配"}})
 		return
 	case OpMatchStatus:
-		conn.Send(ServerMessage{Type: MsgMatchStatus, Seq: msg.Seq, Data: h.matcher.Status(h.ctx, conn.UserID())})
+		conn.Send(ServerMessage{Type: MsgMatchStatus, Seq: msg.Seq, Body: h.matcher.Status(h.ctx, conn.UserID())})
 		return
 	}
 
@@ -245,7 +244,7 @@ func (h *Hub) handleMatch(conn *Conn, msg ClientMessage) {
 		conn.Send(ServerMessage{Type: MsgError, Seq: msg.Seq, Code: errorCode(err), Message: errorMessage(err)})
 		return
 	}
-	conn.Send(ServerMessage{Type: MsgMatchStatus, Seq: msg.Seq, Data: h.matcher.Status(h.ctx, conn.UserID())})
+	conn.Send(ServerMessage{Type: MsgMatchStatus, Seq: msg.Seq, Body: h.matcher.Status(h.ctx, conn.UserID())})
 }
 
 // ---------------- 匹配与开房
@@ -279,6 +278,16 @@ func (h *Hub) MatchStatus(ctx context.Context, userID string) MatchStatusData {
 	return h.matcher.Status(ctx, userID)
 }
 
+// CancelMatchTicket 按票据取消匹配（DELETE /match/tickets/:id）。
+func (h *Hub) CancelMatchTicket(ctx context.Context, userID, ticketID string) error {
+	return h.matcher.CancelTicket(ctx, userID, ticketID)
+}
+
+// MatchStatusTicket 按票据查询匹配状态（GET /match/tickets/:id）。
+func (h *Hub) MatchStatusTicket(ctx context.Context, userID, ticketID string) (MatchStatusData, error) {
+	return h.matcher.StatusTicket(ctx, userID, ticketID)
+}
+
 // StartMatchedRoom 由匹配器调用：把一组玩家（+机器人）开成一桌。
 func (h *Hub) StartMatchedRoom(ctx context.Context, mode catalog.Mode, humans []Ticket, bots int) error {
 	if max := h.cfg.Game.MaxRooms; max > 0 {
@@ -288,7 +297,7 @@ func (h *Hub) StartMatchedRoom(ctx context.Context, mode catalog.Mode, humans []
 		if full {
 			// 房间数量已达上限：把玩家留在队列里等下一轮，并给出明确提示。
 			for _, t := range humans {
-				h.Notify(t.UserID, ServerMessage{Type: MsgMatchStatus, Data: MatchStatusData{
+				h.Notify(t.UserID, ServerMessage{Type: MsgMatchStatus, Body: MatchStatusData{
 					Status: "queued", ModeID: mode.ID, Message: "牌桌已满，正在等待空位…",
 				}})
 			}
@@ -299,7 +308,7 @@ func (h *Hub) StartMatchedRoom(ctx context.Context, mode catalog.Mode, humans []
 		return nil
 	}
 
-	roomRef := id.NewPrefixed("room")
+	roomRef := id.New()
 
 	// 1) 收报名费。任何一个人付不起，整桌取消并退掉已收的部分。
 	charged := make([]string, 0, len(humans))
@@ -384,7 +393,7 @@ func (h *Hub) StartMatchedRoom(ctx context.Context, mode catalog.Mode, humans []
 
 	// 5) 通知并绑定连接。
 	for _, t := range humans {
-		h.Notify(t.UserID, ServerMessage{Type: MsgMatchStatus, Data: MatchStatusData{
+		h.Notify(t.UserID, ServerMessage{Type: MsgMatchStatus, Body: MatchStatusData{
 			Status: "matched", ModeID: mode.ID, RoomID: room.ID(),
 			Message: "匹配成功，正在进入牌桌",
 		}})
@@ -456,6 +465,15 @@ func (h *Hub) OnlineCount() int {
 	return len(h.conns)
 }
 
+// IsOnline 该玩家当前是否有**活跃的 WebSocket 连接**。
+//
+// 与"能不能发 HTTP 请求"是两件事：HTTP 通只说明网络可达，
+// 不代表长连接还在。客户端重连决策要的是后者。
+func (h *Hub) IsOnline(userID string) bool {
+	_, ok := h.conn(userID)
+	return ok
+}
+
 // removeRoom 由房间在关闭时回调。
 func (h *Hub) removeRoom(roomID string) {
 	h.mu.Lock()
@@ -524,7 +542,10 @@ func (h *Hub) conn(userID string) (*Conn, bool) {
 }
 
 // IsBotUser 判断一个 ID 是否是机器人。
-func IsBotUser(userID string) bool { return strings.HasPrefix(userID, botUserPrefix) }
+//
+// 判据是"合法 ULID 且时间戳字段全零"（见 `id.NewBot` 的说明）——
+// 原先靠 `"bot_"` 前缀，但那会让机器人 ID 过不了客户端的 ULID 校验。
+func IsBotUser(userID string) bool { return id.IsBot(userID) }
 
 // zaddMember 构造 ZSET 成员。
 func zaddMember(score float64, member string) redis.Z {

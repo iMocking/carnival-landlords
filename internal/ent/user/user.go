@@ -25,6 +25,8 @@ const (
 	FieldNickname = "nickname"
 	// FieldAvatarIndex holds the string denoting the avatar_index field in the database.
 	FieldAvatarIndex = "avatar_index"
+	// FieldAvatarURL holds the string denoting the avatar_url field in the database.
+	FieldAvatarURL = "avatar_url"
 	// FieldRole holds the string denoting the role field in the database.
 	FieldRole = "role"
 	// FieldStatus holds the string denoting the status field in the database.
@@ -45,6 +47,8 @@ const (
 	FieldDiamonds = "diamonds"
 	// FieldPoints holds the string denoting the points field in the database.
 	FieldPoints = "points"
+	// FieldOfflinePoints holds the string denoting the offline_points field in the database.
+	FieldOfflinePoints = "offline_points"
 	// FieldGames holds the string denoting the games field in the database.
 	FieldGames = "games"
 	// FieldWins holds the string denoting the wins field in the database.
@@ -100,6 +104,7 @@ var Columns = []string{
 	FieldPasswordHash,
 	FieldNickname,
 	FieldAvatarIndex,
+	FieldAvatarURL,
 	FieldRole,
 	FieldStatus,
 	FieldBanReason,
@@ -110,6 +115,7 @@ var Columns = []string{
 	FieldGold,
 	FieldDiamonds,
 	FieldPoints,
+	FieldOfflinePoints,
 	FieldGames,
 	FieldWins,
 	FieldLandlordGames,
@@ -158,6 +164,8 @@ var (
 	DefaultAvatarIndex int
 	// AvatarIndexValidator is a validator for the "avatar_index" field. It is called by the builders before save.
 	AvatarIndexValidator func(int) error
+	// DefaultAvatarURL holds the default value on creation for the "avatar_url" field.
+	DefaultAvatarURL string
 	// DefaultRole holds the default value on creation for the "role" field.
 	DefaultRole string
 	// DefaultStatus holds the default value on creation for the "status" field.
@@ -184,6 +192,10 @@ var (
 	DefaultPoints int64
 	// PointsValidator is a validator for the "points" field. It is called by the builders before save.
 	PointsValidator func(int64) error
+	// DefaultOfflinePoints holds the default value on creation for the "offline_points" field.
+	DefaultOfflinePoints int64
+	// OfflinePointsValidator is a validator for the "offline_points" field. It is called by the builders before save.
+	OfflinePointsValidator func(int64) error
 	// DefaultGames holds the default value on creation for the "games" field.
 	DefaultGames int64
 	// GamesValidator is a validator for the "games" field. It is called by the builders before save.
@@ -284,6 +296,11 @@ func ByAvatarIndex(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAvatarIndex, opts...).ToFunc()
 }
 
+// ByAvatarURL orders the results by the avatar_url field.
+func ByAvatarURL(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAvatarURL, opts...).ToFunc()
+}
+
 // ByRole orders the results by the role field.
 func ByRole(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldRole, opts...).ToFunc()
@@ -332,6 +349,11 @@ func ByDiamonds(opts ...sql.OrderTermOption) OrderOption {
 // ByPoints orders the results by the points field.
 func ByPoints(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPoints, opts...).ToFunc()
+}
+
+// ByOfflinePoints orders the results by the offline_points field.
+func ByOfflinePoints(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldOfflinePoints, opts...).ToFunc()
 }
 
 // ByGames orders the results by the games field.

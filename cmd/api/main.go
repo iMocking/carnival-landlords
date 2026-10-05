@@ -12,9 +12,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -33,6 +35,7 @@ import (
 	"carnival-landlords/internal/service/auth"
 	"carnival-landlords/internal/service/entry"
 	"carnival-landlords/internal/service/mail"
+	"carnival-landlords/internal/service/offline"
 	"carnival-landlords/internal/service/profile"
 	"carnival-landlords/internal/service/prop"
 	"carnival-landlords/internal/service/rank"
@@ -45,6 +48,40 @@ import (
 
 // version 由构建时注入：-ldflags "-X main.version=..."
 var version = "dev"
+
+// explainListenError 把"端口被占用"翻译成可操作的提示。
+//
+// 本地开发最容易踩的坑：`make compose-up` 会启动 compose 里的 api 容器并把 8080
+// 发布到宿主，此时再 `go run ./cmd/api` / `make run` 一定 bind 失败。
+// 与其让开发者对着 "Only one usage of each socket address" 猜，不如直接把出路写出来。
+func explainListenError(addr string, err error) error {
+	if isAddrInUse(err) {
+		return fmt.Errorf("HTTP 服务无法监听 %s：端口已被占用\n"+
+			"  最常见的占用者：docker compose 里的 cl-api 容器（发布 8080）\n"+
+			"  处理方式（任选其一）：\n"+
+			"    make compose-stop-api && make run   # 停掉容器里的 API（PG/Redis 保留）再跑本机 API\n"+
+			"    make run HTTP_ADDR=:8081            # 容器不动，本机 API 换一个端口\n"+
+			"    （如果只是想用容器里的 API，就不必本机 go run，直接访问 8080）\n"+
+			"  本机命令是 `go run ./cmd/api`（./ 不能省，否则会被当成标准库路径）\n"+
+			"  原始错误：%v", addr, err)
+	}
+	return fmt.Errorf("HTTP 服务异常退出: %w", err)
+}
+
+// isAddrInUse 判断错误是否为"地址已被占用"。
+// Windows 的文案是 "Only one usage of each socket address..."，Linux/macOS 是
+// "address already in use"，因此除了 errors.Is 再兜一层字符串匹配。
+func isAddrInUse(err error) bool {
+	if err == nil {
+		return false
+	}
+	if errors.Is(err, syscall.EADDRINUSE) {
+		return true
+	}
+	msg := strings.ToLower(err.Error())
+	return strings.Contains(msg, "address already in use") ||
+		strings.Contains(msg, "only one usage of each socket address")
+}
 
 func main() {
 	if err := run(); err != nil {
@@ -91,7 +128,7 @@ func run() error {
 	}()
 
 	if cfg.Postgres.AutoMigrate {
-		if err := pg.Migrate(ctx, pgClient.Client, log); err != nil {
+		if err := pg.Migrate(ctx, pgClient.Client, pgClient.DB, log); err != nil {
 			return err
 		}
 	} else {
@@ -110,6 +147,13 @@ func run() error {
 
 	enforcer, err := casbin.New(ctx, pgClient.Client, log)
 	if err != nil {
+		return err
+	}
+
+	// 角色改名的一次性数据迁移：`gm` → `operator`（运营）。
+	// 必须在这里做 —— 路由的允许列表里已经没有 `gm` 了，
+	// 不迁移的话那些账号会静默失去全部后台权限（见 casbin.MigrateLegacyRoles 注释）。
+	if _, err := enforcer.MigrateLegacyRoles(ctx); err != nil {
 		return err
 	}
 
@@ -134,7 +178,7 @@ func run() error {
 		Client: pgClient.Client, Wallet: walletSvc, Granter: granter, Logger: log,
 	})
 	propSvc := prop.New(pgClient.Client, rdb, log)
-	rankSvc := rank.New(pgClient.Client, rdb, log)
+	rankSvc := rank.New(pgClient.Client, pgClient.DB, rdb, log)
 	mailSvc := mail.New(pgClient.Client, granter, log)
 	entrySvc := entry.New(pgClient.Client)
 
@@ -171,13 +215,29 @@ func run() error {
 	hub.Start(ctx)
 	defer hub.Stop()
 
+	// ---------------- 离线进度回传（REC-06）
+	// 每日额度与单批上限都走配置：它们是**经济口径**，会随运营调整，
+	// 不该写死在代码里。
+	offlineSvc := offline.NewService(pgClient.Client, cfg.Offline.PointsDailyCap, cfg.Offline.MaxRecordsPerBatch)
+
+	// ---------------- 本地上传目录
+	//
+	// 启动时就创建，而不是等第一次上传：目录不可写属于**部署配置错误**，
+	// 应该在启动时暴露，而不是等玩家点"上传头像"时才失败。
+	if dir := cfg.Upload.PublicDir; dir != "" {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			return fmt.Errorf("创建上传目录 %s 失败: %w", dir, err)
+		}
+		log.Info("上传目录就绪", zap.String("dir", dir), zap.String("url_prefix", cfg.Upload.URLPrefix))
+	}
 	// ---------------- HTTP
 	engine, _, err := api.NewRouter(api.RouterDeps{
 		Config: cfg, Version: version, Logger: log,
 		DB: pgClient.DB, Redis: rdb, Enforcer: enforcer,
 		Auth: authSvc, Profile: profileSvc, Wallet: walletSvc, Shop: shopSvc,
 		Activity: activitySvc, Mail: mailSvc, Rank: rankSvc, Admin: adminSvc, Prop: propSvc,
-		Hub: hub,
+		Offline: offlineSvc,
+		Hub:     hub,
 	})
 	if err != nil {
 		return err
@@ -195,8 +255,16 @@ func run() error {
 
 	serverErr := make(chan error, 1)
 	go func() {
+		// 先 net.Listen 再 Serve：端口被占用时（本地最常见的场景是 compose 里的
+		// cl-api 容器已经把 8080 发布到宿主）错误会在这里立刻返回，而不是先打一行
+		// "HTTP 服务开始监听" 再失败 —— 那行日志会让人误以为端口其实抢到了。
+		ln, err := net.Listen("tcp", cfg.HTTP.Addr)
+		if err != nil {
+			serverErr <- err
+			return
+		}
 		log.Info("HTTP 服务开始监听", zap.String("addr", cfg.HTTP.Addr))
-		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		if err := srv.Serve(ln); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			serverErr <- err
 		}
 	}()
@@ -207,7 +275,7 @@ func run() error {
 
 	select {
 	case err := <-serverErr:
-		return fmt.Errorf("HTTP 服务异常退出: %w", err)
+		return explainListenError(cfg.HTTP.Addr, err)
 	case <-ctx.Done():
 		log.Info("收到退出信号，开始优雅关闭")
 	}

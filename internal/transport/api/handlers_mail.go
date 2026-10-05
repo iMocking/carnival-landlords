@@ -68,27 +68,27 @@ type mailIDsRequest struct {
 	IDs []string `json:"ids"`
 }
 
-// MailMarkRead 批量标记已读。
+// MailMarkRead 标记**单封**邮件已读（需求 MSG-03）。
 //
-// POST /api/v1/mail/read
+// POST /api/v1/notifications/:id/read
+//
+// 从"批量 + 请求体里的 id 列表"改成"单封 + 路径里的 id"：
+// 客户端点开一封就读一封，批量版本反而逼它先攒一批。
+// 需要"全读"的场景有 `/notifications/read-all`。
 func (h *Handlers) MailMarkRead(c *gin.Context) {
-	var req mailIDsRequest
-	if err := bindJSON(c, &req); err != nil {
-		response.Fail(c, err)
-		return
-	}
-	if len(req.IDs) == 0 {
-		response.Fail(c, apperr.ErrInvalidParam.WithMessage("请提供邮件 ID 列表"))
+	id := c.Param("id")
+	if id == "" {
+		response.Fail(c, apperr.ErrInvalidParam.WithMessage("缺少邮件 ID"))
 		return
 	}
 	ctx, cancel := withTimeout(c, 0)
 	defer cancel()
 
-	if err := h.mail.MarkRead(ctx, authctx.UserID(c), req.IDs); err != nil {
+	if err := h.mail.MarkRead(ctx, authctx.UserID(c), []string{id}); err != nil {
 		response.Fail(c, err)
 		return
 	}
-	response.OK(c, gin.H{"read": len(req.IDs)})
+	response.OK(c, gin.H{"read": 1})
 }
 
 // MailMarkAllRead 全部标记已读。

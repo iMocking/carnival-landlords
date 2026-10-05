@@ -17,6 +17,11 @@
 # 用法（在仓库根目录执行，或直接用 Makefile 的 compose-up）：
 #		docker compose -f docker-compose.yml up -d
 #		curl http://127.0.0.1:8080/healthz
+#
+# 注意：本文件里的 api 容器会把 8080 发布到宿主。因此"整套容器（compose-up）"
+# 与"本机 go run（make run / make dev）"是**两条互斥的路**，同时用会 bind 失败。
+# 本机跑 API 请用 `make dev`（只起下面的 postgres + redis），
+# 或先 `make compose-stop-api` 把 api 容器停掉。
 
 name: carnival-landlords
 

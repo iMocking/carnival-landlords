@@ -307,7 +307,7 @@ func (t *Table) DrainEvents() []Event {
 }
 
 func (t *Table) emit(evtType EventType, seat int, data any) {
-	t.events = append(t.events, Event{Type: evtType, Seat: seat, At: time.Now(), Data: data})
+	t.events = append(t.events, Event{Type: evtType, Seat: seat, At: time.Now(), Body: data})
 }
 
 // ================================================================ 开局

@@ -21,6 +21,8 @@ import (
 	"go.uber.org/zap"
 
 	"carnival-landlords/internal/domain/catalog"
+	"entgo.io/ent/dialect/sql"
+
 	"carnival-landlords/internal/ent"
 	"carnival-landlords/internal/ent/inventoryitem"
 	"carnival-landlords/internal/ent/order"
@@ -144,7 +146,7 @@ func (s *Service) Purchase(ctx context.Context, userID, goodID, idemKey string) 
 // createMockOrder 创建一张模拟充值订单（此时**不发货**）。
 func (s *Service) createMockOrder(ctx context.Context, userID string, good catalog.Good, idemKey string) (PurchaseResult, error) {
 	o, err := s.client.Order.Create().
-		SetID(id.NewPrefixed("ord")).
+		SetID(id.New()).
 		SetUserID(userID).
 		SetGoodID(good.ID).
 		SetTab(string(good.Tab)).
@@ -176,7 +178,7 @@ func (s *Service) createMockOrder(ctx context.Context, userID string, good catal
 
 // purchaseWithDiamond 用钻石直购：扣款、建单、发货在同一个事务里。
 func (s *Service) purchaseWithDiamond(ctx context.Context, userID string, good catalog.Good, idemKey string) (PurchaseResult, error) {
-	orderID := id.NewPrefixed("ord")
+	orderID := id.New()
 	var granted reward.Granted
 	var view OrderView
 
@@ -452,7 +454,7 @@ func (s *Service) PurchaseSkin(ctx context.Context, userID, skinID string) (Skin
 		return SkinView{Skin: skin, Owned: true}, wallet.Balances{}, apperr.ErrConflict.WithMessage("已经拥有该皮肤")
 	}
 
-	orderID := id.NewPrefixed("ord")
+	orderID := id.New()
 	err := s.inTx(ctx, func(tx *ent.Tx) error {
 		if _, err := s.wallet.ApplyGroupTx(ctx, tx, []wallet.UserChange{{
 			UserID: userID,
@@ -479,13 +481,21 @@ func (s *Service) PurchaseSkin(ctx context.Context, userID, skinID string) (Skin
 		if err != nil {
 			return apperr.ErrDependency.WithCause(err)
 		}
+		// 冲突目标必须显式给出：`OnConflict().Ignore()`（不带目标）生成的是
+		// `ON CONFLICT DO UPDATE` 而 PostgreSQL 要求它带推断或约束名，
+		// 于是整条语句报 `SQLSTATE 42601`，被包成 ErrDependency ——
+		// 表现就是"买皮肤永远失败、提示依赖服务不可用"。
+		//
+		// 目标是 `(user_id, skin_id)` 这个唯一索引（不是 id：id 是刚生成的新 ULID，
+		// 永远不会冲突）。它防的是并发重复购买：上面那次 exists 预检查之外，
+		// 仍可能有另一个请求在同一瞬间通过预检查。
 		err = tx.SkinOwnership.Create().
-			SetID(id.NewPrefixed("skin")).
+			SetID(id.New()).
 			SetUserID(userID).
 			SetSkinID(skin.ID).
 			SetPricePaid(skin.Price).
 			SetSource("shop").
-			OnConflict().Ignore().
+			OnConflict(sql.ConflictColumns(skinownership.FieldUserID, skinownership.FieldSkinID), sql.DoNothing()).
 			Exec(ctx)
 		if err != nil {
 			return apperr.ErrDependency.WithCause(err)
@@ -510,18 +520,8 @@ func (s *Service) EquipSkin(ctx context.Context, userID, skinID string) (SkinVie
 	if !ok {
 		return SkinView{}, apperr.ErrGoodNotFound.WithMessage("皮肤不存在")
 	}
-	owned := skin.Price <= 0
-	if !owned {
-		exists, err := s.client.SkinOwnership.Query().
-			Where(skinownership.UserIDEQ(userID), skinownership.SkinIDEQ(skinID)).
-			Exist(ctx)
-		if err != nil {
-			return SkinView{}, apperr.ErrDependency.WithCause(err)
-		}
-		owned = exists
-	}
-	if !owned {
-		return SkinView{}, apperr.ErrSkinNotOwned
+	if err := s.ensureSkinOwned(ctx, userID, skin); err != nil {
+		return SkinView{}, err
 	}
 
 	update := s.client.User.UpdateOneID(userID)
@@ -537,6 +537,86 @@ func (s *Service) EquipSkin(ctx context.Context, userID, skinID string) (SkinVie
 		return SkinView{}, apperr.ErrDependency.WithCause(err)
 	}
 	return SkinView{Skin: skin, Owned: true, Equipped: true}, nil
+}
+
+// ensureSkinOwned 校验玩家是否拥有某款皮肤（免费的默认皮肤人人拥有）。
+//
+// 抽出来是因为"装备一款"与"批量装备"都要做同一件事：
+// 两处各写一遍拥有判定，迟早会在某个分支上不一致（比如免费皮肤的处理）。
+func (s *Service) ensureSkinOwned(ctx context.Context, userID string, skin catalog.Skin) error {
+	if skin.Price <= 0 {
+		return nil
+	}
+	exists, err := s.client.SkinOwnership.Query().
+		Where(skinownership.UserIDEQ(userID), skinownership.SkinIDEQ(skin.ID)).
+		Exist(ctx)
+	if err != nil {
+		return apperr.ErrDependency.WithCause(err)
+	}
+	if !exists {
+		return apperr.ErrSkinNotOwned.WithMessage("尚未拥有「%s」", skin.Name)
+	}
+	return nil
+}
+
+// EquipSkins 一次装备多款皮肤（需求 SKIN-05）。
+//
+// 服务端把"当前装备"存成 users 表上的两个字段（`table_skin_id` / `card_skin_id`，
+// 按皮肤种类各一个），因此批量装备天然就是**一次 update 同时改两列** ——
+// 逐款调用会写两次用户行，中间那一瞬间的"牌桌已换、卡背没换"是可被读到的
+// （快照、并发请求都会看到）。
+//
+// 参数里同一个种类出现多次时取**最后一个**：客户端"先点 A 再点 B"的语义
+// 就是最终想要 B，报错反而更烦人。
+func (s *Service) EquipSkins(ctx context.Context, userID string, skinIDs []string) ([]SkinView, error) {
+	if len(skinIDs) == 0 {
+		return nil, apperr.ErrInvalidParam.WithMessage("请至少指定一款皮肤")
+	}
+	update := s.client.User.UpdateOneID(userID)
+	applied := make(map[catalog.SkinKind]catalog.Skin, 2)
+	for _, skinID := range skinIDs {
+		skin, ok := catalog.FindSkin(skinID)
+		if !ok {
+			return nil, apperr.ErrGoodNotFound.WithMessage("皮肤不存在：%s", skinID)
+		}
+		if err := s.ensureSkinOwned(ctx, userID, skin); err != nil {
+			return nil, err
+		}
+		switch skin.Kind {
+		case catalog.SkinKindTable:
+			update = update.SetTableSkinID(skin.ID)
+		case catalog.SkinKindCard:
+			update = update.SetCardSkinID(skin.ID)
+		default:
+			return nil, apperr.ErrInvalidParam.WithMessage("未知皮肤类型")
+		}
+		applied[skin.Kind] = skin
+	}
+	if _, err := update.Save(ctx); err != nil {
+		return nil, apperr.ErrDependency.WithCause(err)
+	}
+
+	// 返回装备后的完整皮肤列表，省掉客户端紧接着再查一次。
+	all, err := s.Skins(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+	return all, nil
+}
+
+// ResetSkins 把皮肤恢复成默认（需求 SKIN-04）。
+//
+// 这是"批量装备"的特例：装备两款免费默认皮肤。
+// 因此它不需要 new 一套逻辑，也不会出现"重置之后某个种类没被清掉"的漏项 ——
+// 那个漏项正是逐种类手写重置最容易犯的错。
+func (s *Service) ResetSkins(ctx context.Context, userID string) ([]SkinView, error) {
+	if _, err := s.client.User.UpdateOneID(userID).
+		SetTableSkinID(catalog.DefaultTableSkin).
+		SetCardSkinID(catalog.DefaultCardSkin).
+		Save(ctx); err != nil {
+		return nil, apperr.ErrDependency.WithCause(err)
+	}
+	return s.Skins(ctx, userID)
 }
 
 // ---------------- 背包
@@ -619,6 +699,18 @@ func (s *Service) UseItem(ctx context.Context, userID, itemID, arg string) (UseR
 		}
 		if row.ExpireAt != nil && !row.ExpireAt.After(time.Now()) {
 			return apperr.ErrItemNotUsable.WithMessage("该道具已过期")
+		}
+		// 数量为 0 的行**仍然存在**（用掉最后一个只是把 count 减到 0，不删行），
+		// 因此必须在这里挡一道。
+		//
+		// 少了这一道的后果很具体（实测）：下面 `SetCount(row.Count-1)` 会把 count
+		// 写成 -1，撞上 schema 的 `NonNegative` 检查约束，错误被包成
+		// **`ErrDependency`（90002 依赖服务不可用 / HTTP 503）**。
+		// 于是"你没有改名卡"在客户端显示成"服务开小差了，请稍后再试" ——
+		// 玩家会一直重试，而真正该做的是去商城买一张。
+		// 这不是改名卡独有的问题，**每一个按次消耗的道具**都走这条路径。
+		if row.Count <= 0 {
+			return apperr.ErrItemNotOwned.WithMessage("%s 数量不足", def.Name)
 		}
 
 		switch def.Effect {

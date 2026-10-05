@@ -43,6 +43,10 @@ const (
 	FieldGoldDelta = "gold_delta"
 	// FieldPointsDelta holds the string denoting the points_delta field in the database.
 	FieldPointsDelta = "points_delta"
+	// FieldIsOffline holds the string denoting the is_offline field in the database.
+	FieldIsOffline = "is_offline"
+	// FieldCreditedPoints holds the string denoting the credited_points field in the database.
+	FieldCreditedPoints = "credited_points"
 	// FieldBombCount holds the string denoting the bomb_count field in the database.
 	FieldBombCount = "bomb_count"
 	// FieldPlayCount holds the string denoting the play_count field in the database.
@@ -73,6 +77,8 @@ var Columns = []string{
 	FieldStake,
 	FieldGoldDelta,
 	FieldPointsDelta,
+	FieldIsOffline,
+	FieldCreditedPoints,
 	FieldBombCount,
 	FieldPlayCount,
 	FieldOpponentNames,
@@ -130,6 +136,12 @@ var (
 	DefaultGoldDelta int64
 	// DefaultPointsDelta holds the default value on creation for the "points_delta" field.
 	DefaultPointsDelta int64
+	// DefaultIsOffline holds the default value on creation for the "is_offline" field.
+	DefaultIsOffline bool
+	// DefaultCreditedPoints holds the default value on creation for the "credited_points" field.
+	DefaultCreditedPoints int64
+	// CreditedPointsValidator is a validator for the "credited_points" field. It is called by the builders before save.
+	CreditedPointsValidator func(int64) error
 	// DefaultBombCount holds the default value on creation for the "bomb_count" field.
 	DefaultBombCount int
 	// BombCountValidator is a validator for the "bomb_count" field. It is called by the builders before save.
@@ -221,6 +233,16 @@ func ByGoldDelta(opts ...sql.OrderTermOption) OrderOption {
 // ByPointsDelta orders the results by the points_delta field.
 func ByPointsDelta(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldPointsDelta, opts...).ToFunc()
+}
+
+// ByIsOffline orders the results by the is_offline field.
+func ByIsOffline(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldIsOffline, opts...).ToFunc()
+}
+
+// ByCreditedPoints orders the results by the credited_points field.
+func ByCreditedPoints(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCreditedPoints, opts...).ToFunc()
 }
 
 // ByBombCount orders the results by the bomb_count field.

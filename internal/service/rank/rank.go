@@ -38,6 +38,7 @@ package rank
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 
 	"github.com/redis/go-redis/v9"
@@ -142,15 +143,21 @@ type userLoader func(ctx context.Context, ids []string) (map[string]*ent.User, e
 // Service 排行榜服务。
 type Service struct {
 	client *ent.Client
-	redis  *redisx.Client
-	log    *zap.Logger
+	// db 用于**按玩法**的榜单聚合（见 mode.go）。
+	//
+	// 账号级榜单（rank.go 的四个榜）不需要它：那些分数直接取自 users 行，
+	// 走 ent 就够了。而玩法榜要跨用户聚合 match_records，
+	// 手写 SQL 比用 ent 的 GroupBy/Aggregate 更直观也更可控。
+	db    *sql.DB
+	redis *redisx.Client
+	log   *zap.Logger
 	// load 回表查询，默认走 ent；测试里可替换。
 	load userLoader
 }
 
-// New 构造排行榜服务。
-func New(client *ent.Client, redis *redisx.Client, log *zap.Logger) *Service {
-	s := &Service{client: client, redis: redis, log: log}
+// New 构造排行榜服务。db 允许为 nil（只使用账号级榜单时不需要它）。
+func New(client *ent.Client, db *sql.DB, redis *redisx.Client, log *zap.Logger) *Service {
+	s := &Service{client: client, db: db, redis: redis, log: log}
 	s.load = s.queryUsers
 	return s
 }

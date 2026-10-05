@@ -1,0 +1,8 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+/build
+/builds
+# 视觉验收工具的截图输出（tools/capture_shots.gd）
+/.probe/
+.idea

@@ -49,6 +49,10 @@ type MatchRecord struct {
 	GoldDelta int64 `json:"gold_delta,omitempty"`
 	// 积分增减
 	PointsDelta int64 `json:"points_delta,omitempty"`
+	// 是否来自离线对局（客户端本地权威结算、联网后回传，见 REC-06）
+	IsOffline bool `json:"is_offline,omitempty"`
+	// 离线回传时**服务端实际发放**的积分（受每日上限截断，可能小于 points_delta；线上对局恒为 0）
+	CreditedPoints int64 `json:"credited_points,omitempty"`
 	// 本局打出的炸弹数
 	BombCount int `json:"bomb_count,omitempty"`
 	// 本局出牌手数
@@ -67,9 +71,9 @@ func (*MatchRecord) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case matchrecord.FieldOpponentNames:
 			values[i] = new([]byte)
-		case matchrecord.FieldWon:
+		case matchrecord.FieldWon, matchrecord.FieldIsOffline:
 			values[i] = new(sql.NullBool)
-		case matchrecord.FieldHandIndex, matchrecord.FieldMultiplier, matchrecord.FieldBaseScore, matchrecord.FieldStake, matchrecord.FieldGoldDelta, matchrecord.FieldPointsDelta, matchrecord.FieldBombCount, matchrecord.FieldPlayCount:
+		case matchrecord.FieldHandIndex, matchrecord.FieldMultiplier, matchrecord.FieldBaseScore, matchrecord.FieldStake, matchrecord.FieldGoldDelta, matchrecord.FieldPointsDelta, matchrecord.FieldCreditedPoints, matchrecord.FieldBombCount, matchrecord.FieldPlayCount:
 			values[i] = new(sql.NullInt64)
 		case matchrecord.FieldID, matchrecord.FieldUserID, matchrecord.FieldRoomID, matchrecord.FieldTableID, matchrecord.FieldHandID, matchrecord.FieldModeID, matchrecord.FieldRole:
 			values[i] = new(sql.NullString)
@@ -186,6 +190,18 @@ func (_m *MatchRecord) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.PointsDelta = value.Int64
 			}
+		case matchrecord.FieldIsOffline:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field is_offline", values[i])
+			} else if value.Valid {
+				_m.IsOffline = value.Bool
+			}
+		case matchrecord.FieldCreditedPoints:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field credited_points", values[i])
+			} else if value.Valid {
+				_m.CreditedPoints = value.Int64
+			}
 		case matchrecord.FieldBombCount:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
 				return fmt.Errorf("unexpected type %T for field bomb_count", values[i])
@@ -292,6 +308,12 @@ func (_m *MatchRecord) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("points_delta=")
 	builder.WriteString(fmt.Sprintf("%v", _m.PointsDelta))
+	builder.WriteString(", ")
+	builder.WriteString("is_offline=")
+	builder.WriteString(fmt.Sprintf("%v", _m.IsOffline))
+	builder.WriteString(", ")
+	builder.WriteString("credited_points=")
+	builder.WriteString(fmt.Sprintf("%v", _m.CreditedPoints))
 	builder.WriteString(", ")
 	builder.WriteString("bomb_count=")
 	builder.WriteString(fmt.Sprintf("%v", _m.BombCount))
