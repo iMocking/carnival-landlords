@@ -1,0 +1,131 @@
+# 本地开发用的编排：PostgreSQL + Redis + API。
+#
+# ## 关于支付（先读这一段）
+#
+# 这一整套栈里**没有任何真实支付服务商**：没有支付网关容器、没有商户号、
+# 没有回调验签、没有支付相关的密钥或环境变量。这是刻意的产品约束，
+# 不是"还没做"：
+#
+#   - 商城的钻石礼包走的是**模拟充值订单**（channel=mock），下单只写一行 pending 订单，
+#     再由模拟支付接口把它置为 paid 并联调发货链路；
+#   - 该接口只在 CL_APP_ENV != prod 时可达，生产环境下调用会直接返回
+#     CodePayChannelBlocked（40007，见 internal/pkg/apperr）；
+#   - 其余商品（金币礼包、道具、皮肤）走钻石闭环，钻石由签到/任务/成就/比赛场奖励产出。
+#
+# 所以这里不需要（也不应该）出现任何支付相关的 service 或 secret。
+#
+# 用法（在仓库根目录执行，或直接用 Makefile 的 compose-up）：
+#		docker compose -f docker-compose.yml up -d
+#		curl http://127.0.0.1:8080/healthz
+
+name: carnival-landlords
+
+services:
+  postgres:
+    # 固定主版本：大版本升级会带来 dump/restore 格式差异，
+    # 本地开发环境不该在某次 `compose pull` 之后突然换掉 PG 版本。
+    image: postgres:17-alpine
+    container_name: cl-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: carnival_landlords
+      # 中文排序与大小写：默认 C 排序会让昵称/邮件的排序结果不符合直觉。
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=C"
+    ports:
+      - "5432:5432"
+    volumes:
+      # 具名卷而不是绑定宿主目录：Windows 上绑定挂载的权限与性能都容易出问题，
+      # 而本地开发并不需要直接翻数据目录（用 make psql 更顺手）。
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      # 用 pg_isready 而不是 tcp 探测：端口能连上不代表数据库已接受查询，
+      # 而 api 需要的是"真的能执行 SQL"（auto_migrate 会立刻建表）。
+      test: ["CMD-SHELL", "pg_isready -U postgres -d carnival_landlords"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    container_name: cl-redis
+    restart: unless-stopped
+    # appendonly：本地开发也想让会话/验证码/匹配队列在重启后留得住，
+    # 否则每次重启都要重新登录一遍。
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 5s
+
+  api:
+    build:
+      # compose 文件就在仓库根上，而模块根也是仓库根，因此上下文就是 `.`。
+      # 这个文件挪回子目录时 `context` 必须同步改，否则 go.mod 会找不到。
+      context: .
+      dockerfile: Dockerfile
+      args:
+        VERSION: dev
+    image: carnival-landlords-server:dev
+    container_name: cl-api
+    restart: unless-stopped
+    depends_on:
+      # service_healthy 而不是 service_started：api 启动时会连库并执行 auto_migrate，
+      # PG 只是"容器起来了"根本不够。
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # 环境变量名规则：CL_<段>_<字段> 全大写（见 internal/config/config.go 的 applyEnv）。
+      # 这里只写与"本地 compose 环境"有关的覆盖项，其余字段用配置文件的默认值。
+      CL_APP_ENV: dev
+      CL_APP_DEBUG: "true"
+
+      # 时区必须显式指定。
+      #
+      # 服务端把"今天"当作**本地自然日**（daily_stats.date 存 'YYYY-MM-DD'，
+      # 签到与每日任务都按它切天）。容器默认是 UTC，于是东八区的玩家会在
+      # 早上 8 点才"跨天"：凌晨 0~8 点做的任务、领的签到全都算在前一天，
+      # 表现就是"我明明签到过了却说我没签"。
+      #
+      # 镜像里已经装了 tzdata（见 Dockerfile），这里只需要把 TZ 传进去。
+      TZ: Asia/Shanghai
+
+      # 服务名即主机名：compose 的网络里 api 用 postgres / redis 这两个名字互相寻址。
+      CL_POSTGRES_HOST: postgres
+      CL_POSTGRES_PORT: "5432"
+      CL_POSTGRES_USER: postgres
+      CL_POSTGRES_PASSWORD: postgres
+      CL_POSTGRES_DATABASE: carnival_landlords
+      CL_POSTGRES_SSLMODE: disable
+      # 开发环境允许启动时自动建表；生产必须关掉并改用 cmd/migrate
+      # （config.Validate 在 env=prod 时会直接拒绝启动）。
+      CL_POSTGRES_AUTO_MIGRATE: "true"
+
+      CL_REDIS_ADDR: redis:6379
+      CL_REDIS_DB: "0"
+      CL_REDIS_KEY_PREFIX: cl
+
+      # 仅本地开发用的固定密钥。生产必须用 openssl rand -hex 32 生成后覆盖，
+      # 且不要提交进仓库。
+      CL_JWT_SECRET: carnival-landlords-compose-dev-secret-change-me
+
+      # log 驱动只把验证码写进容器日志，不在日志里翻不到 SMTP 的时候也能登录：
+      #		docker compose -f docker-compose.yml logs -f api | grep 验证码
+      # 生产必须换成 smtp，否则任何能看到日志的人都能登录别人的账号。
+      CL_MAIL_DRIVER: log
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres-data:
+  redis-data:
