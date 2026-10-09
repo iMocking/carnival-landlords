@@ -107,16 +107,47 @@ func bootstrap() -> void:
     _emit_profile()
     skin_changed.emit(skin_snapshot())
 
-## 登录：离线实现把 nickname 当本机账号（password 忽略）；联机实现要求
+## 登录：离线实现把账号当本机账号（password 忽略）；联机实现要求
 ## account 是邮箱、password 必填 —— 两种实现共用同一个签名，页面不写模式分支。
+##
+## 联机形态下**连不上服务端时静默回落本机登录**，见 `_login_across_modes()`。
 func login(account: String, password: String = "") -> bool:
-    var result := hub.service().login(account, password)
+    var result := _login_across_modes(account, password)
     _after_change(result)
     if not bool(result.get("ok", false)):
         return false
     skin_changed.emit(skin_snapshot())
     navigate(Route.LOBBY)
     return true
+
+## 登录时跨模式兜底：联机失败但**原因是"连不上"**（`need_online`）就换本机账号登一次。
+##
+## 为什么必须有这一步：未设置偏好时默认联机（D-17），而装出来的包多半连不上
+## 开发机上的服务端；只在 `bootstrap()` 里降级是不够的 —— 全新安装没有凭据，
+## `restore_session()` 返回 `need_login`（那不是"连不上"，不该降级），于是应用会
+## **停在联机形态的登录页**，此时点「登录」只会一直弹网络错误，用户永远进不去。
+## （实测：手机装包后就是这个现象。）
+##
+## 界线要划清：
+##   * 只有 `need_online`（网络 / 服务端不可达）才回落；
+##   * 密码错、账号不存在映射的是 `need_login`，**照实报错**，绝不悄悄放行 ——
+##     否则等于把"凭据错误"伪装成"登录成功"；
+##   * 回落走 `fallback_to_offline()`：**不写偏好**，下次启动仍会按偏好再试联机
+##     （一次网络抖动不该让用户永久退网）。
+func _login_across_modes(account: String, password: String) -> Dictionary:
+    var result := hub.service().login(account, password)
+    if bool(result.get("ok", false)) or hub.mode() != ServiceHub.Mode.ONLINE:
+        return result
+    if str(result.get("code", "")) != ServiceContract.NEED_ONLINE:
+        return result
+    hub.fallback_to_offline()
+    var local := hub.service().login(account, password)
+    if not bool(local.get("ok", false)):
+        return local
+    var merged := local.duplicate(true)
+    merged["toast"] = "%s（当前连不上服务器，已用本机账号登录）" % str(
+        local.get("toast", "登录成功"))
+    return merged
 
 ## 联机注册（邮箱 + 验证码）。离线实现没有注册概念，会失败关闭。
 func register(account: String, password: String, nickname: String, code: String) -> bool:
@@ -477,6 +508,9 @@ func profile_snapshot() -> Dictionary:
         "hint_level": current.hint_level,
         "hint_level_label": current.hint_level_label(),
         "hint_level_steps": (settings.get("hint_level_labels", []) as Array).size(),
+        "ai_level": current.ai_level,
+        "ai_level_label": current.ai_level_label(),
+        "ai_level_steps": (settings.get("ai_level_labels", []) as Array).size(),
         "auto_sort_hand": current.auto_sort_hand,
         "table_skin_name": str(table_skin.get("name", "")),
         "card_skin_name": str(card_skin.get("name", "")),

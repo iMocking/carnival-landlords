@@ -1,4 +1,4 @@
-﻿class_name OnlineService
+class_name OnlineService
 extends ServiceContract
 ## 联机服务实现：把服务端 HTTP 接口映射成客户端 `ServiceContract`。
 ##
@@ -205,6 +205,13 @@ func adopt_profile(value: PlayerProfile) -> void:
 func settings_snapshot() -> Dictionary:
     return _local.settings_snapshot()
 
+## 只落本地、不同步服务端的设置项。
+##
+## 机器人强度只影响**本机对局**（联机对局的电脑玩家由服务端裁决），
+## 而服务端的 settings schema 里没有这个字段（见 `internal/ent/schema/user.go`）：
+## 同步过去会被拒，进而把整次"保存设置"拖失败。所以它像模式偏好一样只存本机。
+const LOCAL_ONLY_SETTINGS := ["ai_level"]
+
 func set_setting(key: String, value: Variant) -> Dictionary:
     if _profile == null:
         return fail_result(NEED_LOGIN)
@@ -213,6 +220,9 @@ func set_setting(key: String, value: Variant) -> Dictionary:
         return fail_result(INVALID)
     if not _profile.set_setting(key, value):
         return fail_result(INVALID)
+    if LOCAL_ONLY_SETTINGS.has(key):
+        _save_profile()
+        return ok_result()
     var env := _api.update_settings({key: _profile.get_setting(key)})
     if not bool(env.get("ok", false)):
         _profile.set_setting(key, previous)

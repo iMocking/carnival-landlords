@@ -63,6 +63,14 @@ func hints_for(_hand: Array, _last_pattern: CardPattern, _wild_rank: int) -> Arr
 func pick_hint(_hints: Array, _index: int, _hand: Array, _prefer_finishing: bool) -> CardPattern:
     return null
 
+## 设置**本机机器人强度**档位（`AiBrain.Level`：简单 / 困难 / 高级 / 地狱）。
+##
+## 属于"对局偏好"而不是"一局的参数"：由 ViewModel 在开局前灌一次，中途改也立刻生效。
+## 离线实现据此驱动本地 AI；**联机实现可以忽略** —— 那边的电脑玩家由服务端裁决，
+## 客户端设一个数字并不会让服务端的 AI 变强或变弱。
+func set_ai_level(_level: int) -> void:
+    pass
+
 ## 电脑玩家叫分：**决定并提交**，返回它叫的分（0 表示不叫）。
 ## 与 `ai_take_turn` 保持同一形态 —— 裁决与提交都在服务层，
 ## 否则"决定"和"提交"分开两处，联机实现就得在 ViewModel 里再拼一次。

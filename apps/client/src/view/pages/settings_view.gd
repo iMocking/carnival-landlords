@@ -49,6 +49,7 @@ const SETTINGS_LAYOUT := [
             {"title": "对局设置", "rows": [
                 {"key": "card_speed", "title": "牌速调节", "kind": "stepper", "desc": "AI 思考与发牌的节奏"},
                 {"key": "hint_level", "title": "提示强度", "kind": "stepper", "desc": "提示给出的牌型强度"},
+                {"key": "ai_level", "title": "机器人强度", "kind": "stepper", "desc": "电脑玩家的水平：简单 / 困难 / 高级 / 地狱"},
                 {"key": "auto_sort_hand", "title": "自动整理手牌", "kind": "switch", "desc": "出牌后按点数重新排好"},
             ]},
         ],
@@ -623,6 +624,9 @@ func _refresh_settings(snapshot: Dictionary) -> void:
                 "hint_level":
                     row.set_step(int(snapshot.get("hint_level", 1)),
                         snapshot.get("hint_level_labels", []))
+                "ai_level":
+                    row.set_step(int(snapshot.get("ai_level", AiBrain.DEFAULT_LEVEL)),
+                        snapshot.get("ai_level_labels", []))
                 "service_mode":
                     # 档位下标与 ServiceHub.Mode 一一对应（0 = 离线，1 = 联机）
                     row.set_step(int(snapshot.get("service_mode", ServiceHub.Mode.OFFLINE)),

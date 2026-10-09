@@ -36,9 +36,11 @@ var tts_enabled: bool = true
 ## 系统设置 → 基础设置：出牌震动反馈 / 轮到自己时的快捷提示
 var vibrate_enabled: bool = true
 var quick_hint_enabled: bool = true
-## 系统设置 → 对局设置：牌速档位 / 提示强度档位 / 自动整理手牌
+## 系统设置 → 对局设置：牌速档位 / 提示强度档位 / 机器人强度档位 / 自动整理手牌
 var card_speed: int = 2
 var hint_level: int = 1
+## 机器人强度（`AiBrain.Level`）。旧版没有这一项，那时电脑玩家的水平大致等于"困难"。
+var ai_level: int = AiBrain.DEFAULT_LEVEL
 var auto_sort_hand: bool = false
 
 var table_skin_id: String = SkinCatalog.DEFAULT_TABLE_ID
@@ -255,6 +257,7 @@ static func from_dict(data: Dictionary) -> PlayerProfile:
     # 档位型设置读档时一律钳到合法范围：以后增删档位不会让旧存档失配
     profile.card_speed = clampi(int(data.get("card_speed", DEFAULT_CARD_SPEED)), 0, CARD_SPEED_LABELS.size() - 1)
     profile.hint_level = clampi(int(data.get("hint_level", DEFAULT_HINT_LEVEL)), 0, HINT_LEVEL_LABELS.size() - 1)
+    profile.ai_level = clampi(int(data.get("ai_level", DEFAULT_AI_LEVEL)), 0, AI_LEVEL_LABELS.size() - 1)
     profile.auto_sort_hand = bool(data.get("auto_sort_hand", false))
     profile.table_skin_id = str(data.get("table_skin_id", SkinCatalog.DEFAULT_TABLE_ID))
     profile.card_skin_id = str(data.get("card_skin_id", SkinCatalog.DEFAULT_CARD_ID))
@@ -306,6 +309,7 @@ func to_dict() -> Dictionary:
         "quick_hint_enabled": quick_hint_enabled,
         "card_speed": card_speed,
         "hint_level": hint_level,
+        "ai_level": ai_level,
         "auto_sort_hand": auto_sort_hand,
         "table_skin_id": table_skin_id,
         "card_skin_id": card_skin_id,
@@ -484,6 +488,11 @@ const DEFAULT_CARD_SPEED := 2
 const HINT_LEVEL_LABELS := ["基础", "标准", "智能"]
 const DEFAULT_HINT_LEVEL := 1
 
+## 机器人强度档位：文案与默认值**直接引用 `AiBrain`**，两处不许各写一份
+## （写作一处、读在另一处，改档位时漏改一边就会"设置里显示高级、实际还是旧的"）。
+const AI_LEVEL_LABELS := AiBrain.LEVEL_LABELS
+const DEFAULT_AI_LEVEL := AiBrain.DEFAULT_LEVEL
+
 ## 设置项默认值（「恢复默认」按这张表还原；`audio_test` / `settings_test` 也据此断言）
 const SETTINGS_DEFAULTS := {
     "music_enabled": true,
@@ -493,6 +502,7 @@ const SETTINGS_DEFAULTS := {
     "quick_hint_enabled": true,
     "card_speed": DEFAULT_CARD_SPEED,
     "hint_level": DEFAULT_HINT_LEVEL,
+    "ai_level": DEFAULT_AI_LEVEL,
     "auto_sort_hand": false,
 }
 
@@ -505,6 +515,10 @@ func card_speed_label() -> String:
 
 func hint_level_label() -> String:
     return HINT_LEVEL_LABELS[clampi(hint_level, 0, HINT_LEVEL_LABELS.size() - 1)]
+
+## 机器人强度档位文案（"简单 / 困难 / 高级 / 地狱"）
+func ai_level_label() -> String:
+    return AI_LEVEL_LABELS[clampi(ai_level, 0, AI_LEVEL_LABELS.size() - 1)]
 
 ## 把某个设置项还原成默认值。未知键返回 false。
 func reset_setting(key: String) -> bool:
@@ -535,6 +549,8 @@ func set_setting(key: String, value: Variant) -> bool:
             card_speed = clampi(int(value), 0, CARD_SPEED_LABELS.size() - 1)
         "hint_level":
             hint_level = clampi(int(value), 0, HINT_LEVEL_LABELS.size() - 1)
+        "ai_level":
+            ai_level = clampi(int(value), 0, AI_LEVEL_LABELS.size() - 1)
         "auto_sort_hand":
             auto_sort_hand = bool(value)
         _:
@@ -558,6 +574,8 @@ func get_setting(key: String) -> Variant:
             return card_speed
         "hint_level":
             return hint_level
+        "ai_level":
+            return ai_level
         "auto_sort_hand":
             return auto_sort_hand
     return null

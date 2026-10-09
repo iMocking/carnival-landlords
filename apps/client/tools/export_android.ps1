@@ -24,6 +24,24 @@ if (-not (Test-Path "$JavaHome\bin\java.exe")) { throw "JDK not found: $JavaHome
 $env:JAVA_HOME = $JavaHome
 $env:PATH = "$JavaHome\bin;$env:PATH"
 
+# 0) 编辑器设置里的 Java SDK 路径：Godot 拿它跑 keytool / apksigner，**为空时连 debug 包都拒绝导出**
+#    （只设 JAVA_HOME 不够），而报出来的只是一句笼统的 "configuration errors"，很难查。
+#    而 Godot 编辑器退出时会用内存里的设置覆盖这个文件，手工填的那次很容易被冲掉，
+#    所以这里只在它为空时补一次。
+#    注意：必须用 .NET 的显式 UTF-8 读写 —— `Get-Content`/`Set-Content` 在 PowerShell 5.1 下
+#    按系统 ANSI 解码无 BOM 的 UTF-8 文件，写回去就把文件写成乱码了（踩过这个坑）。
+$editorSettings = Join-Path $env:APPDATA "Godot\editor_settings-4.7.tres"
+if (Test-Path $editorSettings) {
+    $utf8 = New-Object System.Text.UTF8Encoding($false)
+    $text = [System.IO.File]::ReadAllText($editorSettings, [System.Text.Encoding]::UTF8)
+    if ($text -match 'export/android/java_sdk_path\s*=\s*""') {
+        $javaPath = $JavaHome -replace '\\', '/'
+        $text = $text -replace 'export/android/java_sdk_path\s*=\s*""', "export/android/java_sdk_path = `"$javaPath`""
+        [System.IO.File]::WriteAllText($editorSettings, $text, $utf8)
+        Write-Host "[fix] 编辑器设置的 Java SDK 路径为空，已补成 $javaPath"
+    }
+}
+
 # 1) 版本号：默认 patch +1 / versionCode +1；-NoBump 只同步当前版本
 $modeName = if ($Release) { "release" } else { "debug" }
 $action = if ($NoBump) { "--sync" } else { "--bump" }

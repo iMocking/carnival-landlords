@@ -124,6 +124,10 @@ func settings_snapshot() -> Dictionary:
         "hint_level_label": _profile.hint_level_label(),
         "hint_level_steps": PlayerProfile.HINT_LEVEL_LABELS.size(),
         "hint_level_labels": PlayerProfile.HINT_LEVEL_LABELS.duplicate(),
+        "ai_level": _profile.ai_level,
+        "ai_level_label": _profile.ai_level_label(),
+        "ai_level_steps": PlayerProfile.AI_LEVEL_LABELS.size(),
+        "ai_level_labels": PlayerProfile.AI_LEVEL_LABELS.duplicate(),
         "auto_sort_hand": _profile.auto_sort_hand,
     }
 

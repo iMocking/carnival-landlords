@@ -87,10 +87,15 @@ var human_name: String = "我"
 ## 系统设置下发的对局偏好（由 `MainView` 在开局前写入）
 ## * `card_speed_scale`：AI 思考时长系数（牌速调节）
 ## * `hint_level`：提示强度档位（0 基础 / 1 标准 / 2 智能）
+## * `ai_level`：机器人强度档位（`AiBrain.Level`：简单 / 困难 / 高级 / 地狱）
 ## * `auto_hint`：快捷提示 —— 轮到我先手时自动给一次提示
 ## * `auto_sort_hand`：出牌后自动把剩余手牌按点数排好（直接透传给引擎）
 var card_speed_scale: float = 1.0
 var hint_level: int = 1
+## -1 表示"还没从设置里灌过"：这一档的默认值与合法性由对局服务（裁决侧）自己兜。
+## ViewModel 刻意不引用 `AiBrain` —— 档位校验属于裁决侧的事，
+## 越界那就是边界又漏回来了（`game_session_test` 有结构断言守着）。
+var ai_level: int = -1
 var auto_hint: bool = false
 var auto_sort_hand: bool = false
 ## 发牌动画的**时长下限**（秒），由视图在开局前灌入（见 `MainView._bind_scene()`）。
@@ -271,6 +276,11 @@ func apply_preferences(settings: Dictionary) -> void:
     auto_sort_hand = bool(settings.get("auto_sort_hand", false))
     if engine != null:
         engine.auto_sort_hand = auto_sort_hand
+    # 机器人强度只**转发**，不在这里校验：那是裁决侧的活（对局服务自己钳制档位）
+    if settings.has("ai_level"):
+        ai_level = int(settings["ai_level"])
+        if session != null:
+            session.set_ai_level(ai_level)
 
 ## 暂停 / 恢复对局（退出确认弹窗打开期间调用）。
 ## 恢复时重新排一次 AI 计时器，避免暂停瞬间正好把 AI 的回合吞掉。

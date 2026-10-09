@@ -8,12 +8,21 @@ extends GameSessionContract
 ## 从而让 `GameViewModel` 一行都不用改。
 
 var _engine: GameEngine = null
+## 本机机器人强度档位（`AiBrain.Level`）。由 `GameViewModel.apply_preferences()` 灌入；
+## 没灌过就用 `AiBrain.DEFAULT_LEVEL`（"高级"）。
+var _ai_level: int = AiBrain.DEFAULT_LEVEL
 
 func _init() -> void:
     _engine = GameEngine.new()
 
 func engine() -> GameEngine:
     return _engine
+
+func set_ai_level(level: int) -> void:
+    _ai_level = AiBrain.clamp_level(level)
+
+func ai_level() -> int:
+    return _ai_level
 
 # ---------------------------------------------------------------- 结算与排名（纯函数）
 
@@ -105,7 +114,7 @@ func ai_bid(seat: int) -> int:
         return 0
     if _engine.phase != GameEngine.Phase.BIDDING or _engine.current_seat != seat:
         return 0
-    var score := AiBrain.decide_bid(_engine.players[seat].hand, _engine.wild_rank)
+    var score := AiBrain.decide_bid(_engine.players[seat].hand, _engine.wild_rank, _ai_level)
     _engine.submit_bid(seat, score)
     return score
 
@@ -118,7 +127,7 @@ func ai_take_turn(seat: int) -> Dictionary:
     if _engine.phase != GameEngine.Phase.PLAYING or _engine.current_seat != seat:
         return {"action": "none", "cards": []}
 
-    var cards := AiBrain.choose_play(_engine, seat)
+    var cards := AiBrain.choose_play(_engine, seat, _ai_level)
     if not cards.is_empty() and _engine.play_cards(seat, cards):
         return {"action": "play", "cards": cards}
 

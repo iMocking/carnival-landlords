@@ -120,6 +120,7 @@ func _preference_snapshot() -> Dictionary:
     return {
         "card_speed_scale": profile.card_speed_scale(),
         "hint_level": profile.hint_level,
+        "ai_level": profile.ai_level,
         "auto_hint": profile.quick_hint_enabled,
         "auto_sort_hand": profile.auto_sort_hand,
     }

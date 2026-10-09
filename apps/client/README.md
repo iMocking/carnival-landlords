@@ -236,6 +236,21 @@ godot --path . --script res://tools/probe_boot_overlay.gd
   输入框的 `max_length` 也取 64，否则预填值会被 LineEdit 直接截断。
   `tests/login_field_test.gd` 钉预填与长度上限，`tests/account_identity_test.gd`
   钉「离线形态下默认账号真的登得进去」。
+* **连不上服务端时，登录会自动回落成本机登录**（`AppViewModel._login_across_modes()`）。
+  这条是**必须有的**：未设置偏好时默认联机（D-17），而 `bootstrap()` 只在失败原因
+  **不是** `need_login` 时降级；全新安装恰好就是 `need_login`（本机没有凭据），
+  于是应用会停在**联机形态**的登录页 —— 此时点「登录」只会一直弹网络错误，
+  在没有后端的手机上**永远进不去**（实测就是这个现象）。
+  界线划得很清楚：
+  * 只有 `need_online`（网络 / 服务端不可达）才回落，且用 `fallback_to_offline()`
+	**不写偏好**（下次启动仍按偏好再试联机，一次网络抖动不该让用户永久退网）；
+  * 密码错 / 账号不存在映射的是 `need_login`，**照实报错**，绝不悄悄放行 ——
+	否则等于把"凭据错误"伪装成"登录成功"。
+  `tests/online_service_test.gd` 的 `_test_login_falls_back_to_local_when_unreachable()`
+  同时钉住「能进去」与「凭据错不回落」两侧。
+  注意：回落**不持久化模式偏好**，所以每次冷启动仍会先按偏好试联机、停一次登录页 ——
+  点一下（账号已预填）即可；若希望「有本机档案就直接进大厅（离线）」，
+  可在 `bootstrap()` 的 `need_login` 分支上再放宽一次，这属于产品口径，未擅自改。
 * **场景与脚本分离 + 设计稿程序化重建**：页面的基础节点树、锚点、样式仍在 `.tscn` 里；
   个人中心、登录、大厅等按设计稿重构的部分，由页面脚本在 `_bind_scene()` 中移除旧节点后程序化重建，
   这样设计改动集中在脚本，避免手工维护大场景文件（五个新子页的场景就是"根节点 + 脚本"的最小场景）。
@@ -474,6 +489,7 @@ godot --path . --script res://tools/probe_boot_overlay.gd
 │ │ 隐私设置 › │ │  📱 震动反馈 [●]   🏮 快捷提示 [●]             │ │
 │ │ 账号设置 › │ ├ 对局设置 ─────────────────────────────────────┤ │
 │ │            │ │  🪙 牌速调节 ◀ 中等 ▶   🏆 提示强度 ◀ 标准 ▶  │ │
+│ │            │ │  🤖 机器人强度 ◀ 高级 ▶                       │ │
 │ │            │ │  🧰 自动整理手牌 [○]                          │ │
 │ └────────────┘ └───────────────────────────────────────────────┘ │
 │                              [ 恢复默认 ]  [ 保存设置 ]            │
@@ -493,9 +509,43 @@ godot --path . --script res://tools/probe_boot_overlay.gd
 | | 快捷提示 | `quick_hint_enabled` | 轮到我**先手**时自动给一次提示 |
 | 对局设置 | 牌速调节 | `card_speed` | 5 档，系数乘在 AI 思考时长上（`0.50× ~ 1.80×`） |
 | | 提示强度 | `hint_level` | 3 档（基础 / 标准 / 智能）；智能会优先挑"打完就走完"的那一手 |
+| | **机器人强度** | `ai_level` | **4 档（简单 / 困难 / 高级 / 地狱），默认高级**；见下节 |
 | | 自动整理手牌 | `auto_sort_hand` | 出牌后把剩余手牌重新按点数排好 |
 | 音效设置 | 出牌播报 | `tts_enabled` | 真人语音 + TTS 兜底 |
 | 账号设置 | 修改昵称 / 恢复默认装扮 / 退出登录 | — | 复用手册页既有动作，不另写一套 |
+
+### 机器人强度（`AiBrain.Level`）
+
+四档的差别都落在**可观察的决策**上，不是"概率上强一点"（`tests/ai_level_test.gd` 逐条钉住）：
+
+| 档位 | 决策特征 |
+| --- | --- |
+| 简单 | 跟牌出**最大**能压住的一手（把大牌当小牌打）、不看队友（会压自己人）、见炸弹就丢、叫分带随机抖动 |
+| 困难 | 跟牌出**最小**能压住的、不压队友、对手剩 ≤2 张（或自己 ≤3 张）才动炸弹 —— **旧版行为就在这一档** |
+| 高级（默认） | 在困难之上加牌型结构意识：宁可用散牌也不拆对子/三张，先手优先选"出完之后手里更整"的一手，对手只剩 1 张时改出多张牌型封堵 |
+| 地狱 | 在高级之上加收官意识：先手优先选"剩下的牌正好还是一手"的打法，炸弹也只在"炸完就只剩一手"时提前动用 |
+
+* **默认档是"高级"而不是"困难"**：旧版被反馈"机器人过于简单"，所以默认给一档更强的；
+  想复现旧手感把设置拨到"困难"。
+* 档位文案与默认值是**单一事实来源**：`PlayerProfile.AI_LEVEL_LABELS/DEFAULT_AI_LEVEL`
+  直接引用 `AiBrain.LEVEL_LABELS/DEFAULT_LEVEL`，两处各写一份迟早会漂成
+  "设置里显示高级、实际还是旧 AI"。
+* **信息边界**：AI 只用公开信息 —— 自己的手牌、各家剩几张、桌面上的牌
+  （为此给 `GameEngine` 加了 `played_cards` 公开记录）、上一手牌型。
+  **绝不读别人的手牌**（那是作弊）。`AiBrain._is_control_rank()` 就是靠
+  "已出牌堆 + 我的手牌"反推"这张是不是已经无人能压"。
+* **强度是量出来的，不是估的**：`tools/probe_ai_strength.gd` 做**角色受控**对照
+  （固定地主 + 统一叫分，每对 200 局，比地主胜率）。当前四档单调有序：
+  简单 32% / 困难 57%、困难 48% / 高级 59%、高级 50% / 地狱 54%（互为地主的两次对照）。
+  **别用"随机身份 60 局"下结论** —— 座位 0 的身份每局随机，同一配置两次能差 10 个点，
+  第一版探针就被带偏过（还叠加了"各档叫分偏好不同"的混淆：地主本就是叫分决定的）。
+* 架构上：档位由 `MainView` → `GameViewModel.apply_preferences()` → `GameSessionContract.set_ai_level()`
+  一路播到对局服务，**决策在服务层做**（联机时由服务端裁决，客户端这一档只影响本机对局）。
+  `GameViewModel` 因此刻意不引用 `AiBrain` —— 档位校验属于裁决侧，
+  `tests/game_session_test.gd` 有结构断言守着这条边界。
+  又因为联机对局的电脑玩家由服务端裁决，`ai_level` 是**只落本地不同步**的设置项
+  （`OnlineService.LOCAL_ONLY_SETTINGS`）—— 同步过去会被服务端 schema 拒掉，
+  反而把整次"保存设置"拖失败。
 
 * **自动整理手牌默认关闭**：引擎本来**故意不排**剩余手牌 ——
   出过哪几张、缝隙留在哪里是玩家的记忆锚点，每出一手就重排会让人找不到牌。
@@ -1054,31 +1104,73 @@ tools/
 
 ## 打包 Android APK
 
-> **前置依赖（换机器必看）**：导出模板与 Android SDK **都不在工程里**，必须先装好：
+> **前置依赖（换机器必看）**：导出模板与 Android SDK **都不在工程里**，必须先在机器上装好：
 > 1. **导出模板**：Godot 编辑器 →「编辑器 / 管理导出模板」→ 下载并安装与引擎**同版本**的模板
->    （4.7.2，落盘在 `%APPDATA%\Godot\export_templates\4.7.2.stable\`）；
->    也可以手动下 `Godot_v4.7.2-stable_export_templates.tpz`（1.19 GB）后从编辑器安装。
-> 2. **Android SDK**：`cmdline-tools` + `platform-tools` + `build-tools;34.0.0` + `platforms;android-34`，
->    然后在编辑器设置里填 `export/android/android_sdk_path`（本机为
->    `C:\Users\<用户>\AppData\Local\Android\Sdk`）与 `export/android/java_sdk_path`（JDK 17）。
-> 3. 调试包还需要调试签名库（编辑器设置的 `export/android/debug_keystore`，缺失时用 `keytool` 生成）。
+>    （4.7.2，落盘在 `%APPDATA%\Godot\export_templates\4.7.2.stable\`）。
+>    Android 只需要该目录下的 `android_debug.apk` / `android_release.apk` / `android_source.zip`
+>    三个文件（合计约 426 MB），不必装全平台模板。
+> 2. **Android SDK**：需要 `platform-tools` + `build-tools`（本机 36.0.0）+ `platforms`（本机 android-34）；
+>    在编辑器设置里填 `export/android/android_sdk_path`（本机
+>    `C:\Users\<用户>\AppData\Local\Android\Sdk`）。
+> 3. **Java SDK 路径**：编辑器设置 `export/android/java_sdk_path` **必须填**（本机 `D:/apps/jdk17`）。
+>    这一项为空时 Godot 会直接拒绝导出（报「编辑器设置中需要有效的 Java SDK 路径」），
+>    连 `--export-debug` 也一样 —— 只在 `export_android.ps1` 里设 `JAVA_HOME` **不够**。
+>    而且**Godot 编辑器退出时会用内存里的设置覆盖这个文件**，手工填的那次很容易被冲掉；
+>    因此 `export_android.ps1` 现在会在脚本开头**只在它为空时自动补一次**并打印 `[fix]`，
+>    不再让这条变成一句笼统的 "configuration errors"。
 >
-> 缺任何一项时 `--export-debug` 都会直接报错退出，**不会**产出半成品包。
+> ⚠️ **改 `tools/*.ps1` 必须保留 UTF-8 BOM**：PowerShell 5.1 对**无 BOM** 的脚本按系统 ANSI
+> 解码，中文注释会被解成乱码，紧接着就是莫名的语法错误（本机 `run_tests.ps1` 至今跑不起来
+> 就是这个原因，`export_android.ps1` 也被这么坑过一次：报 `Unexpected token ')'`，
+> 位置却在没动过的 `param()` 上）。补 BOM 的办法：
+>
+> ```powershell
+> $p = 'tools\export_android.ps1'
+> $b = [System.IO.File]::ReadAllBytes($p)
+> [System.IO.File]::WriteAllBytes($p, [byte[]](0xEF,0xBB,0xBF) + $b)
+> ```
+> 4. **签名库**（两个，都在 `%APPDATA%\Godot\keystores\`）：
+>    * 调试包用 `debug.keystore`（别名 `androiddebugkey`、口令 `android`，编辑器设置
+>      `export/android/debug_keystore` 指向它）；
+>    * 发布包用 `release.keystore`（别名 `doudizhu`、口令 `doudizhu`，DN
+>      `CN=doudizhu, OU=dev, O=waiting-for-landlord, C=CN`）。
+>    两者都由编辑器设置 / `.godot/export_credentials.cfg`（不入库）引用；
+>    缺失时用 `keytool -genkeypair` 生成即可，参数见上。
+>
+> 缺任何一项都会**直接报错退出**，不会产出半成品包。
+> 另外 `tools/export_android.ps1` 里的 `-Godot` 默认值是 `D:\apps\godot\...`，
+> 换机器后要显式传本机引擎路径：
+>
+> ```powershell
+> $godot = "C:\Apps\Godot_SDK\Godot_v4.7.2-stable_win64.exe\Godot_v4.7.2-stable_win64_console.exe"
+> powershell -ExecutionPolicy Bypass -File tools/export_android.ps1 -Godot $godot            # 调试包
+> powershell -ExecutionPolicy Bypass -File tools\export_android.ps1 -Godot $godot -Release   # 发布包
+> ```
+>
+> ⚠️ **发布签名密钥已重建过一次**：原先那把 `release.keystore` 的私钥在本机丢失
+> （只留下 `.godot/export_credentials.cfg` 里的路径与别名记录），当前这把是按同样别名 / DN
+> **新生成**的，SHA-256 为 `14:c2:bb:30:...`。因此：
+> * 手上装着更早 release 包的手机，**必须先卸载**再装新包（签名不一致会拒绝覆盖安装）；
+> * 正式对外分发前应换成一把妥善备份的发布密钥；换掉后重新打包即可，其余配置不用动。
 
-装好上面三项后可一键导出（默认调试包，可直接装到手机上测试）：
+装好上面几项后可一键导出（不加 `-Release` 即调试包，可直接装到手机上测试）：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File tools/export_android.ps1
+powershell -ExecutionPolicy Bypass -File tools/export_android.ps1 -Godot $godot
 # 每次打包自动递增版本号，产物不会被覆盖：
-# build/waiting-for-landlord-v1.0.1-b2-debug.apk
+# build/waiting-for-landlord-v1.0.4-b5-debug.apk
 ```
 
 安装方式：
 
 ```powershell
-adb install -r build/waiting-for-landlord-v1.0.1-b2-debug.apk     # USB 调试
+adb install -r build/waiting-for-landlord-v1.0.4-b5-release.apk   # USB 调试
 # 或把 APK 传到手机，点击安装（需允许「未知来源」）
 ```
+
+> **APK 体积提示**：`export_filter="all_resources"` 会把 `desgin/` 与 `design_update/`
+> 下的设计稿 / 参考图（约 45 MB 的 jpeg）也打进包。它们只在设计对照时用得到，
+> 若要瘦身，在 `export_presets.cfg` 的 `exclude_filter` 里加上 `desgin/*,design_update/*` 即可。
 
 ### 版本号自增（不会覆盖旧包）
 

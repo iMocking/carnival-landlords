@@ -1,4 +1,4 @@
-﻿extends SceneTree
+extends SceneTree
 ## OnlineService / ApiClient 业务映射回归测试（S1）
 ##   godot --headless --path . --script res://tests/online_service_test.gd
 ##
@@ -46,6 +46,7 @@ func _initialize() -> void:
     _test_switch_to_online_without_session_keeps_offline()
     _test_logout_clears_both_sessions()
     _test_app_view_model_falls_back_offline()
+    _test_login_falls_back_to_local_when_unreachable()
     await _test_login_view_online_mode()
 
     _restore()
@@ -620,6 +621,55 @@ func _test_app_view_model_falls_back_offline() -> void:
     _check(toasts.size() > 0 and str(toasts[0]).contains("无法联机"), "降级给出可读提示")
     _check(app.route == AppViewModel.Route.LOGIN, "没有本地账号时停在登录页，而不是进大厅")
     _check(app.profile == null, "降级不会凭空造出档案")
+
+## 全新安装（本机没有凭据）+ 服务端不可达时，登录页点「登录」也必须能进得去。
+##
+## 这是手机上真实踩到的坑：`bootstrap()` 只在**非** `need_login` 的失败上降级，
+## 而全新安装恰好就是 `need_login`，于是应用停在**联机形态**的登录页；
+## 此时点登录只会一直弹网络错误，用户永远进不去。
+## 这里钉住四件事：回落本机登录、模式变成离线、偏好不被改写、凭据错误**不**回落。
+func _test_login_falls_back_to_local_when_unreachable() -> void:
+    ProfileRepository.clear()
+    if FileAccess.file_exists(ServiceHub.MODE_PATH):
+        DirAccess.remove_absolute(ServiceHub.MODE_PATH)
+
+    var app := AppViewModel.new()
+    var toasts: Array = []
+    app.toast.connect(func(text: String) -> void: toasts.append(text))
+    var unreachable := UnreachableOnlineService.new()
+    unreachable.restore_code = ServiceContract.NEED_LOGIN   # 全新安装：本机没有凭据
+    app.hub.install_online(unreachable, null)
+    app.hub.set_preferred_mode(ServiceHub.Mode.ONLINE)
+    app.bootstrap()
+
+    _check(app.service_mode() == ServiceHub.Mode.ONLINE,
+        "全新安装 + 服务端不可达时**仍停在联机形态**的登录页（need_login 不降级）")
+    _check(app.route == AppViewModel.Route.LOGIN, "停在登录页")
+
+    var account := LoginView.DEFAULT_ACCOUNT
+    var ok := app.login(account, LoginView.DEFAULT_PASSWORD)
+    _check(ok, "连不上服务端时，默认账号仍能完成本机登录")
+    _check(app.service_mode() == ServiceHub.Mode.OFFLINE, "已回落到离线实现")
+    _check(app.route == AppViewModel.Route.LOBBY, "登录成功进入大厅")
+    _check(app.profile != null and app.profile.nickname == account, "本机档案昵称 = 账号")
+    _check(app.preferred_service_mode() == ServiceHub.Mode.ONLINE,
+        "回落不改写偏好（下次启动仍会尝试联机）")
+    var last := str(toasts[toasts.size() - 1]) if not toasts.is_empty() else ""
+    _check(last.contains("本机账号"), "提示说明了这是本机登录（实际「%s」）" % last)
+
+    # 凭据错误（密码错 / 账号不存在）映射的是 need_login，**绝不能**回落放行
+    ProfileRepository.clear()
+    var app2 := AppViewModel.new()
+    var wrong := UnreachableOnlineService.new()
+    wrong.restore_code = ServiceContract.NEED_LOGIN
+    wrong.login_code = ServiceContract.NEED_LOGIN
+    app2.hub.install_online(wrong, null)
+    app2.hub.set_preferred_mode(ServiceHub.Mode.ONLINE)
+    app2.bootstrap()
+    _check(not app2.login(account, "错误的密码"), "凭据错误时登录失败")
+    _check(app2.service_mode() == ServiceHub.Mode.ONLINE,
+        "凭据错误不回落离线（否则等于把密码错伪装成登录成功）")
+    _check(app2.route == AppViewModel.Route.LOGIN, "凭据错误仍停在登录页")
 
 func _test_offline_batch_transport() -> void:
     var transport := FakeApiTransport.new()

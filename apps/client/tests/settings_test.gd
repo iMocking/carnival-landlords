@@ -48,6 +48,16 @@ func _test_profile_settings() -> void:
     _check(profile.card_speed == 0, "负数档位被钳到 0")
     _check(not profile.set_setting("不存在的键", true), "未知设置键写入被拒绝")
     _check(profile.get_setting("不存在的键") == null, "未知设置键读取返回 null")
+    # 机器人强度：四档、默认"高级"，越界同样钳制
+    _check(PlayerProfile.AI_LEVEL_LABELS.size() == 4, "机器人强度有四档")
+    _check(profile.ai_level_label() == "高级",
+        "机器人强度默认是高级（实际 %s）" % profile.ai_level_label())
+    _check(profile.set_setting("ai_level", 3), "可以写入机器人强度")
+    _check(profile.ai_level_label() == "地狱", "档位文案切换正确（实际 %s）" % profile.ai_level_label())
+    profile.set_setting("ai_level", 99)
+    _check(profile.ai_level == PlayerProfile.AI_LEVEL_LABELS.size() - 1, "越界机器人强度钳到最大值")
+    profile.set_setting("ai_level", -1)
+    _check(profile.ai_level == 0, "负数机器人强度钳到 0")
     # 恢复默认：只影响设置项，不动战绩与资产
     profile.set_setting("music_enabled", false)
     profile.set_setting("auto_sort_hand", true)
@@ -65,6 +75,7 @@ func _test_persistence() -> void:
     profile.set_setting("quick_hint_enabled", false)
     profile.set_setting("card_speed", 0)
     profile.set_setting("hint_level", 2)
+    profile.set_setting("ai_level", 1)
     profile.set_setting("auto_sort_hand", true)
     var reloaded := PlayerProfile.from_dict(profile.to_dict())
     _check(reloaded != null, "设置可读档")
@@ -74,21 +85,27 @@ func _test_persistence() -> void:
     _check(not reloaded.quick_hint_enabled, "快捷提示已持久化")
     _check(reloaded.card_speed == 0, "牌速档位已持久化")
     _check(reloaded.hint_level == 2, "提示强度档位已持久化")
+    _check(reloaded.ai_level == 1, "机器人强度档位已持久化")
     _check(reloaded.auto_sort_hand, "自动整理已持久化")
     # 旧存档没有这些字段：必须回退到默认值而不是崩 / 变 0
     var legacy := profile.to_dict()
-    for key in ["vibrate_enabled", "quick_hint_enabled", "card_speed", "hint_level", "auto_sort_hand"]:
+    for key in ["vibrate_enabled", "quick_hint_enabled", "card_speed", "hint_level",
+            "ai_level", "auto_sort_hand"]:
         legacy.erase(key)
     var old := PlayerProfile.from_dict(legacy)
     _check(old != null and old.card_speed == PlayerProfile.DEFAULT_CARD_SPEED, "旧存档牌速回退默认")
+    _check(old != null and old.ai_level == PlayerProfile.DEFAULT_AI_LEVEL,
+        "旧存档机器人强度回退默认（高级）")
     _check(old != null and old.vibrate_enabled, "旧存档震动开关回退默认开")
     # 越界档位（手工改坏的存档）读档时也要被钳住
     var broken := profile.to_dict()
     broken["card_speed"] = 999
     broken["hint_level"] = -999
+    broken["ai_level"] = 999
     var fixed := PlayerProfile.from_dict(broken)
     _check(fixed != null and fixed.card_speed == PlayerProfile.CARD_SPEED_LABELS.size() - 1, "读档钳制越界牌速")
     _check(fixed != null and fixed.hint_level == 0, "读档钳制越界提示强度")
+    _check(fixed != null and fixed.ai_level == PlayerProfile.AI_LEVEL_LABELS.size() - 1, "读档钳制越界机器人强度")
 
 # ---------------------------------------------------------------- 行为接线
 
@@ -219,6 +236,17 @@ func _test_settings_panel() -> void:
         await _frames(2)
         _check(app.profile.card_speed != before_speed, "档位步进写入档案")
         _check(speed_row != null and view.find_child("StepValue", true, false) != null, "档位显示仍然存在")
+
+    # 机器人强度：设置页必须真的出现这一行，且步进能写进档案
+    var ai_row := view.find_child("Setting_ai_level", true, false) as SettingsRow
+    _check(ai_row != null, "对局设置里有机器人强度行")
+    if ai_row != null:
+        var before_ai := app.profile.ai_level
+        ai_row.stepped.emit("ai_level", (before_ai + 1) % PlayerProfile.AI_LEVEL_LABELS.size())
+        await _frames(2)
+        _check(app.profile.ai_level != before_ai, "机器人强度步进写入档案")
+        ai_row.stepped.emit("ai_level", before_ai)
+        await _frames(2)
 
     # 切分类
     view.call("_select_settings_category", 1)

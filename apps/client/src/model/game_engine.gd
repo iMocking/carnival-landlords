@@ -33,6 +33,12 @@ var landlord_seat: int = -1
 var last_play: Array = []
 var last_pattern: CardPattern = null
 var last_play_seat: int = -1
+## 已经打出的牌（**公开信息**：牌桌上一张张摊出来的）。
+##
+## 存在的意义只有一个：让 AI 能"数牌"——判断某个点数是都出完了（绝张）、
+## 自己手里那张是不是当前最大的（控牌）。AI **绝不能**去读别人的手牌，
+## 那是作弊；这张表是它唯一合法的信息源。提示功能也可以用它算"还剩几张"。
+var played_cards: Array = []
 var pass_count: int = 0
 var multiplier: int = 1
 var base_score: int = 1
@@ -155,6 +161,9 @@ func play_cards(seat: int, cards: Array) -> bool:
     last_pattern = pattern
     last_play_seat = seat
     pass_count = 0
+    # 记进"已出牌堆"：这是**公开信息**（牌桌上一张张摊出来的），
+    # 也是 AI 数牌（判断某张牌是否已经绝张）唯一合法依据 —— 绝不允许它去读别人手牌。
+    played_cards.append_array(cards)
 
     if pattern.is_bomb():
         multiplier *= 2
