@@ -38,6 +38,7 @@ func _initialize() -> void:
     await _test_bootstrap_requires_login()
     _test_guest_login_removed()
     _test_valid_account_still_works()
+    _test_default_account_works()
 
     _restore()
     print("checks=%d failures=%d" % [_checks, _failures])
@@ -137,6 +138,35 @@ func _test_guest_login_removed() -> void:
     _check(view.find_child("LoginButton", true, false) != null, "登录按钮仍在")
     _check(view.find_child("RegisterButton", true, false) != null, "注册入口仍在")
     view.queue_free()
+
+## ---------------------------------------------------------------- 6) 打包默认账号
+##
+## 需求：登录页默认带 `khddz@test.com` / `951024bb`，开箱一键即可进。
+## 它比昵称上限（12）长，所以服务层的「账号」必须走 `ACCOUNT_MAX`（64）——
+## 这条断言就是钉住这一点：默认账号在离线形态下必须登得进去。
+func _test_default_account_works() -> void:
+    var account := LoginView.DEFAULT_ACCOUNT
+    var password := LoginView.DEFAULT_PASSWORD
+    _check(account == "khddz@test.com" and password == "951024bb", "默认账号即需求给定值")
+    _check(account.length() > ServiceContract.NICKNAME_MAX,
+        "默认账号（%d 字）确实长于昵称上限（%d）——所以必须走账号上限"
+            % [account.length(), ServiceContract.NICKNAME_MAX])
+
+    ProfileRepository.clear()
+    var app := AppViewModel.new()
+    app.set_service_mode(ServiceHub.Mode.OFFLINE)
+    _check(app.login(account, password), "离线形态下默认账号可以登录")
+    _check(app.route == AppViewModel.Route.LOBBY, "登录后进入大厅")
+    _check(app.profile != null and app.profile.nickname == account,
+        "登录后本机档案昵称 = 默认账号")
+    _check(ProfileRepository.load_profile() != null, "默认账号的存档已落盘")
+
+    # 超长账号仍要拦（否则 ACCOUNT_MAX 形同虚设）
+    ProfileRepository.clear()
+    var app2 := AppViewModel.new()
+    app2.set_service_mode(ServiceHub.Mode.OFFLINE)
+    _check(not app2.login("x".repeat(ServiceContract.ACCOUNT_MAX + 1)),
+        "超过账号上限的输入仍被拒")
 
 # ---------------------------------------------------------------- 5) 合法存档照常
 

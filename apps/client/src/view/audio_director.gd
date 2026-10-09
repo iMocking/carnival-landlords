@@ -14,6 +14,8 @@ const SFX_DB := -4.0
 const MUSIC_DB := -9.0
 const VOICE_DB := -1.0
 const CLICK_GUARD_MSEC := 50
+## 发牌是两段：先 `Special_Dispatch` 派牌，隔这么久再叠 `DealFold` 落手
+const DEAL_FOLD_DELAY := 0.35
 
 static var _instance: AudioDirector = null
 
@@ -54,6 +56,29 @@ static func set_music_enabled(enabled: bool) -> void:
     if _instance != null:
         _instance._music_on = enabled
         _instance._sync_music()
+
+## 发牌音效一共响多久（秒）。牌桌拿它当**发牌动画的时长下限** ——
+## 否则牌早就发完了，`Special_Dispatch` 还在响（实测这段音效有 3.87s，
+## 而动画原本只有 1.88s，观感就是"音效被硬生生掐断"）。
+##
+## 刻意**不依赖 `_instance`**：这是素材自身的事实，与音频系统有没有起来无关
+## （无头测试里牌桌也会照这个时长把牌发完）。音频文件缺失时返回 0，调用方退回默认节奏。
+static func deal_duration() -> float:
+    var dispatch := _stream_length(AudioLibrary.path(AudioLibrary.sfx_rel("deal")))
+    var fold := _stream_length(AudioLibrary.path(AudioLibrary.sfx_rel("deal_fold")))
+    var total := maxf(dispatch, DEAL_FOLD_DELAY + fold)
+    return total if total > 0.05 else 0.0
+
+## 音频文件时长（秒）。取不到就返回 0，调用方自己决定怎么兜底。
+static func _stream_length(path: String) -> float:
+    if path.is_empty() or not ResourceLoader.exists(path):
+        return 0.0
+    var stream := load(path) as AudioStream
+    if stream is AudioStreamMP3:
+        return (stream as AudioStreamMP3).get_length()
+    if stream is AudioStreamWAV:
+        return (stream as AudioStreamWAV).get_length()
+    return 0.0
 
 ## 系统设置 →「震动反馈」：在关键操作上给一次短震动。
 ##
@@ -160,7 +185,7 @@ func _play_deal(volume_db: float = 0.0) -> void:
         return
     _play_effect(AudioLibrary.sfx_rel("deal"), volume_db)
     if is_inside_tree():
-        get_tree().create_timer(0.35).timeout.connect(func() -> void:
+        get_tree().create_timer(DEAL_FOLD_DELAY).timeout.connect(func() -> void:
             _play_effect(AudioLibrary.sfx_rel("deal_fold"), volume_db - 1.0))
 
 func _play_effect(relative: String, volume_db: float = 0.0) -> void:

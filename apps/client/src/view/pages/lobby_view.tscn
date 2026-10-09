@@ -150,92 +150,6 @@ shadow_color = Color(0, 0, 0, 0.3)
 shadow_size = 3.0
 shadow_offset = Vector2(0, 2)
 
-[sub_resource type="StyleBox" id="StyleBox_m8rtv"]
-resource_local_to_scene = false
-resource_name = ""
-content_margin_left = 18.0
-content_margin_top = 11.0
-content_margin_right = 18.0
-content_margin_bottom = 11.0
-script = ExtResource("3_qcjr8")
-top_color = Color(0.8117647, 0.1254902, 0.15294118, 1)
-bottom_color = Color(0.49019608, 0.07058824, 0.08627451, 1)
-border_color = Color(0.24705882, 0.039215688, 0.047058824, 1)
-corner_radius = 14
-gloss_strength = 0.3
-shadow_color = Color(0, 0, 0, 0.4)
-shadow_size = 5.0
-
-[sub_resource type="StyleBox" id="StyleBox_8wlec"]
-resource_local_to_scene = false
-resource_name = ""
-content_margin_left = 18.0
-content_margin_top = 11.0
-content_margin_right = 18.0
-content_margin_bottom = 11.0
-script = ExtResource("3_qcjr8")
-top_color = Color(0.65882355, 0.101960786, 0.1254902, 1)
-bottom_color = Color(0.36078432, 0.05882353, 0.07058824, 1)
-border_color = Color(0.2, 0.03137255, 0.03529412, 1)
-corner_radius = 14
-gloss_strength = 0.14
-shadow_color = Color(0, 0, 0, 0.22)
-shadow_size = 2.0
-shadow_offset = Vector2(0, 2)
-bottom_shade = 0.18
-
-[sub_resource type="StyleBox" id="StyleBox_yrhba"]
-resource_local_to_scene = false
-resource_name = ""
-content_margin_left = 18.0
-content_margin_top = 11.0
-content_margin_right = 18.0
-content_margin_bottom = 11.0
-script = ExtResource("3_qcjr8")
-top_color = Color(0.9098039, 0.2509804, 0.18431373, 1)
-bottom_color = Color(0.56078434, 0.11372549, 0.12941177, 1)
-border_color = Color(0.24705882, 0.039215688, 0.047058824, 1)
-corner_radius = 14
-gloss_strength = 0.38
-shadow_color = Color(0, 0, 0, 0.44)
-shadow_size = 6.0
-shadow_offset = Vector2(0, 3.6)
-
-[sub_resource type="StyleBox" id="StyleBox_j74nb"]
-resource_local_to_scene = false
-resource_name = ""
-content_margin_left = 18.0
-content_margin_top = 11.0
-content_margin_right = 18.0
-content_margin_bottom = 11.0
-script = ExtResource("3_qcjr8")
-top_color = Color(0.3019608, 0.22745098, 0.23137255, 1)
-bottom_color = Color(0.16862746, 0.12941177, 0.13333334, 1)
-border_color = Color(0.10980392, 0.08235294, 0.08627451, 1)
-corner_radius = 14
-gloss_strength = 0.08
-shadow_color = Color(0, 0, 0, 0.18)
-shadow_size = 3.0
-shadow_offset = Vector2(0, 2)
-
-[sub_resource type="StyleBox" id="StyleBox_pb3wd"]
-resource_local_to_scene = false
-resource_name = ""
-content_margin_left = 18.0
-content_margin_top = 11.0
-content_margin_right = 18.0
-content_margin_bottom = 11.0
-script = ExtResource("3_qcjr8")
-top_color = Color(0, 0, 0, 0)
-bottom_color = Color(0, 0, 0, 0)
-border_color = Color(0, 0, 0, 0)
-border_width = 0
-corner_radius = 14
-gloss_strength = 0.0
-shadow_color = Color(0, 0, 0, 0)
-shadow_size = 0.0
-shadow_offset = Vector2(0, 2)
-
 [sub_resource type="StyleBox" id="StyleBox_3qff8"]
 resource_local_to_scene = false
 resource_name = ""
@@ -811,13 +725,6 @@ theme_override_font_sizes/font_size = 13
 theme_override_colors/font_color = Color(1, 1, 1, 0.42)
 text = "ID --"
 
-[node name="Chevron" type="Label" parent="SafeArea/Root/TopBar/TopRow/ProfileButton/ProfileRow" unique_id=1729625854]
-layout_mode = 2
-theme_override_font_sizes/font_size = 26
-theme_override_colors/font_color = Color(1, 0.9529412, 0.76862746, 1)
-text = "›"
-horizontal_alignment = 2
-
 [node name="TopSpacer" type="Control" parent="SafeArea/Root/TopBar/TopRow" unique_id=1775030853]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -902,23 +809,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 16
 theme_override_colors/font_color = Color(1, 0.7117647, 0.65588236, 1)
 text = "0"
-
-[node name="LogoutButton" type="Button" parent="SafeArea/Root/TopBar/TopRow" unique_id=2085924071]
-custom_minimum_size = Vector2(112, 48)
-layout_mode = 2
-size_flags_vertical = 4
-focus_mode = 0
-theme_override_styles/normal = SubResource("StyleBox_m8rtv")
-theme_override_styles/pressed = SubResource("StyleBox_8wlec")
-theme_override_styles/hover = SubResource("StyleBox_yrhba")
-theme_override_styles/disabled = SubResource("StyleBox_j74nb")
-theme_override_styles/focus = SubResource("StyleBox_pb3wd")
-theme_override_colors/font_color = Color(1, 0.9137255, 0.9019608, 1)
-theme_override_colors/font_pressed_color = Color(0.9, 0.82235295, 0.8117647, 1)
-theme_override_colors/font_hover_color = Color(1, 0.9292549, 0.9196079, 1)
-theme_override_colors/font_disabled_color = Color(1, 1, 1, 0.42)
-theme_override_font_sizes/font_size = 15
-text = "退出登录"
 
 [node name="Body" type="ScrollContainer" parent="SafeArea/Root" unique_id=1632102970]
 layout_mode = 2

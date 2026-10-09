@@ -48,6 +48,10 @@ func _draw() -> void:
     # 选中 / 悬停：牌下方先铺一层金色光晕，再画牌，形成"被抬起并高亮"的观感
     if selected or (interactive and hovered):
         _draw_glow()
+    elif not interactive:
+        # 桌面上的牌（出牌区 / 底牌）按新稿加一圈很淡的金色柔光：
+        # `box-shadow: 0 0 7px rgba(255,217,102,.55)`，让牌从红呢台面上"浮"起来。
+        _draw_table_glow()
     CardArt.draw(self, Rect2(Vector2(1.0, 1.0), size - Vector2(2.0, 2.0)), data, skin)
     if selected:
         _draw_selection_frame()
@@ -66,13 +70,32 @@ func _draw_glow() -> void:
             2.0, true)
 
 
-## 选中框：贴牌边的亮金描边
+## 桌面牌的柔光：两层低透明度的暖金轮廓（新稿的出牌框阴影）
+func _draw_table_glow() -> void:
+    var radius := CardArt.card_radius(size)
+    for i in 2:
+        var grow := 1.5 + float(i) * 2.2
+        var alpha := 0.22 - float(i) * 0.09
+        var rect := Rect2(Vector2.ZERO, size).grow(grow)
+        var points := GlossyBox.rounded_rect_points(rect, radius + grow, radius + grow, radius + grow, radius + grow)
+        points.append(points[0])
+        draw_polyline(points, Color(1.0, 0.851, 0.400, alpha), 2.4, true)
+
+
+## 选中框：新稿是"金／红"两层的贴边描边 —— 外圈暖金、内一圈深红，抬起感更强
 func _draw_selection_frame() -> void:
     var radius := CardArt.card_radius(size)
-    var rect := Rect2(Vector2(0.5, 0.5), size - Vector2(1.0, 1.0))
+    var width := maxf(2.0, size.x * 0.055)
+    var rect := Rect2(Vector2(width * 0.5, width * 0.5), size - Vector2(width, width))
     var points := GlossyBox.rounded_rect_points(rect, radius, radius, radius, radius)
     points.append(points[0])
-    draw_polyline(points, ThemeFactory.GOLD_LIGHT, maxf(2.0, size.x * 0.045), true)
+    draw_polyline(points, ThemeFactory.GOLD, width, true)
+    var inner := rect.grow(-width * 0.62)
+    if inner.size.x > 6.0 and inner.size.y > 8.0:
+        var inner_radius := maxf(1.0, radius - width * 0.62)
+        var inner_points := GlossyBox.rounded_rect_points(inner, inner_radius, inner_radius, inner_radius, inner_radius)
+        inner_points.append(inner_points[0])
+        draw_polyline(inner_points, Color(ThemeFactory.CRIMSON.r, ThemeFactory.CRIMSON.g, ThemeFactory.CRIMSON.b, 0.55), 1.2, true)
 
 func _gui_input(event: InputEvent) -> void:
     if not interactive:

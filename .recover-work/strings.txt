@@ -1,0 +1,78 @@
+﻿history_view.gd:176	率"	…iKit.section_title("分玩法胜【率|"】, "按玩法统计本机账号的对局胜率"))
+history_view.gd:198	次"	…at_cell("StatGames", "总场【次|"】))
+history_view.gd:202	胜"	…_cell("StatStreak", "最高连【胜|"】))
+history_view.gd:207	近 	…ion_title("最近对局", "最多显示最【近| 】30 局"))
+history_view.gd:272	—"	… := ThemeFactory.label("【—|"】, 20, Color("#f5e8c7"))
+history_view.gd:383	后"	…ory.label("暂无对局记录，去大厅开一局【后|"】, 16, ThemeFactory.TEXT_FAINT))
+history_view.gd:404	—"	…entry.get("opponents", "【—|"】)), 15, Color(1, 1, 1, 0.5))
+skins_view.gd:176	，"	…eFactory.label("卡牌皮肤（含牌背【，|"】, 17, Color("#f7d98c")))
+skins_view.gd:231	—"	…[str(table.get("name", "【—|"】)), str(card.get("name", "�?))]
+skins_view.gd:249	「%	…confirm_title.text = "解锁【「|%】s�? % str(skin.get("name", ""))
+skins_view.gd:249	」"	…firm_title.text = "解锁�?s【」|"】 % str(skin.get("name", ""))
+skins_view.gd:252	耗 	…confirm_detail.text = "消【耗| 】%d 钻石解锁并立即装备\n钻石 %d �?%d" % [price
+skins_view.gd:252	→ 	…"消�?%d 钻石解锁并立即装备\n钻石 %d 【→| 】%d" % [price, balance, balance - p
+skins_view.gd:254	要 	…nfirm_detail.text = "解锁需【要| 】%d 钻石，当前只�?%d\n先去对局或比赛场赚一些吧" % [pr
+skins_view.gd:254	有 	…l.text = "解锁需�?%d 钻石，当前只【有| 】%d\n先去对局或比赛场赚一些吧" % [price, balanc
+skins_view.gd:256	备"	…_confirm_ok.text = "解锁并装【备|"】 if enough else "钻石不足"
+skins_view.gd:433	情"	…l := _outline_button("再想【情|"】, 18)
+skins_view.gd:438	备"	…actory.gold_button("解锁并装【备|"】, 18)
+settings_view.gd:31	关"	…_enabled", "title": "音乐开【关|"】, "kind": "switch", "desc": "大厅与对局
+settings_view.gd:32	关"	…_enabled", "title": "音效开【关|"】, "kind": "switch", "desc": "按钮、出牌
+settings_view.gd:33	动"	…ch", "desc": "出牌与结算时的轻微震【动|"】},
+settings_view.gd:37	节"	…rd_speed", "title": "牌速调【节|"】, "kind": "stepper", "desc": "AI 思
+settings_view.gd:38	度"	…pper", "desc": "提示给出的牌型强【度|"】},
+settings_view.gd:47	乐"	…tch", "desc": "大厅与对局的背景音【乐|"】},
+settings_view.gd:49	型"	…itch", "desc": "语音播报打出的牌【型|"】},
+settings_view.gd:62	全"	…         {"title": "账号与安【全|"】, "rows": [
+settings_view.gd:63	准"	… "修改", "desc": "本机账号以昵称为【准|"】},
+settings_view.gd:64	面"	… "恢复", "desc": "回到默认桌布与牌【面|"】},
+settings_view.gd:65	录"	… "logout", "title": "退出登【录|"】, "kind": "action", "action": "退�?
+settings_view.gd:73	态"	…          {"title": "联机状【态|"】, "rows": []},
+settings_view.gd:75	能"	…, "desc": "离线本地对战 / 联机全功【能|"】},
+settings_view.gd:76	端"	…同步", "desc": "把离线战绩补传到服务【端|"】},
+settings_view.gd:472	、"	…积分；清理应用数据会连同存档一起删除，且不可恢复【、|"】
+settings_view.gd:473	全"	…删除，且不可恢复�?
+        "账号与安【全|"】:
+settings_view.gd:474	、"	…与绑定手机；换设备时把存档文件拷过去即可继续使用【、|"】
+settings_view.gd:475	态"	…拷过去即可继续使用�?
+        "联机状【态|"】:
+settings_view.gd:477	「"	…)
+    return "本分类当前没有可调项【「|"】
+settings_view.gd:481	。"	…ll:
+        return "尚未登录【。|"】
+settings_view.gd:484	、 	… var debt := "没有待同步的离线战绩【、| 】 if pending <= 0 else "�?%d 局离线战绩待
+settings_view.gd:487	、"	…分；商城、任务、签到、排行榜与邮件需要联机后使用【、|"】
+settings_view.gd:488	，%	…需要联机后使用�?
+    return "当前【，|%】s模式�?s%s" % [mode_text, debt, hint
+settings_view.gd:488	。%	…使用�?
+    return "当前�?s模式【。|%】s%s" % [mode_text, debt, hint]
+settings_view.gd:559	置"	…  app.toast.emit("已恢复默认设【置|"】)
+settings_view.gd:563	存"	…    app.toast.emit("设置已保【存|"】)
+achievements_view.gd:238	锁 	…ummary.text = "成就之路 · 已解【锁| 】%d / %d · 持续解锁丰厚奖励" % [unlocked_co
+achievements_view.gd:299	取"	…var progress_text := "已领【取|"】 if claimed else "进度 %d / %d" % [c
+achievements_view.gd:311	取 	…" if claimable else ("已领【取| 】 if claimed else "已完�?)
+messages_view.gd:164	取"	…Factory.gold_button("一键领【取|"】, 18)
+messages_view.gd:193	法"	…") or title.contains("新玩【法|"】):
+messages_view.gd:232	息"	…l(
+            "%s暂时没有新消【息|"】 % str(MAIL_CATEGORIES[_mail_categ
+messages_view.gd:238	，"	… "欢迎加入狂欢斗地主，祝你牌运昌隆、天天好手气【，|"】,
+messages_view.gd:241	进"	….GOLD,
+        "icon": "【进|"】,
+messages_view.gd:249	「%	…
+            "body": "玩家【「|%】s」请求添加您为好�? % str(last.get("oppone
+messages_view.gd:249	友"	…  "body": "玩家�?s」请求添加您为好【友|"】 % str(last.get("opponents", "牌友")
+messages_view.gd:252	发"	…),
+            "icon": "【发|"】,
+messages_view.gd:256	：%	…           "body": "作为%s【：|%】s�?s" % [str(last.get("role", "玩家"
+messages_view.gd:256	：%	…        "body": "作为%s�?s【：|%】s" % [str(last.get("role", "玩家")),
+messages_view.gd:259	胜 	…),
+            "icon": "【胜| 】 if won else "�?,
+messages_view.gd:263	法"	… "body": "新版本已上线，更新体验更多玩【法|"】,
+messages_view.gd:266	讯"	…414"),
+        "icon": "【讯|"】,
+messages_view.gd:273	奖"	….GOLD,
+        "icon": "【奖|"】,
+messages_view.gd:344	取"	…ctory.neutral_button("已领【取|"】, 16)
+profile_view.gd:330	录"	… := _outline_button("退出登【录|"】, 22)
+profile_view.gd:428	分"	…rencyIcon.Kind.STAR, "竞技【分|"】, Color("#f0c060")))
+profile_view.gd:597	游"	…napshot.get("initial", "【游|"】)), int(snapshot.get("avatar_index

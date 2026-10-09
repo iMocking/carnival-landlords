@@ -6,7 +6,6 @@ extends SceneTree
 ## godot --headless --path . --script res://tests/profile_menu_test.gd
 
 const EXPECTED := ["我的战绩", "主题皮肤", "我的成就", "消息中心"]
-const PANELS := ["TabHistory", "TabSkins", "TabAchievements", "TabMessages"]
 
 var _checks := 0
 var _failures := 0
@@ -49,8 +48,28 @@ func _run() -> void:
         var settings_label := settings.find_child("MenuLabel", true, false) as Label
         _check(settings_label != null and settings_label.text == "系统设置", "第五项文案为「系统设置」")
 
-    for panel_name in PANELS:
-        _check(view.find_child(panel_name, true, false) != null, "存在内容面板 %s" % panel_name)
+    # 菜单只做**跳转入口**：五项分别对应五条独立路由 + 五个可独立加载的场景
+    var entries := [
+        {"button": "MenuButton0", "route": AppViewModel.Route.HISTORY,
+            "scene": "res://src/view/pages/history_view.tscn"},
+        {"button": "MenuButton1", "route": AppViewModel.Route.SKINS,
+            "scene": "res://src/view/pages/skins_view.tscn"},
+        {"button": "MenuButton2", "route": AppViewModel.Route.ACHIEVEMENTS,
+            "scene": "res://src/view/pages/achievements_view.tscn"},
+        {"button": "MenuButton3", "route": AppViewModel.Route.MESSAGES,
+            "scene": "res://src/view/pages/messages_view.tscn"},
+        {"button": "MenuButtonSettings", "route": AppViewModel.Route.SETTINGS,
+            "scene": "res://src/view/pages/settings_view.tscn"},
+    ]
+    for entry in entries:
+        var entry_button := view.find_child(str(entry["button"]), true, false) as Button
+        _check(entry_button != null, "存在菜单入口 %s" % str(entry["button"]))
+        if entry_button != null:
+            entry_button.pressed.emit()
+            _check(app.route == int(entry["route"]),
+                "%s 跳到独立路由 %d（实际 %d）" % [str(entry["button"]), int(entry["route"]), app.route])
+            app.navigate(AppViewModel.Route.PROFILE)
+        _check(load(str(entry["scene"])) != null, "%s 是可独立加载的场景" % str(entry["scene"]))
 
     print("checks=%d failures=%d labels=%s" % [_checks, _failures, labels])
     if _failures == 0:

@@ -22,6 +22,13 @@ signal toast(text: String)
 ## 结算面板点「准备」后进入等待态；新一局开始时再回到 false
 signal ready_state_changed(waiting: bool)
 
+## 新一局**先发牌、再叫分**：这个信号是发牌环节的起点，载荷里带齐视图需要的一切
+## （发几张、什么节奏、我的牌长什么样），视图不需要再问第二个接口。
+##
+## 发牌时长由本类给出（见 `_deal_plan()`），视图照它排动画、本类照它排"发牌结束"，
+## 于是"牌还在空中"与"叫分面板已经弹出来"这两件事不可能同时发生。
+signal deal_started(plan: Dictionary)
+
 ## 音频播报事件：叫分 / 不出 / 报警（手牌剩 1~2 张）；View 层 AudioDirector 负责播放
 signal bid_announced(seat: int, score: int)
 signal pass_announced(seat: int)
@@ -36,6 +43,27 @@ const HUMAN_SEAT := 0
 const AI_DELAY := 0.85
 ## 「准备」后模拟其他玩家准备的等待时长
 const READY_DELAY := 1.1
+
+# ---------------------------------------------------------------- 发牌环节
+#
+# 一局开始不再是"啪一下三家都有牌了"，而是先亮一段发牌动画，动画走完才开放叫分。
+# 这段节奏放在 ViewModel（呈现层）而不是引擎里，理由是**引擎不该知道屏幕上有几帧**：
+#   * 引擎的 `start_new_game()` 仍然是一次性把牌发完（裁决），
+#     所以 `rules_smoke_test` / `mode_flow_test` 这些直接驱动引擎的测试不受影响；
+#   * 本类在发牌期间把引擎信号**按住不发**（`_dealing`），屏幕上就只有牌在飞；
+#   * 时长到了再把叫分界面整体推上来。
+#
+# 下面的两个常量是这段节奏的**唯一**来源：`_deal_plan()` 把它们连同总时长一起交给视图。
+# 唯一能盖过它们的是**发牌音效的时长**（见 `deal_min_seconds`）——
+# 牌发完了音效还在响，观感上就是音效被硬生生掐断。
+
+## 单张牌从牌堆飞到座位的时长（秒）
+const DEAL_CARD_FLIGHT := 0.26
+## 相邻两张牌的发牌间隔（秒）
+const DEAL_CARD_STAGGER := 0.03
+## 最后一张落地后再留一点余量才开放叫分：动画的最后一帧与真手牌因此是"压着"交接的，
+## 不会出现"牌还没停稳，叫分面板已经盖上来"。
+const DEAL_TAIL := 0.12
 
 # ---------------------------------------------------------------- 玩法与计分
 # 实现在服务层（`OfflineGameSession`），这里只做转发以保持既有调用点（含单测）不变。
@@ -65,6 +93,12 @@ var card_speed_scale: float = 1.0
 var hint_level: int = 1
 var auto_hint: bool = false
 var auto_sort_hand: bool = false
+## 发牌动画的**时长下限**（秒），由视图在开局前灌入（见 `MainView._bind_scene()`）。
+##
+## 为什么是"下限"而不是直接定长：发牌音效有多长，牌就该飞多久，
+## 而"音效多长"属于音频层 —— 这里不去翻音频资源，只接受一个秒数。
+## 0 表示不作要求（无头测试 / 音频缺失），退回 `DEAL_*` 常量算出的默认节奏。
+var deal_min_seconds: float = 0.0
 
 var _selected: Array = []
 var _hints: Array = []
@@ -77,6 +111,10 @@ var _disposed: bool = false
 var _ready_pending: bool = false
 ## 打开「退出对局」确认弹窗时暂停对局：AI 不再行动，玩家也点不动牌
 var _paused: bool = false
+## 发牌动画进行中：引擎信号被按住，AI 与玩家都还没轮到
+var _dealing: bool = false
+## 发牌计时器的代际号：重开一局 / 退出页面会让上一局的计时器作废
+var _deal_serial: int = 0
 ## 视图用来识别「新的一手牌 / 新的一局」：只靠 last_play 无法区分连续两手相同的牌
 var _play_seq: int = 0
 var _round_seq: int = 0
@@ -107,6 +145,8 @@ func install_session(next_session: GameSessionContract) -> void:
     _disposed = true          # 让旧实现排队中的定时器全部失效
     _ai_serial += 1
     _restart_serial += 1
+    _deal_serial += 1
+    _dealing = false
     session = next_session
     engine = session.engine()
     engine.hand_changed.connect(_on_hand_changed)
@@ -129,8 +169,10 @@ func shutdown() -> void:
     _disposed = true
     _ready_pending = false
     _paused = false
+    _dealing = false
     _ai_serial += 1
     _restart_serial += 1
+    _deal_serial += 1
 
 func start() -> void:
     _paused = false
@@ -138,19 +180,88 @@ func start() -> void:
     _play_seq = 0
     tournament_scores.clear()
     tournament_round = 0
-    # 开局属于裁决（配置玩法 + 发牌），交给对局服务
-    session.begin(mode, human_name, auto_sort_hand)
-    _emit_all()
-    _maybe_schedule_ai()
+    _begin_round()
 
 func restart() -> void:
     _paused = false
     _round_seq += 1
     _play_seq = 0
     _reset_round_state()
+    _begin_round()
+
+## 开一局：**先发牌、再叫分**。
+##
+## 顺序上有个要点：`session.begin()` 是裁决（洗牌 + 发牌 + 定谁先叫），必须最先跑完，
+## 否则视图既拿不到牌、也就没法把牌"发"到正确的位置上。但它的信号在这一帧里是**静默**的
+## （`_dealing` 会挡掉手牌 / 座位 / 阶段的下发与 AI 计时器），于是屏幕上只有发牌动画。
+## 时长一到，`_finish_dealing()` 再把叫分界面整体推上去。
+func _begin_round() -> void:
+    _dealing = true
+    _emit_status()                       # 此时引擎还没开工，视图只有一句「发牌中…」
     session.begin(mode, human_name, auto_sort_hand)
+    _emit_table()                        # 台面中央那三张牌就是刚抽出来的牌堆
+    var plan := _deal_plan()             # 牌已发完，这里才读得到"我的牌"
+    _schedule_deal_end(plan)
+    deal_started.emit(plan)
+
+## 发牌动画的规模与节奏。
+##
+## 它是这一段演出的**唯一**时间来源：本类照它排"发牌结束"的定时器，视图照它排每张牌的
+## 飞行与间隔。两边各写一份常量迟早会漂移 —— 表现就是"牌还在空中，叫分面板已经弹出来"。
+##
+## 时长 = `max(DEAL_* 算出的默认节奏, deal_min_seconds)`。后者是发牌音效的长度
+## （实测 `Special_Dispatch` 有 3.87s，而默认节奏只有 1.88s —— 牌发完了音效还在响）。
+## 补足差额时**只拉长逐张间隔**，单张飞行时长不动：牌速观感不变，只是发牌节奏变疏，
+## 反而更像真人一张张派牌。「牌速」档位不参与这里 —— 它是 AI 思考时长的档位，
+## 而发牌的节奏该由发牌音效决定。
+func _deal_plan() -> Dictionary:
+    var per_seat := GameEngine.HAND_SIZE
+    var seats := GameEngine.SEAT_COUNT
+    var span := maxf(float(per_seat * seats - 1), 1.0)
+    var flight := DEAL_CARD_FLIGHT
+    var tail := DEAL_TAIL
+    var stagger := DEAL_CARD_STAGGER
+    var duration := flight + stagger * span + tail
+    var floor_seconds := maxf(deal_min_seconds, 0.0)
+    if floor_seconds > duration:
+        stagger = maxf(0.001, (floor_seconds - flight - tail) / span)
+        duration = flight + stagger * span + tail
+    return {
+        "round_seq": _round_seq,
+        "per_seat": per_seat,
+        "seat_count": seats,
+        "human_cards": _human_card_dicts(),
+        "flight": flight,
+        "stagger": stagger,
+        "duration": duration,
+    }
+
+## 排队"发牌结束"。用独立代际号而不是复用 `_ai_serial`：发牌结束要放的
+## 是叫分界面与 AI 叫分计时器，和 AI 思考的排队是两件事，混用会互相取消。
+func _schedule_deal_end(plan: Dictionary) -> void:
+    var tree := Engine.get_main_loop() as SceneTree
+    if tree == null:
+        _finish_dealing()
+        return
+    _deal_serial += 1
+    var serial := _deal_serial
+    var round_seq := int(plan.get("round_seq", _round_seq))
+    tree.create_timer(maxf(float(plan.get("duration", 0.0)), 0.01)).timeout.connect(func() -> void:
+        if _disposed or serial != _deal_serial or round_seq != _round_seq:
+            return
+        _finish_dealing())
+
+## 发牌结束：把按住的状态一次性放开 —— 手牌、座位张数、叫分面板、AI 计时器同时上线。
+func _finish_dealing() -> void:
+    if not _dealing:
+        return
+    _dealing = false
     _emit_all()
     _maybe_schedule_ai()
+
+## 发牌动画是否正在进行（视图用它决定要不要压住台面提示）。
+func is_dealing() -> bool:
+    return _dealing
 
 ## 系统设置：把对局偏好灌进来（牌桌开局前调用一次；对局中途改也会立刻生效）
 func apply_preferences(settings: Dictionary) -> void:
@@ -273,7 +384,9 @@ func hand_of_human() -> Array:
     return engine.players[HUMAN_SEAT].hand
 
 func request_bid(score: int) -> void:
-    if _paused:
+    # 发牌还没完就不该有人叫分：引擎此刻已经进 BIDDING（发牌是它一次性做完的），
+    # 单看引擎状态拦不住"叫分抢在发牌动画前面"这件事，得由这里挡。
+    if _paused or _dealing:
         return
     session.human_bid(score)
 
@@ -407,15 +520,16 @@ func _on_restart_requested() -> void:
         if _disposed or serial != _restart_serial:
             return
         _reset_round_state()
-        # 重新发牌属于裁决，走对局服务（与 start / restart 同一条路径）
-        session.begin(mode, human_name, auto_sort_hand)
-        _emit_all()
-        _maybe_schedule_ai())
+        # 重新发牌走与 start / restart 完全相同的一条路径：同样有发牌动画，同样最后才叫分
+        _begin_round())
 
 # ---------------------------------------------------------------- 电脑玩家
 
 func _maybe_schedule_ai() -> void:
     if _paused:
+        return
+    # 发牌期间不许 AI 抢跑：引擎已经进了 BIDDING，不挡的话电脑会在牌还在飞的时候就叫分
+    if _dealing:
         return
     if engine.phase == GameEngine.Phase.BIDDING and engine.current_seat != HUMAN_SEAT:
         _schedule_ai(_ai_bid)
@@ -470,17 +584,29 @@ func _emit_all() -> void:
     _emit_status()
 
 func _emit_hand() -> void:
-    if engine.players.is_empty():
-        hand_changed.emit([])
+    # 发牌期间不发手牌：屏幕上该出现的是一张张飞过去的牌，而不是"凭空摆好的一手牌"
+    if _dealing:
         return
+    hand_changed.emit(_human_card_dicts())
+
+## 我的手牌（含选中标记）的呈现数据。
+##
+## 发牌动画要"把我的牌按落位顺序发出去"，用的就是这一份 —— 与 `hand_changed` 完全同源，
+## 所以牌飞到位之后换成真正的手牌时，牌面与位置都不会跳一下。
+func _human_card_dicts() -> Array:
+    if engine == null or engine.players.is_empty():
+        return []
     var hand: Array = engine.players[HUMAN_SEAT].hand.duplicate()
     hand.sort_custom(func(a: Card, b: Card) -> bool:
         if a.rank != b.rank:
             return a.rank > b.rank
         return a.suit < b.suit)
-    hand_changed.emit(CardPresenter.card_dicts(hand, _selected, engine.wild_rank))
+    return CardPresenter.card_dicts(hand, _selected, engine.wild_rank)
 
 func _emit_seats() -> void:
+    # 两家的牌背与张数同样等发牌结束再上：发牌中途显示"剩 17 张"没有意义
+    if _dealing:
+        return
     var seats := []
     for player in engine.players:
         if player.is_ai and not _seat_gold.has(player.seat):
@@ -557,6 +683,9 @@ func _hand_counts() -> Array:
     return out
 
 func _emit_phase() -> void:
+    # 发牌期间不亮叫分面板：引擎早在发牌时就进了 BIDDING，直接下发会让面板盖在动画上
+    if _dealing:
+        return
     phase_changed.emit({
         "phase": engine.phase,
         "bid_visible": engine.phase == GameEngine.Phase.BIDDING and engine.current_seat == HUMAN_SEAT,
@@ -569,6 +698,10 @@ func _emit_phase() -> void:
 
 func _emit_status() -> void:
     var text := ""
+    if _dealing:
+        # 引擎此刻已是 BIDDING，按阶段渲染会写出"请选择叫分" —— 而玩家其实还在等发牌
+        status_changed.emit("发牌中…")
+        return
     match engine.phase:
         GameEngine.Phase.BIDDING:
             if engine.current_seat == HUMAN_SEAT:

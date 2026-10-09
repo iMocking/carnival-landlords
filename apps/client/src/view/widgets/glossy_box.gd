@@ -37,6 +37,33 @@ extends StyleBox
         corner_radius = value
         emit_changed()
 
+## 渐变方式。新视觉稿（`design_update/`）里所有玩法卡的内板都是
+## `radial-gradient(ellipse …, 中心色 0%, 边缘色 100%)`：纯竖直渐变做不出"从中心发光"的效果，
+## 于是加一档**椭圆径向** —— 用一圈圈同心圆角矩形承色，由外向内逐环逼近中心色。
+## 与 `UiKit.radial_spotlight()` 同一个思路：顶点色多边形，不碰贴图
+## （本项目这套渲染设置下纹理路径会整块发白，见 README）。
+enum Fill {
+    VERTICAL,
+    RADIAL,
+}
+
+@export var fill_mode: int = Fill.VERTICAL:
+    set(value):
+        fill_mode = value
+        emit_changed()
+
+## 径向渐变中心（相对矩形的位置，0~1）
+@export var radial_center: Vector2 = Vector2(0.5, 0.5):
+    set(value):
+        radial_center = value
+        emit_changed()
+
+## 径向渐变的环数；0 = 按卡片尺寸自适应（越大越细腻）
+@export_range(0, 40, 1) var radial_steps: int = 0:
+    set(value):
+        radial_steps = value
+        emit_changed()
+
 ## 上半部高光强度（0 = 不画高光）
 @export_range(0.0, 1.0, 0.01) var gloss_strength: float = 0.42:
     set(value):
@@ -94,8 +121,11 @@ func _draw(to_canvas_item: RID, rect: Rect2) -> void:
             srect.position += shadow_offset
             _fill(to_canvas_item, srect, radius + grow * 0.5, shade, shade)
 
-    # 2) 主体竖直渐变
-    _fill(to_canvas_item, rect, radius, top_color, bottom_color)
+    # 2) 主体：竖直渐变 / 椭圆径向渐变
+    if fill_mode == Fill.RADIAL:
+        _fill_radial(to_canvas_item, rect, radius, top_color, bottom_color)
+    else:
+        _fill(to_canvas_item, rect, radius, top_color, bottom_color)
 
     # 3) 底部内阴影
     if bottom_shade > 0.0:
@@ -119,7 +149,12 @@ func _draw(to_canvas_item: RID, rect: Rect2) -> void:
 
 
 func _radius_for(card_size: Vector2) -> float:
-    return maxf(0.0, minf(float(corner_radius), minf(card_size.x, card_size.y) * 0.5))
+    # 这里**必须**留出与 `_polygon_ok()` 相同的 0.5px 余量：
+    # 圆角取到"正好半高"时（胶囊、圆形头像底），`_polygon_ok()` 会判定顶点序列自交并把
+    # 整块填充丢掉、只剩描边 —— 症状是"胶囊是空的"（`chip_style` 的半径是 999，永远走这条）。
+    # 把半径先钳到 `短边/2 - 0.5`，观感与正圆端头没有区别，填充却能正常画出来。
+    var limit := minf(card_size.x, card_size.y) * 0.5 - 0.5
+    return clampf(float(corner_radius), 0.0, maxf(0.0, limit))
 
 
 ## 竖直渐变填充（top -> bottom），四角半径分别给出
@@ -182,6 +217,32 @@ func _fill_v(
     r_bl: float = -1.0
 ) -> void:
     _fill(to_canvas_item, rect, radius, top, bottom, r_tl, r_tr, r_br, r_bl)
+
+
+## 椭圆径向渐变填充：一圈圈同心圆角矩形，从边缘色逐环逼近中心色。
+## `top_color` 在这里是**中心色**，`bottom_color` 是**边缘色**（与竖直渐变同一对变量，语义随模式变）。
+func _fill_radial(
+    to_canvas_item: RID,
+    rect: Rect2,
+    radius: float,
+    center_color: Color,
+    edge_color: Color
+) -> void:
+    if not _polygon_ok(rect, radius):
+        return
+    var steps := radial_steps
+    if steps <= 0:
+        steps = clampi(int(minf(rect.size.x, rect.size.y) / 5.0), 8, 36)
+    var focus := rect.position + Vector2(rect.size.x * radial_center.x, rect.size.y * radial_center.y)
+    for step in steps:
+        var t := float(step) / float(steps)
+        var scale := 1.0 - t
+        var half := rect.size * 0.5 * scale
+        if half.x < 1.0 or half.y < 1.0:
+            break
+        var ring := Rect2(focus - half, half * 2.0)
+        var color := edge_color.lerp(center_color, t)
+        _fill(to_canvas_item, ring, radius * scale, color, color)
 
 
 func _stroke(to_canvas_item: RID, rect: Rect2, radius: float, color: Color, width: float) -> void:

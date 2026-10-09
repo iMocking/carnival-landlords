@@ -40,7 +40,9 @@ $env:CARNIVAL_OFFLINE = "1"
 
 ## 美术风格
 
-整体参照 `desgin/` 目录里的**概念设计图《狂欢斗地主》**：**暗红厅堂底 + 鎏金描边 + 四角祥云 + 立体高光按钮 + 翠绿呢绒牌桌**。
+界面按 `design_update/` 目录里的**新视觉稿**（设计工具逐页导出的 HTML，见 `docs/design-update.md`）实现：
+**暗红厅堂底 + 鎏金描边 + 细金线祥云 + 径向渐变卡片 + 红呢牌桌**。
+`desgin/` 目录是更早的一版概念图（AI 生成的大图），只作为**氛围参照**保留，不再是实现的依据。
 
 | 元素 | 做法 |
 | --- | --- |
@@ -55,18 +57,27 @@ $env:CARNIVAL_OFFLINE = "1"
 | 头像 | `AvatarView`：多层同心圆渐变圆盘 + 金环 + 等级勋章 |
 | 文案 | 关键标题用「描边字」（`ThemeFactory.outlined_label` / `UiKit.title_label`），保证在任何底色上都清晰 |
 
-> 全部视觉都是**代码绘制**，项目里没有任何图片资源；新增皮肤仍然只是加一条颜色数据。
+> 全部视觉都是**代码绘制**，项目里唯一的位图是 `assets/avatar/landlord.png`
+> （设计稿里的地主形象，由 `tools/build_avatar_assets.gd` 从 `icon.svg` 里抽出来并把 alpha 裁成圆）；
+> 新增皮肤仍然只是加一条颜色数据。
 
-### 径向渐变一律用「顶点色多边形」，不要用纹理
+### 径向渐变用「顶点色多边形」
 
 `UiKit.radial_spotlight()` 用**同心环三角带 + 逐顶点颜色**画椭圆径向渐变，厅堂底色与牌桌台面都走它。
+顶点色多边形与 `GlossyBox` 画按钮渐变走的是同一条路径，不依赖任何贴图。
 
-原因是一段不好察觉的踩坑：本项目这套渲染设置下（`mobile` 渲染器 + Windows/d3d12），
-把一张逐像素生成的纹理交给 `draw_texture_rect()` / `draw_texture_rect_region()` / `draw_texture()`
-**三者中的任何一个，屏幕上都会渲染成纯白** —— 而 `texture.get_image()` 读回来的像素完全正确、
-`get_size()` 也正常，所以从代码上看不出任何问题。
-`GradientTexture2D`（含 `FILL_RADIAL`）同样如此。症状就是"牌桌台面整块发白、厅堂底色一直没有渐变"。
-顶点色多边形与 `GlossyBox` 画按钮渐变走的是同一条可靠路径，因此不会有这个毛病。
+> **订正（2026-10）**：这里原本记着一条"本项目这套渲染设置下 `draw_texture_rect()` /
+> `draw_texture_rect_region()` / `draw_texture()` 都会把纹理渲染成纯白，连 `GradientTexture2D`
+> 也一样"，并据此全面改用顶点色。**那条结论是误判** —— 真正的原因是贴图只被 `_draw()` 的
+> **局部变量**引用，函数一返回引用就没了，RefCounted 贴图随即释放，Godot 回退到 1x1 的白色
+> 占位贴图。贴图交给成员长期持有就完全正常：`assets/avatar/landlord.png`（牌桌圆形头像）
+> 与主题皮肤的预览贴图现在都是这么画的。
+>
+> 但下面这条**确实**成立，别去碰：
+> **`draw_polygon(points, colors, uvs, texture)` 的逐顶点 uv 对带透明角的贴图整块画不出来**
+> —— 同一张贴图给 `draw_texture_rect` 正常、给带 uv 的 `draw_polygon` 什么都不画；
+> 换成纯色贴图又"正常"，那只是因为纯色对 uv 不敏感，是假象。
+> 所以"把方图裁成圆"要在像素上做（见 `tools/build_avatar_assets.gd`），别指望 uv 遮罩。
 
 ### 引用计数节点：先 `setup()` 再 `add_child()`
 
@@ -77,24 +88,64 @@ $env:CARNIVAL_OFFLINE = "1"
 
 ### 配色来自设计图（`ThemeFactory`）
 
+颜色取自**新版视觉稿** `design_update/<页面>/index.html`（施工说明见 `docs/design-update.md`）：
+
 | 家族 | 角色 |
 | --- | --- |
-| `INK_900..INK_500` | **暗红厅堂**（`#28070a` → `#a0282c`），页面底 / 面板 / 胶囊。变量名沿用 `INK_*`，是为了让所有既有调用点一次性跟着换色 |
-| `CRIMSON*` | **亮红行动色**（`#7d1216` → `#f4705c`），主行动按钮与高亮卡片 |
-| `GOLD*` | 鎏金描边 / 高光 / 强调文字 |
-| `FELT*` | 牌桌呢绒三段（台面专用，与厅堂底色**分开**） |
-| `WOOD*` | 牌桌红木桌沿 |
-| `TEXT_DIM / TEXT_FAINT` | 暖色降级文字（原来是冷蓝灰，在红底上发脏） |
+| `INK_900..INK_500` | **暗红厅堂**（`#2a0806` → `#731c14`），面板底 / 胶囊。变量名沿用 `INK_*`，是为了让所有既有调用点一次性跟着换色 |
+| `HALL_CENTER` / `ROOM_CENTER` / `SPLASH_CENTER` | 三张页底的径向渐变中心色（大厅 `#9e3324` / 房间 `#8c291f` / 启动页 `#6b1a1a`） |
+| `CRIMSON*` | **亮红行动色**（`#8e140e` → `#f4705c`），主行动按钮与高亮卡片 |
+| `GOLD*` | 鎏金描边 / 高光 / 强调文字（描边金 `#cc9e40`、副标金 `#c9a961`、主金 `#ffd75e`、深金 `#e8961e`） |
+| `SURFACE_TINT*` / `CHIP_TINT` / `FIELD_FILL` | 新稿的**半透明暗底**（面板 / 菜单行 / 资产胶囊 / 输入框） |
+| `CARD_*` | 玩法卡的「中心色 / 边缘色」（经典红 / 高倍橙 / 癞子紫 / 挑战蓝 / 好友青） |
+| `FELT*` / `WOOD*` | 牌桌红呢台面（`#9e1a17`）与深棕桌沿（`#451a0d`） |
+| `TEXT_DIM / TEXT_FAINT / TEXT_MUTED` | 暖色降级文字（`#e8d5a8` / `#b89a78` / `#8a6a50`） |
 
-> **厅堂底色与台面呢绒是两套颜色**：设计图是「暗红房间 + 翠绿台面」。
-> 若沿用同一组颜色，牌桌就会变成一整块红或一整块绿，失去"桌布铺在房间里"的层次。
-> `SkinCatalog` 的每条背景皮肤因此同时携带 `top/mid/bottom`（厅堂）与 `felt*`（台面）。
+### 新稿的四条视觉规则
+
+1. **面板不描边**：新稿只有「卡片 / 输入框 / 按钮」才有 2px 金描边，普通面板是半透明暗底 + 柔投影；
+2. **卡片是椭圆径向渐变**（不是竖直渐变）：`GlossyBox.Fill.RADIAL` + `UiKit.board()` 是唯一实现；
+3. **装饰只在两处**：四角 / 顶栏的**细金线祥云**（`Ornaments.cloud_wisp()`，path 直接取自设计稿），
+   以及大厅背景的**暗红剪影祥云 + 左上环形花纹**（`TableBackdrop` 内）。新稿里没有斜向织纹、暗角、涟漪、鎏金画框；
+4. **图标来自设计稿的 SVG path**：`SvgPath` 解析 `M/L/C/Q/Z` 折线并填充 / 描边，
+   `DesignIcons` 把稿子里的信封 / 挂锁 / 眼睛 / 齿轮 / 灯笼 / 宝箱 / 奖杯 / 勋章 / 金币 / 钻石等原样搬过来，
+   不再"手搓一个近似图形"。
 
 ### 数值一律千分位
 
 设计图里所有数值都是 `12,580,300` 这种带逗号的写法，统一走 `UiKit.group_digits()`（唯一实现，避免各页面各写一套）：
 大厅顶栏、个人中心资产胶囊与资产表、牌桌上的金币都走它。
 
+
+## 启动加载页（替换 Godot 默认启动画面）
+
+新稿《游戏启动界面》被用在**两处**，两者共用同一份绘制代码，玩家看到的是一条不会跳的进度条：
+
+| 阶段 | 实现 | 进度 |
+| --- | --- | --- |
+| 引擎启动画面（主场景加载前，Godot 自己的那一屏） | `project.godot` → `boot_splash/image = res://assets/boot_splash.png` | 70%（与设计稿一致） |
+| 应用内加载页（主场景就绪后盖在最上层） | `src/view/boot_view.gd`（`BootView`），由 `AppRoot._show_boot_overlay()` 挂载 | 70% → 100%，随后 0.35s 淡出 |
+
+```bash
+# 改设计只要改 boot_view.gd，然后重新生成那张 PNG（必须开窗口跑，headless 没有渲染结果）
+godot --path . --script res://tools/build_boot_splash.gd
+# 输出 res://assets/boot_splash.png（1280x720，与逻辑视口 1:1；版本号取 config/version）
+
+# 验收"引擎启动画面 → 应用内加载页 → 第一个页面"的衔接：
+godot --path . --script res://tools/probe_boot_overlay.gd
+# 输出 .probe/shots/00_boot_overlay.png（启动页盖在上层、进度约 90%）
+#     .probe/shots/00_boot_after.png（启动页已销毁后的真实页面）
+```
+
+* `boot_splash/bg_color` 取画面最外圈的 `#260808`，非 16:9 窗口多出来的部分不会出现色块边界；
+* `boot_splash/minimum_display_time = 800`：启动很快时也不会"闪一下"；
+* 应用内加载页**整棵子树 `mouse_filter = IGNORE`**：它只是看得见的加载动画，
+  底下的登录 / 大厅页在 `bootstrap()` 里已经建好，这 1 秒里点到的东西照常生效
+  （自动化测试里"看得见就点得到"的检查也因此不会被它吃掉）。
+
+> `assets/boot_splash.png` 是本项目**唯一**的图片资源，而且它是**生成物**：
+> 画法在 `src/view/boot_view.gd`，`tools/build_boot_splash.gd` 只是把它截下来。
+> 除它以外，界面上的每一根线仍然是代码画的。
 
 ## 字体
 
@@ -112,6 +163,9 @@ $env:CARNIVAL_OFFLINE = "1"
   HarmonyOS Sans 未覆盖的零星符号，不影响正文风格；
 * `tests/font_theme_test.gd` 会断言主题配置、字形覆盖与 `Label` / `Button` / `LineEdit` 的解析结果，
   防止配置失效后悄悄回退到系统字体。
+* 设计稿的 Logo / 大标题用的是**站酷快乐体**（`design_update/*/assets/fonts/*.woff2` 是逐字子集，
+  只有稿子上出现过的那几个字，不能拿来当正文字体），项目里**不引入这个字体**：
+  标题仍用 HarmonyOS Sans SC，靠 `UiKit.title_label()` / `logo_label()` 的深红描边 + 红色辉光做出设计稿的立体感。
 
 ## 真实扑克牌面
 
@@ -155,14 +209,36 @@ $env:CARNIVAL_OFFLINE = "1"
 
 | 页面 | 场景 | 脚本 | 内容 |
 | --- | --- | --- | --- |
-| 登录 | `src/view/pages/login_view.tscn` | `login_view.gd` | 按设计图重构：**鎏金大标题 + 金字副标题**、居中暗红登录卡片（信封 / 挂锁图标输入框、忘记密码、正红鎏金「登 录」）、记住账号 / 立即注册、协议与版本；四角祥云角花 |
-| 游戏大厅 | `src/view/pages/lobby_view.tscn` | `lobby_view.gd` | 顶栏标题 + 账号入口 + 资产 + **灯笼 / 宝箱圆形图标**（活动中心 / 商城）+ 退出登录；**玩法大卡片栅格（一卡一色）** |
-| 牌桌 | `src/view/main_view.tscn` | `main_view.gd` | 左上角**红色圆形关闭钮**、顶部**居中鎏金匾额**（模式 / 底分 / 倍数）、右上角齿轮（进系统设置）；左右对手、左下角我的头像与金币、右下角操作按钮、手牌压在两者之上 |
-| 个人中心 | `src/view/pages/profile_view.tscn` | `profile_view.gd` | 左侧账号资产卡 + 右侧竖排菜单（我的战绩 / **主题皮肤** / 我的成就 / 消息中心 / 系统设置），每项带图标与 ›；系统设置为整页浮层 |
+| 登录 | `src/view/pages/login_view.tscn` | `login_view.gd` | 按新稿重构：**鎏金大标题 + 金字副标题**、直接浮在厅堂底上的两行输入框（信封 / 挂锁 / 眼睛图标）、忘记密码、正红金边「登 录」、圆形勾选框 + 记住账号 / 立即注册、协议与版本；四角细金线祥云。**账号 / 密码默认预填 `khddz@test.com` / `951024bb`**（打包版本开箱一键登录，见下） |
+| 游戏大厅 | `src/view/pages/lobby_view.tscn` | `lobby_view.gd` | **透明顶栏**（头像金环 + 昵称 + VIP 徽章 + 金/钻胶囊 + 灯笼 / 宝箱圆形入口；**无退出登录钮、昵称后无箭头**）；左栏旋转 4° 的大 Logo + 金字副标题；右侧**两行玩法卡**（径向渐变内板 + 2px 描边金 + 外投影，一卡一色，上二下三） |
+| 牌桌 | `src/view/main_view.tscn` | `main_view.gd` | 红呢台面 + 深棕桌沿（`TableBackdrop.TABLE`）；左上红色圆角关闭钮、顶部居中匾额（模式 / 底分 / 倍数）；开局先走一段**发牌动画**（`DealAnimator`，时长下限取发牌音效的 3.87s）；**圆形立绘头像**（默认是设计稿的地主形象）+ 昵称金币、中央牌型白胶囊与地主金标、出牌区、贴底手牌；右下操作带（不出银灰 / 提示金 / 出牌红 / 聊天蓝，**四颗同一条基线**，头像 / 昵称 / 金币也压在这条线上）+ 顶部两朵祥云。**右上角没有设置入口**（系统设置只从个人中心进） |
+| 个人中心（入口页） | `src/view/pages/profile_view.tscn` | `profile_view.gd` | 金色顶栏 + 左侧资料面板（金环头像 / **昵称 + 复制 ID / 修改昵称两颗图标钮** / ID / VIP / 三格资产 + 退出登录）+ **右侧五项跳转菜单**；自己不再内嵌任何子页 |
+| 我的战绩 | `src/view/pages/history_view.tscn` | `history_view.gd` | 三张径向渐变战果卡（胜 / 负 / 平）+ 分玩法胜率表（表头 + 玩法 / 胜率 / 场次）+ 总览格 + 最近对局；四角祥云 |
+| 主题皮肤 | `src/view/pages/skins_view.tscn` | `skins_view.gd` | 通栏皮肤栅格（真实牌面预览 + 名称 + 状态胶囊）、当前装扮 / 恢复默认、购买确认浮层（钻石不足时确认键禁用） |
+| 我的成就 | `src/view/pages/achievements_view.tscn` | `achievements_view.gd` | 分类表头 + 成就行（勋章 + 金进度条 + 领取胶囊）+ 底部汇总条与总进度 |
+| 消息中心 | `src/view/pages/messages_view.tscn` | `messages_view.gd` | 胶囊页签（系统消息 / 好友消息 / 游戏公告）+ 一键领取 + 邮件行（徽记 / 时间 / 未读红点 / 领取） |
+| 系统设置 | `src/view/pages/settings_view.tscn` | `settings_view.gd` | 左栏分类（金底激活态）+ 右侧设置卡片（开关 / 金描边档位胶囊 / 动作按钮）+ 保存 / 恢复默认 |
+| 启动加载页 | `src/view/boot_view.gd`（非 `AppPage`，由 `AppRoot` 挂载） | `boot_view.gd` | 新稿《游戏启动界面》：Logo / 装饰扑克 / 金币 / 进度条；同一份绘制代码也生成引擎启动画面 `assets/boot_splash.png` |
 
-* **场景与脚本分离 + 设计图程序化重建**：页面的基础节点树、锚点、样式仍在 `.tscn` 里；
-  个人中心、登录、大厅等按概念设计图重构的部分，由页面脚本在 `_bind_scene()` 中移除旧节点后程序化重建，
-  这样设计改动集中在脚本，避免手工维护大场景文件。
+* **个人中心的五个界面都是独立页面**：`AppViewModel.Route` 里各有一条路由
+  （`HISTORY / SKINS / ACHIEVEMENTS / MESSAGES / SETTINGS`），`AppRoot` 按路由加载对应场景，
+  右侧菜单只负责 `app.navigate(...)`。返回键（手机返回 / ESC）由子页自己消费并回个人中心。
+* **顶栏最左侧的返回箭头一律纯白**（`DesignIcons.back_arrow(Color.WHITE, 30.0)`，
+  函数默认值也是白色）：金顶栏上原先用琥珀 `#f5c242`（与底色几乎同色）、
+  浮层顶栏（活动中心 / 商城）用深棕 `#7a4408`（在暗红底上基本看不见），两种都不醒目。
+  顶栏标题是暖白描边字，箭头跟着用白色才在同一条视觉语言里。
+  `tests/ui_refactor_test.gd` 在个人中心断言这一枚的颜色。
+* **登录页的默认账号是 `khddz@test.com` / `951024bb`**（`LoginView.DEFAULT_ACCOUNT` /
+  `DEFAULT_PASSWORD`），打包版本开箱即可一键登录；「记住账号」优先，用户换过账号后不会被默认值顶掉。
+  这里有个必须分开的上限：**离线形态下账号就是本机账号**，而它允许写成邮箱
+  （默认账号就有 14 个字符），所以服务层校验的是 `ServiceContract.ACCOUNT_MAX`（64）
+  而不是 `NICKNAME_MAX`（12）——12 字上限只用于**显示昵称**（`rename()`）。
+  输入框的 `max_length` 也取 64，否则预填值会被 LineEdit 直接截断。
+  `tests/login_field_test.gd` 钉预填与长度上限，`tests/account_identity_test.gd`
+  钉「离线形态下默认账号真的登得进去」。
+* **场景与脚本分离 + 设计稿程序化重建**：页面的基础节点树、锚点、样式仍在 `.tscn` 里；
+  个人中心、登录、大厅等按设计稿重构的部分，由页面脚本在 `_bind_scene()` 中移除旧节点后程序化重建，
+  这样设计改动集中在脚本，避免手工维护大场景文件（五个新子页的场景就是"根节点 + 脚本"的最小场景）。
 * 场景由 `tools/build_page_scenes.gd` 生成（一次性工具：用代码搭结构 → Godot 自己序列化成 `.tscn`，保证格式合法）：
   ```bash
   godot --headless --path . --script res://tools/build_page_scenes.gd
@@ -173,8 +249,8 @@ $env:CARNIVAL_OFFLINE = "1"
 
 ```
 ┌ 顶栏（整条只有一行）
-│  ┌ 账号入口（整块可点 → 个人中心）─┐   ┌ 横向资产胶囊 ──────────┐  ┌ 活动中心 ┐ ┌ 商城 ┐ ┌ 退出登录
-│  │ 头像 +Lv徽章 │ 昵称 / Lv / ID │ › │   │ ● 128,600 ◆ 320 ★ 4,520 │  │  灯笼    │ │ 宝箱 │ └（危险色）
+│  ┌ 账号入口（整块可点 → 个人中心）─┐   ┌ 横向资产胶囊 ──────────┐  ┌ 活动中心 ┐ ┌ 商城 ┐
+│  │ 头像 +Lv徽章 │ 昵称 / Lv / ID │   │   │ ● 128,600 ◆ 320 ★ 4,520 │  │  灯笼    │ │ 宝箱 │
 │  └────────────────────────────────┘   └────────────────────────┘  └──────────┘ └──────┘
 └ 玩法区（一行两栏，不足一屏时垂直居中）
    ┌───────────────┬──────────────────┬──────────────────┐
@@ -215,8 +291,20 @@ $env:CARNIVAL_OFFLINE = "1"
   刻面靠明暗区分），积分是**五角星**。三枚胶囊**横向**并排，里面只剩数值（千分位分组）。
 * 同一套图标语言贯穿全 app：大厅顶栏、个人中心的资产胶囊、我的战绩统计格与消息中心奖励图标，
   用的都是同一个 `CurrencyIcon`，靠 `kind` 区分（带 `@export`，可随场景序列化）。
-* **个人中心入口 = 账号区**：整块（头像 / 昵称 / 等级 / ID + 右侧 `›`）就是一个 `bare_button`。
-* **退出登录**移到顶栏最右（危险色按钮），与资产胶囊同处一行。
+* **个人中心入口 = 账号区**：整块（头像 / 昵称 / 等级 / ID）就是一个 `bare_button`。
+  昵称后面**没有**「›」右箭头（按需求去掉）：整块可点这件事由 hover 高亮表达。
+* **顶栏没有退出登录入口**（按需求去掉了右上角那颗半透明幽灵图标钮）。
+  退出登录只从个人中心进（那里有自己的 `LogoutButton`）；
+  大厅侧由 `ui_refactor_test` / `app_flow_test` 各一条断言钉着"不存在 `LogoutButton`"。
+* **货币栏的纵向位置对准「玩家信息 + 活动中心图标」那条水平线**（`_sync_currency_line()`）。
+  这里不能用容器居中糊过去：顶栏三块的**视觉中线本来就不在同一高度** ——
+  账号区的昵称压在 VIP 徽章之上（昵称中线比整块账号区高 ~16px），
+  圆形入口的图标压在文字之上（图标中线比入口按钮高 ~24px），
+  所以"按容器居中"的胶囊（对齐整条顶栏的中线）看上去比这两块都沉。
+  实现上取两个参照物**各自实际中线**的中点（不写死像素），
+  并在 `_relayout()` 里同步 + `call_deferred` 各放一次（容器排序在页面 `resized` 之后才跑）。
+  另外 `CHIP_PAD` 的**纵向必须是 3**：胶囊高 46、图标 40，剩下 6 只能上下各 3 ——
+  早先是 6，内容最小高 52 反而超过声明高度，图标顶着下沿、上留 6 下留 0。
 * 顶栏右侧的**活动中心 / 商城**是 `DecoIcons` 的灯笼 / 宝箱图标 + 圆形鎏金底 + 下方小字，
   点击打开对应浮层（见下节）。
 * 已开放的玩法（经典场 / 高倍场 / 癞子场 / 挑战赛）是可点的主色卡片，
@@ -289,7 +377,7 @@ $env:CARNIVAL_OFFLINE = "1"
 ## 对局牌桌
 
 ```
-┌ ✕（红色圆形关闭钮）        经典场 …… 底分 120 · 倍数 ×3（居中鎏金匾额）        ⚙（齿轮）
+┌ ✕（红色圆形关闭钮）        经典场 …… 底分 120 · 倍数 ×3（居中鎏金匾额）
 │                        等待 小智 出牌…（状态）
 │                        底 牌 / 三张底牌
 │ ┌ 大圆头像 ┐                                        ┌ 大圆头像 ┐
@@ -303,25 +391,80 @@ $env:CARNIVAL_OFFLINE = "1"
 └─└──────┘ 金币 128,600 ─────────────────────────────────────────────────────────┘
 ```
 
-* **底部两条带，自下而上排**（按需求调整）：
-  1. **操作带**（贴屏幕底边）：**左下角**是我的大圆头像 + 昵称 / 身份 / 金币，
-	 **右下角**是不出 / 提示 / 出牌；
-  2. **手牌带**在操作带**之上**，与它留出两倍间距。
+* **底部只有一条线**：四颗按钮（不出 / 提示 / 出牌 / 聊天）**共用同一条中线**，
+  左下角的头像 / 昵称 / 金币也压在这条线上 —— 头像以中线居中、昵称与金币两行**合起来**同样居中。
+  按需求改过两处：① 聊天键原先比另外三颗下沉 8px（把设计图量错了，稿子里四颗的上下边是齐的）；
+  ② 头像那块原先按视口高度的固定比例摆、与按钮各算一条基线。
+  现在两者共用同一个中线（`MainView._layout()` 里先算 `line_center` 再分别摆两侧），
+  `ui_refactor_test._probe_bottom_line()` 逐条量中线偏差（≤1px）。
 * **手牌行不带任何半透明黑卡**：牌直接压在绿呢上。
   （原来垫的那块 `HandPanel` 深色圆角板已按需求删除；
   `ui_refactor_test` 会断言 `HandPanel` 不存在，并断言"手牌底边 ≤ 操作带顶边、
   头像与按钮左右分离互不重叠"这三条几何约束。）
-* 左上角是**红色圆形「×」关闭钮**（`_draw_close_glyph` 用两条抗锯齿粗线画，比字形 ✕ 可靠），
-  右上角是**齿轮设置入口**；顶部三条信息（模式 / 底分 / 倍数）收在同一块**居中鎏金匾额**里。
+* 左上角是**红色圆形「×」关闭钮**（`_draw_close_glyph` 用两条抗锯齿粗线画，比字形 ✕ 可靠）；
+  顶部三条信息（模式 / 底分 / 倍数）收在同一块**居中鎏金匾额**里。
+  右上角**没有设置入口** —— 按需求去掉了原来的齿轮，系统设置只从个人中心进
+  （`app_flow_test` / `ui_refactor_test` 各有一条断言钉着"牌桌上不存在 `SettingsButton`"）。
+* **手牌带会在行内再向中间收拢一点**（`CardRow.side_clearance`，由 `MainView._layout()` 下发）。
+  原因是一条实测的版面冲突：手牌底边（稿子 518/640）比左下角"我的头像"顶边（511/640）更低，
+  两者在纵向上本来就重叠；手牌张数一多（17~20 张）就会摊满整行，最左边几张必然压住头像顶边。
+  收拢量取"一个头像宽 + 半道缝"，正好让最左边的牌停在头像右缘之外，右侧同步收拢以保证牌带居中。
+  注意收拢发生在**牌带内部**：`HandRow` 这个节点的矩形仍然贴着页面留白，
+  `page_padding_test` 锁的那条横向对齐不受影响。
+* **牌桌头像是圆形立绘 + 圆形金环**（`SeatView.BoardAvatar`，按需求从"深绿圆角方块 + 米色人像"改过来）。
+  立绘是 `assets/avatar/landlord.png` —— 设计稿里的**地主形象**，也是默认头像：
+  由 `tools/build_avatar_assets.gd` 从 `icon.svg` 内嵌的那段 base64 PNG 抽出来，
+  并**把 alpha 裁成圆**（圆边羽化 1.5px）。三圈同心圆的半径比直接沿用 `icon.svg`
+  （深边 / 金环 / 立绘内切，基准半径 43.9），所以牌桌上的头像与启动图标是同一套视觉。
+  将来要按玩家区分时，只要把对应立绘交给 `BoardAvatar.portrait` 即可，绘制一行都不用改。
+  圆形为什么不是用 uv 遮罩画的，见上面"径向渐变"那节的订正。
 * 座位版式取自设计图：**大圆头像在上、下面一条暗红鎏金信息条（昵称 + 金币），右下角"剩 N 张"小胶囊**，
   地主则在头像左上压一枚金色身份牌（独立图层，永远绘制在头像之上）。
   两家对手的「座位 + 出牌区」作为一整段在剩余空间里垂直居中。
 * 电脑玩家的金币是**展示值**（`GameViewModel._fake_gold()` 按名字散列推导，同一局内稳定），本机 AI 没有真实钱包。
 
+### 发牌环节（先发牌，再叫分）
+
+一局开始不再"啪一下三家都有牌了"：牌从台面中央的牌堆一张张飞向三家座位，飞完才开放叫分。
+
+* **裁决仍然是引擎的**：`GameEngine.start_new_game()` 照旧一次性把 51 张牌发完（洗牌 + 发牌 + 定先叫的人）。
+  所以直接驱动引擎的测试（`rules_smoke_test` / `mode_flow_test`）一点都不受影响 —— 引擎不知道屏幕上有几帧。
+* **节奏在 ViewModel**：`GameViewModel._begin_round()` 把 `_dealing` 置上，于是引擎在这一帧里的
+  手牌 / 座位 / 阶段信号全部被按住，AI 计时器也不许排；随后 `deal_started` 把发牌载荷交给视图。
+  时长到了再 `_finish_dealing()` 一次性把叫分界面与 AI 推上来。
+  **这期间引擎状态已经是 `BIDDING`**，所以任何照着 `engine.phase` 写 UI 的代码都会提前弹出叫分面板 ——
+  `deal_flow_test` 就是拦这件事的。
+* **时间是同一个来源**：`DEAL_CARD_FLIGHT` / `DEAL_CARD_STAGGER` / `DEAL_TAIL` 三个常量在 `_deal_plan()`
+  里折成"总时长"交给视图，视图照它排每张牌的飞行。两边各写一份常量迟早会漂移到
+  "牌还在空中，叫分面板已经弹出来了"。
+* **发牌音效是时长下限**（按需求修的"动画太快、音效没放完牌就发完了"）：
+  `Special_Dispatch` 实测 **3.87s**，而上面的默认节奏只有 1.88s —— 差了一倍。
+  `MainView` 开局前把 `AudioDirector.deal_duration()`（两段音效谁后结束取谁）写进
+  `GameViewModel.deal_min_seconds`，`_deal_plan()` 取 `max(默认节奏, 下限)`；
+  **补足差额只拉长逐张间隔**，单张飞行时长不动，所以牌速观感不变、只是节奏变疏，更像真人派牌。
+  「牌速」档位不参与这里 —— 它是 AI 思考时长的档位，发牌的节奏该由发牌音效决定。
+  `deal_flow_test` 的 `_test_deal_floor()` 把三种情形（不设下限 / 设长下限 / 设短下限）
+  连同"真实音效比默认节奏长"一起钉住。
+* **`DealAnimator` 只负责画**：每张牌一个节点，但只有"正在飞"的那几张 `visible = true`
+  （同一时刻最多 `ceil(flight / stagger) + 1` ≈ 10 张），其余不参与绘制；
+  `_process` 里按 `stagger` 逐张发射。
+  这里踩过两个坑，都值得记一笔：
+  1. **不能用 `Callable.bind()` 给 `tween_method` 传上下文** —— Godot 的 `bind()` 把参数
+	 追加到调用参数表的**末尾**，于是 `f.bind(view, a, b, c)` 会被以 `f(进度, view, a, b, c)`
+	 调用：节点、位置、类型全都对，只有每帧往控制台刷 "Cannot convert argument 1"，牌一动不动。
+	 改用单行 lambda 就没有这个歧义。
+  2. **不能做"牌池 + 复用槽位"来省节点** —— 槽位一复用，已经落定的牌会被抢走再飞一次，
+	 于是自己的手牌根本累积不起来（`deal_flow_test` 里"动画真的在逐帧移动"那条就是为这类
+	 静默失效准备的；截图能一眼看出手牌没有逐张长出来）。
+  * 我自己的牌飞**明牌**、两家飞**牌背**；落点由 `CardRow.slot_center()` 给出，与真手牌是同一个位置；
+	真手牌上桌的那一帧 `MainView` 才把动画层整层撤掉，中间不闪空帧。
+* 发牌期间状态栏是「发牌中…」（引擎此时已是 `BIDDING`，按阶段渲染会错误地写出"请选择叫分"）。
+
 ## 系统设置
 
 按《狂欢斗地主》系统设置设计图做成**整页浮层**（`ProfileView._build_settings()`），
-入口有两个：个人中心右侧菜单第五项「系统设置」、牌桌右上角齿轮。
+入口只有**个人中心**：顶栏齿轮（`SettingsGear`）与右侧菜单第五项「系统设置」。
+牌桌右上角原来的齿轮已按需求去掉，"对局中随手进设置"不再是入口之一。
 
 ```
 ┌ ‹ 返回                    系统设置 ────────────────────────────────┐
@@ -364,9 +507,9 @@ $env:CARNIVAL_OFFLINE = "1"
   都只在本机存档（`user://profile.json`），清理应用数据会一并删除。
 * 返回键（手机返回 / ESC）**先收浮层**，不会一路退到大厅：
   `ProfileView.handle_back_request()` 返回 true 表示"已被消费"，`AppRoot` 据此决定是否继续路由。
-* 牌桌齿轮进设置：牌桌不认识个人中心页，所以只置一个一次性标记
-  `AppViewModel.pending_open_settings` 再切页，个人中心绑定完成时看到标记就把浮层弹出来 ——
-  页面之间依旧只通过 ViewModel 通信。
+* 入口只在个人中心，因此**不再需要跨页请求**：牌桌原来靠
+  `AppViewModel.pending_open_settings` 这个一次性标记请个人中心帮忙打开设置浮层，
+  去掉牌桌齿轮后它永远为 false，已随入口一起删除。
 
 ### 两个布局坑
 
@@ -533,35 +676,52 @@ godot --path . --script res://tools/build_icon.gd   # 再由 icon.svg 生成 ico
 
 `icon.ico` 由 16 / 24 / 32 / 48 / 64 / 128 / 256 七档逐档光栅化的 PNG 按 ICO 目录格式拼成（Vista+ 使用 PNG 条目），而不是从 256 缩放，所以 16px 下依然锐利。
 
-## 个人中心：账号卡 + 右侧菜单（我的战绩 / 主题皮肤 / 我的成就 / 消息中心 / 系统设置）
+## 个人中心：账号卡 + 五个**独立页面**的跳转菜单
 
-按设计图把原来的「账号横幅 + 顶部 Tab」改成三栏布局：
+个人中心现在是一个**入口页**：左边账号资料卡（头像金环 / 昵称 + 复制 ID / 修改昵称 / ID / VIP / 三格资产 / 退出登录），
+右边五项菜单只是**跳转入口**，每跳一项就切到那条独立路由对应的**独立场景**：
 
 ```
-┌ 顶栏：‹ 返回 · 个人中心
-└ MainPanel ── 左：账号资产卡 / 中：内容区 / 右：竖排菜单
-   ┌───────────────┬──────────────────────────┬──────────────┐
-   │ 头像 昵称 Lv. │ 内容标题 + ScrollContainer│ 🏆 我的战绩  ›│
-   │ ID / 注册时间 │                          │ 🎨 主题皮肤  ›│
-   │ 经验条        │ 我的战绩：战果卡 + 胜率表 │ 🎖 我的成就  ›│
-   │ 金币/钻石     │ 主题皮肤：牌桌 + 卡牌皮肤 │ ✉ 消息中心  ›│
-   │ 修改昵称/退出 │ 我的成就：勋章 + 领取按钮 │ ⚙ 系统设置  ›│
-   │ 声音开关      │ 消息中心：系统/奖励消息   │              │
-   └───────────────┴──────────────────────────┴──────────────┘
+┌ 顶栏：‹ 返回 · 个人中心            （58px 金色顶栏：金渐变 + 底边深金线 + 右上祥云）
+└ MainPanel ── 左：账号资料卡 │ 右：竖排菜单（MenuButton0..3 + MenuButtonSettings）
+   ┌──────────────────────────────┐   ├ 🏆 我的战绩  › → Route.HISTORY      → history_view.tscn
+   │ ⬤头像  欢乐小地主   ⧉ ✎      │   ├ 🎨 主题皮肤  › → Route.SKINS        → skins_view.tscn
+   │         ID: 01M4GMBM         │   ├ 🎖 我的成就  › → Route.ACHIEVEMENTS → achievements_view.tscn
+   │         [VIP 12]             │   ├ ✉ 消息中心  › → Route.MESSAGES     → messages_view.tscn
+   │         经验 180/200         │   └ ⚙ 系统设置  › → Route.SETTINGS     → settings_view.tscn
+   │         ────────────────     │
+   │  金币 / 钻石 / 竞技分        │
+   └──────────────────────────────┘
+		[ 退出登录 ]
 ```
 
-* 设计图中的「我的背包」按需求改名为 **主题皮肤**，点击后进入牌桌 / 卡牌皮肤选择。
-* 右侧菜单每一项都是 **图标 + 文字 + 右侧 ›**（`DecoIcons.trophy` / `PaletteIcon` / `MedalIcon` /
-  `DecoIcons.envelope` / `DecoIcons.gear`），并补上设计图的第五项「系统设置」（点击提示开发中）。
-  前四项对应 `TabHistory` / `TabSkins` / `TabAchievements` / `TabMessages` 四个内容面板；
-  默认选中「我的战绩」，切换时回到内容顶部。
-* **「我的战绩」与「我的成就」两页按需求去掉左侧账号卡**（设计图上那里是头像卡片），内容区独占整行。
-  由 `TABS_WITHOUT_ACCOUNT_CARD` + `_sync_account_column()` 控制：
-  隐藏时同时把 `custom_minimum_size` 放回 0 —— 隐藏的节点不再占位，但最小宽度若不放开，
-  仍会继续参与 `HBoxContainer` 的分配，内容区就会被无谓地压窄。
-  主题皮肤与消息中心两页**仍然保留**账号卡。
+* **「复制 ID」与「修改昵称」两颗图标钮在昵称右侧横向并排**（按需求从"ID 行里 / 头像右下角
+  角标"挪过来）：两者尺寸取同一个值（32）并 `SHRINK_CENTER`——大小不一或非正方形的圆钮
+  并排看着就是没对齐；昵称 `EXPAND_FILL` + `clip_text`，长名字裁切而不会把图标挤出面板。
+  两颗钮贴昵称行右端，**与下方经验条的右端对齐**（实测两者的右缘都在 729px）。
+  圆形图标钮在 HBox 里**必须显式 `SHRINK_CENTER`**：`_icon_button()` 只给了
+  `custom_minimum_size`，默认的 `SIZE_FILL` 会把它拉到整行高，正圆就变成椭圆。
+* **改名行紧跟资料头**（`RenameRow` 在 `ProfileHead` 之后、资产条之前，默认隐藏不占高度）：
+  它由昵称右侧那颗编辑钮唤出，出现在紧邻位置才有因果关系——原先挂在卡片最底下，
+  点了编辑却要低头去别处找输入框。
+* **`ID` 文字曾经一直是隐形的**（实测矩形只有 1px 宽）：`Label.clip_text = true` 会把最小宽度
+  变成 0，在 HBox 里只给 `FILL` 的话它只拿最小宽度，后面的弹性占位再一挤就没了。
+  修法是给 `IdLabel` 一个 `EXPAND_FILL`、去掉尾部占位。
+  `ui_refactor_test._probe_name_icons()` 把这四条（同排 / 并排 / 贴右端 / ID 可见）全钉住。
 
-### 我的战绩（`TabHistory`）
+* **为什么拆成独立页面**：这五页各自有页内状态（皮肤的购买确认浮层、设置的分类切换、消息的分类页签），
+  留在个人中心里会让一个文件越来越臃肿；拆开之后每页都能**单独实例化、单独截图、单独测试**。
+* `AppRoot` 按路由 `instantiate()` 对应场景；手机返回键先由子页自己消费（收浮层 → 回个人中心），
+  个人中心再退一级才回大厅。
+* 设计图中的「我的背包」按需求改名为 **主题皮肤**。
+* 五个子页共用同一套页头：58px 金色顶栏（`ThemeFactory.top_bar_style()` + 底边 `gold_rule_color()` 细线）
+  + 左侧 `‹` 返回（`DesignIcons.back_arrow()`）+ 居中 34px `#FFF5DE` 描边标题 + 右上角
+  `Ornaments.cloud_wisp(TOP_RIGHT)`；内容区的左右留白仍由 `AppPage` 统一给出
+  （`tests/page_padding_test.gd` 逐页断言它们与系统设置页完全一致）。
+* 面板用 `ThemeFactory.menu_panel_style()`（暗底 + 1px 暗金描边 + 柔投影），卡片用
+  `UiKit.board()` / `ThemeFactory.board_style()`（径向渐变内板 + 2px 描边金）。
+
+### 我的战绩（`HistoryView`）
 
 按《狂欢斗地主》我的战绩设计图重建：
 
@@ -586,7 +746,7 @@ godot --path . --script res://tools/build_icon.gd   # 再由 icon.svg 生成 ico
 * 为了让分玩法统计成立，`MatchRecord` 增加了 `mode_id` 字段并随存档持久化；
   旧存档没有这个字段时回退成经典场（历史上只有经典场与它规则相同的高倍场）。
 
-### 我的成就（`TabAchievements`）
+### 我的成就（`AchievementsView`）
 
 按《狂欢斗地主》我的成就设计图重建：
 
@@ -625,16 +785,40 @@ godot --path . --script res://tools/build_icon.gd   # 再由 icon.svg 生成 ico
 
 | 类型 | 作用范围 | 目录 |
 | --- | --- | --- |
-| 对局背景 | **厅堂底色**（登录/大厅/个人中心背景 + 牌桌四周）+ **台面呢绒**（牌桌桌布 + 桌沿） | `SkinCatalog.tables()`：经典绿呢、深海蓝、红木桌、落日橙、暗夜金、鎏金殿 |
+| 对局背景 | **厅堂底色**（登录/大厅/个人中心背景 + 牌桌四周）+ **台面呢绒**（牌桌桌布 + 桌沿） | `SkinCatalog.tables()`：经典红呢（新稿默认）、深海蓝、红木桌、落日橙、暗夜金、鎏金殿 |
 | 卡牌皮肤 | 手牌 / 出牌 / 底牌 / 牌背 / 预览 | `SkinCatalog.cards()`：经典蓝背、青花瓷、鎏金、暗夜、玫瑰金 |
 
 * 每条背景皮肤同时带 **厅堂三段**（`top` / `mid` / `bottom` / `accent` / `rail`）与
   **台面三段**（`felt_light` / `felt` / `felt_dark`）——
-  设计图是「暗红房间 + 翠绿台面」，两套颜色必须分开，否则牌桌会变成一整块红或一整块绿。
+  新稿的默认皮是「暗红厅堂 `#9E3324→#540F0D` + 红呢台面 `#9E1A17` + 深棕桌沿」，
+  两套颜色浓度差得很远，必须分开定义，否则牌桌会糊成一片红。
   `felt_*` 缺省时回退到 `SkinCatalog.FELT_*`。
 * 数据流：`PlayerProfile` 保存 `table_skin_id` / `card_skin_id` / `unlocked_skins` → `AppViewModel.skin_snapshot()` 下发 → 各页面 `apply_background_skin()` 与 `CardRow.set_skin()` 应用。
 * 付费皮肤用**钻石**解锁（`purchase_and_equip`：钻石不足会拒绝并提示），装备状态与解锁记录随存档持久化；非法/未拥有的皮肤在读档时自动回退默认。
 * 个人中心的皮肤选择器为 `SkinChip`：**用真实牌面渲染预览**（卡牌皮肤会显示该配色下的 A♠ 与牌背，背景皮肤显示厅堂 + 台面渐变）+ 名称 + 状态（装备中 / 已拥有 / 钻石 N）。
+
+### 预览要**烘成贴图**，不要每帧重画
+
+这组预览是**静态**的，却每条要画几百条绘制指令：实测 6 个桌布条目 + 5 个卡牌条目合计
+**每帧 12700 条**绘制指令（同一页的底噪才 2286 条），页面直接卡成幻灯片——
+"从个人中心点进主题皮肤非常卡"就是这么来的。
+
+现在 `SkinChip.paint_preview(canvas, area)` 是**唯一**的绘制路径，实时预览与离线烘焙共用它
+（两边各画一套的话，烘出来的东西迟早会和屏幕上原本看到的不一样）；
+`PreviewBaker.bake_all()` 把所有条目横着排进**同一个** `SubViewport`，只等一帧、只读一次，
+按区域切成 `ImageTexture` 交给各条目，之后每条只剩一个四边形。实测 **12700 → 2484**。
+
+三个必须记住的点：
+
+1. **贴图必须由调用方长期持有**（`SkinsView._preview_cache` / `SkinChip.preview_texture`）。
+   只在局部变量里存一下就撒手，RefCounted 贴图会被释放，Godot 回退到 1x1 白色占位贴图，
+   屏幕上一片白——"本项目纹理渲染成纯白"那条旧结论就是这么来的（见上面"径向渐变"那节的订正）。
+2. **回填要按条目对象直接给**，不要隔一帧再拿 key 查一遍：首次布局里网格列数会变，
+   条目尺寸在同一帧内还会再翻一次，按 key 查会全部落空
+   （实测：缓存里 11 张都在，条目上却一张都没贴上）。
+3. **无头环境不烘**（`DisplayServer.get_name() == "headless"` 直接返回空字典）：
+   那边没有真实渲染，读回来是一张空图，套上去反而会把预览整片抹掉。
+   所以条目在没有贴图时保留实时绘制，行为与以前一致；`ui_refactor_test._probe_skins()` 钉着这条退化路径。
 
 ### 切换流程
 
@@ -739,6 +923,8 @@ godot --path . --script res://tools/probe_margins.gd
 
 ```bash
 godot --path . --script res://tools/capture_shots.gd   # 输出到 res://.probe/shots/
+# 只画"积木"（厅堂底 / 卡片 / 胶囊 / 云纹 / 牌桌台面）的快速探针：
+godot --path . --script res://tools/probe_design.gd    # 输出 00_design_probe.png / 00_table_probe.png
 ```
 
 牌面本身可以用 `tools/probe_cards.gd` 渲染成对照表逐张检查（整副 54 张 + 人头牌放大两组）：
@@ -748,6 +934,23 @@ godot --path . --script res://tools/probe_cards.gd
 # 输出 res://.probe/card_sheet.png（整副，含大 / 实战 / 小三种尺寸）
 #     res://.probe/card_court.png（J/Q/K 放大，专门核对中央画框与四角索引的间距）
 ```
+
+### 与设计稿逐页比对
+
+新稿（`design_update/<页面>/index.html`）是设计工具导出稿，可以直接转成"能看的规格"和参考图：
+
+```bash
+# ① 版面规格：绝对坐标 + 尺寸 + 颜色 + 字号 + 文字 -> res://.probe/design_spec.txt
+python tools/design_spec.py                # 全部页面；也可只跑某几页
+python tools/design_spec.py 登录界面 游戏启动界面
+
+# ② 参考图：导出稿的 <span> 里没有文字（文字挂在 data-pagx-text 上），
+#    脚本把文字逐字填回去，再用无头 Chrome 截成 1080 宽的 PNG -> res://.probe/design_ref/<页面>.png
+python tools/design_ref.py
+```
+
+两个脚本只依赖 Python（lxml / Pillow）与无头 Chrome，**不参与打包**。
+`design_spec.py` 里刻意手写花括号扫描而不是用正则 —— `([^{}]+)\{([^{}]*)\}` 在几十万字符的稿子上会指数级回溯，实测直接把脚本挂死。
 
 `.probe/` 是工具的产物目录，已在 `.gitignore` 中忽略。
 
@@ -768,12 +971,17 @@ godot --path . --script res://tools/probe_cards.gd
 ## 目录结构
 
 ```
-project.godot                 # 主场景 / expand 拉伸 / 方向传感器 / 桌面图标
+project.godot                 # 主场景 / expand 拉伸 / 方向传感器 / 桌面图标 / 启动加载画面
 version.json                  # 版本号唯一事实来源（打包时自增，见「版本号自增」）
 icon.svg  icon.ico            # 图标源（内嵌设计图地主头像）+ Windows 多尺寸图标
+assets/avatar/landlord.png    # 生成物：牌桌圆形头像（地主形象，alpha 已裁圆）
+							  #   tools/build_avatar_assets.gd 从 icon.svg 里抽出
+assets/boot_splash.png        # 生成物：启动加载画面（tools/build_boot_splash.gd 输出）
 assets/fonts/harmonyos_sans/ # HarmonyOS Sans SC 主字体（含 LICENSE）
 assets/themes/              # 全局字体主题（project.godot -> gui/theme/custom）
 assets/audio/Sound/         # 原版斗地主 BGM / 特效 / 真人语音（275 个，含 README 版权说明）
+design_update/              # 新视觉稿（设计工具导出稿，逐页一个目录）
+docs/design-update.md       # 新稿施工说明：色板 / 代码资产 / 页面对照 / 硬约束
 src/
   core/ulid.gd                # ULID 生成器（26 字符，同毫秒单调）
   model/
@@ -784,33 +992,41 @@ src/
 	player_profile.gd         # 档案：等级/积分/金币/钻石/战绩/皮肤/历史
 	profile_repository.gd     # 存档（user://profile.json）
 	match_record.gd           # 历史对局记录（ULID 主键）
-	skin_catalog.gd           # 皮肤目录（纯数据）
+	skin_catalog.gd           # 皮肤目录（纯数据：厅堂三段 + 红呢台面 + 桌沿）
 	activity_catalog.gd       # 活动中心 + 商城目录（纯数据：签到奖励 / 每日任务 / 商品 / 横幅）
   viewmodel/
 	game_view_model.gd  app_view_model.gd  card_presenter.gd
   view/
-	app_root.tscn/.gd         # 应用外壳：路由 + 全局提示
+	app_root.tscn/.gd         # 应用外壳：路由 + 全局提示 + 启动加载页淡出
+	boot_view.gd              # 新稿《游戏启动界面》：Logo / 装饰扑克 / 金币 / 进度条（引擎启动画面同源）
 	app_page.gd               # 页面基类：背景皮肤 / 安全区 / _bind_scene()
 	main_view.tscn/.gd        # 牌桌（响应式排版）
-	theme_factory.gd          # 调色板 + 控件工厂（按钮四档 / 面板 / 胶囊 / 标签页）
+	theme_factory.gd          # 调色板 + 控件工厂（按钮 / 面板 / 胶囊 / 径向渐变卡片）
 	pages/
 	  login_view.tscn/.gd  lobby_view.tscn/.gd  profile_view.tscn/.gd   # 三个独立场景页面
 	widgets/
-	  glossy_box.gd           # 程序化「渐变 + 高光 + 描边 + 投影」StyleBox（含退化尺寸的多边形守卫）
-	  table_backdrop.gd       # 厅堂背景 + 牌桌台面（暗红房间 + 翠绿圆角桌面 + 红木桌沿）
+	  glossy_box.gd           # 程序化 StyleBox：**竖直渐变 + 椭圆径向渐变** + 高光 + 描边 + 投影
+	  svg_path.gd             # 设计稿 SVG path 解析（M/L/C/Q/Z）→ 填充 / 描边（图标 1:1 还原）
+	  design_icons.gd          # 设计稿图标集：信封 / 挂锁 / 眼睛 / 齿轮 / 灯笼 / 宝箱 / 奖杯 / 勋章 …
+	  table_backdrop.gd       # 厅堂背景（暗红渐变 + 剪影祥云）+ 红呢牌桌（深棕桌沿 + 双金线）
 	  cloud_corner.gd         # 祥云角花（四角镜像共用一份几何）
 	  cloud_band.gd           # 祥云分隔带
-	  ornaments.gd            # 装饰件工厂（角花 / 分隔带 / 鎏金画框）
-	  deco_icons.gd           # 小图标：灯笼 / 宝箱 / 奖杯 / 金币堆 / 信封 / 齿轮
+	  ornaments.gd            # 装饰件工厂（角花 / 细分金线云纹 / 分隔带 / 鎏金画框）
+	  deco_icons.gd           # 旧版小图标（灯笼 / 宝箱 / 奖杯 / 金币堆 / 信封 / 齿轮）
 	  settings_row.gd         # 系统设置的一行（金色滑块开关 / 档位步进 / 动作按钮）	  card_art.gd             # 真实扑克牌面绘制器（整副 54 张）
 	  segment_tabs.gd         # 分段标签栏（可复用控件；个人中心已改为右侧竖排菜单）
-	  mode_tile.gd            # 大厅玩法大卡片（一卡一色 palette）
+	  mode_tile.gd            # 大厅玩法大卡片（一卡一色 palette + 径向渐变内板）
 	  mode_tile_emblem.gd     # 大卡片顶部的真实牌面小牌扇徽标
 	  currency_icon.gd        # 货币图标（金币铜钱 / 钻石 / 积分星）
 	  card_view.gd  card_row.gd  seat_view.gd  action_bar.gd  bid_panel.gd
 	  result_overlay.gd  avatar_view.gd  skin_chip.gd  safe_area.gd  ui_kit.gd
 tests/                        # 规则 / 牌面几何 / 品牌字体 / 版本 / ViewModel / 全流程
 tools/
+  design_spec.py              # 设计稿 → 可读版面规格（.probe/design_spec.txt）
+  design_ref.py               # 设计稿 → 参考图（填回文字 + 无头 Chrome 截图）
+  build_boot_splash.gd        # 用 BootView 生成 assets/boot_splash.png（引擎启动画面）
+  probe_boot_overlay.gd       # 启动流程探针：启动页 → 加载页 → 第一个页面的衔接
+  probe_design.gd             # 共享绘制件探针（厅堂底 / 卡片 / 胶囊 / 云纹 / 牌桌）
   build_page_scenes.gd        # 一次性场景生成工具
   build_icon.gd               # 图标工具：渲染各档 PNG + 对照表 + 拼多尺寸 icon.ico
   build_icon_source.py        # 图标源工具：从设计图提取地主头像，生成 icon.svg（Pillow）
@@ -838,7 +1054,18 @@ tools/
 
 ## 打包 Android APK
 
-已在本机完成模板 / JDK / 签名配置，可一键导出（默认调试包，可直接装到手机上测试）：
+> **前置依赖（换机器必看）**：导出模板与 Android SDK **都不在工程里**，必须先装好：
+> 1. **导出模板**：Godot 编辑器 →「编辑器 / 管理导出模板」→ 下载并安装与引擎**同版本**的模板
+>    （4.7.2，落盘在 `%APPDATA%\Godot\export_templates\4.7.2.stable\`）；
+>    也可以手动下 `Godot_v4.7.2-stable_export_templates.tpz`（1.19 GB）后从编辑器安装。
+> 2. **Android SDK**：`cmdline-tools` + `platform-tools` + `build-tools;34.0.0` + `platforms;android-34`，
+>    然后在编辑器设置里填 `export/android/android_sdk_path`（本机为
+>    `C:\Users\<用户>\AppData\Local\Android\Sdk`）与 `export/android/java_sdk_path`（JDK 17）。
+> 3. 调试包还需要调试签名库（编辑器设置的 `export/android/debug_keystore`，缺失时用 `keytool` 生成）。
+>
+> 缺任何一项时 `--export-debug` 都会直接报错退出，**不会**产出半成品包。
+
+装好上面三项后可一键导出（默认调试包，可直接装到手机上测试）：
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools/export_android.ps1
@@ -917,6 +1144,7 @@ godot --headless --path . --script res://tests/rules_smoke_test.gd            # 
 godot --headless --path . --script res://tests/mode_rules_test.gd             # 玩法目录 + 癞子牌型识别 / 大小比较 / 边界 + 计分
 godot --headless --path . --script res://tests/mode_flow_test.gd              # 癞子场连打 12 局 + 比赛场报名/奖励全流程
 godot --headless --path . --script res://tests/viewmodel_integration_test.gd  # 连续两局完整对局
+godot --headless --path . --script res://tests/deal_flow_test.gd              # 发牌环节：先发牌再叫分 + 手牌不压头像
 godot --headless --path . --script res://tests/app_flow_test.gd               # 四页面全流程 + 皮肤购买 + 历史记录
 godot --headless --path . --script res://tests/profile_menu_test.gd          # 个人中心菜单：主题皮肤 / 我的成就 / 消息中心
 godot --headless --path . --script res://tests/ui_refactor_test.gd            # 登录 / 大厅 / 牌桌 / 个人中心（含战绩 + 成就两页）四页面重构回归

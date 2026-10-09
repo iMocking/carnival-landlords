@@ -16,8 +16,11 @@ config/version="1.0.3"
 run/main_scene="res://src/view/app_root.tscn"
 config/quit_on_go_back=false
 config/features=PackedStringArray("4.7", "Mobile")
+boot_splash/bg_color=Color(0.14902, 0.031373, 0.031373, 1)
+boot_splash/image="res://assets/boot_splash.png"
 config/icon="res://icon.svg"
 config/windows_native_icon="res://icon.ico"
+boot_splash/minimum_display_time=800
 
 [display]
 
@@ -31,6 +34,10 @@ window/handheld/orientation=4
 
 theme/custom="res://assets/themes/harmony_os_theme.tres"
 
+[network]
+
+base_url="http://127.0.0.1:8080/api/v1"
+
 [physics]
 
 3d/physics_engine="Jolt Physics"
@@ -40,9 +47,3 @@ theme/custom="res://assets/themes/harmony_os_theme.tres"
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
-
-[network]
-
-; 联机服务端根地址（含 /api/v1）。留空表示纯离线运行；联调时可在这里、
-; 环境变量 CARNIVAL_API_BASE_URL，或 user://network.json 里配置（优先级见 NetworkConfig）。
-base_url="http://127.0.0.1:8080/api/v1"

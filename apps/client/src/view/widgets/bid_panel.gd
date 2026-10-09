@@ -2,12 +2,13 @@ class_name BidPanel
 extends Control
 ## 叫分面板：不叫 / 1 分 / 2 分 / 3 分。
 ##
-## 三个分数按钮统一用金色主按钮（4 个金色按钮并排会互相抢视线，所以「不叫」降级为深蓝次级），
-## 副标题把规则一次讲清：叫的分数就是底分，3 分直接成为地主。
+## 视觉走新稿的**卡片语言**（`design_update/`）：半透明暗底 + 椭圆径向渐变 + 2px 描边金 + 柔投影。
+## 按钮按"行动优先级"分三档：不叫（银灰）/ 1 分、2 分（金）/ 3 分（正红，直接当地主）。
+## 副标题把规则一次讲清：叫的分数就是底分。
 
 signal bid_selected(score: int)
 
-const _OPTIONS := [["不叫", 0], ["1 分", 1], ["2 分", 2], ["3 分", 3]]
+const _OPTIONS := [["不 叫", 0], ["1 分", 1], ["2 分", 2], ["3 分", 3]]
 
 var _frame: PanelContainer
 var _title_label: Label
@@ -18,16 +19,22 @@ func _ready() -> void:
     visible = false
     _frame = PanelContainer.new()
     _frame.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-    _frame.add_theme_stylebox_override("panel", ThemeFactory.panel_style(0.96))
+    # 卡片内板：中心色 -> 边缘色的径向渐变（新稿的卡片都是"从中心发光"），
+    # 外加一圈 2px 描边金与柔投影；旧版那种"暗蓝面板 + 鎏金粗边"已经不用了。
+    var card := ThemeFactory.glossy(
+        Color(0.239, 0.063, 0.047, 0.94), Color(0.133, 0.020, 0.016, 0.96),
+        ThemeFactory.GOLD_BORDER, 18, 2, 0.05, 0.46, 12.0, 24.0, 16.0)
+    card.fill_mode = GlossyBox.Fill.RADIAL
+    _frame.add_theme_stylebox_override("panel", card)
     add_child(_frame)
     var column := VBoxContainer.new()
     column.add_theme_constant_override("separation", 8)
     column.alignment = BoxContainer.ALIGNMENT_CENTER
     _frame.add_child(column)
-    _title_label = ThemeFactory.label("请叫分，分数即底分", 18, ThemeFactory.GOLD_LIGHT)
+    _title_label = ThemeFactory.label("请叫分，分数即底分", 18, ThemeFactory.CREAM)
     _title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     column.add_child(_title_label)
-    _subtitle_label = ThemeFactory.label("分数即底分，3 分直接当地主", 13, ThemeFactory.TEXT_DIM)
+    _subtitle_label = ThemeFactory.label("分数即底分，3 分直接当地主", 13, ThemeFactory.GOLD_SUBTITLE)
     _subtitle_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     column.add_child(_subtitle_label)
     var row := HBoxContainer.new()
@@ -36,8 +43,14 @@ func _ready() -> void:
     column.add_child(row)
     for option in _OPTIONS:
         var score := int(option[1])
-        var button := ThemeFactory.secondary_button(str(option[0]), 18) if score <= 0 else ThemeFactory.button(str(option[0]), 18)
-        # x 方向不给最小宽度：四个按钮在 360px 宽的面板里平分剩余空间，靠 EXPAND_FILL 均分
+        var button: Button
+        if score <= 0:
+            button = ThemeFactory.neutral_button(str(option[0]), 18)
+        elif score >= 3:
+            button = ThemeFactory.button(str(option[0]), 18)
+        else:
+            button = ThemeFactory.gold_button(str(option[0]), 18)
+        # x 方向不给最小宽度：四个按钮在面板宽度里平分剩余空间，靠 EXPAND_FILL 均分
         button.custom_minimum_size = Vector2(0, 46)
         button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
         button.pressed.connect(_on_option_pressed.bind(score))

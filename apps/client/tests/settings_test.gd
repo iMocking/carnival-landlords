@@ -151,33 +151,43 @@ func _test_settings_panel() -> void:
     root.size = Vector2i(1280, 720)
     var app := AppViewModel.new()
     app.profile = PlayerProfile.create("面板测试员")
-    var view: ProfileView = load("res://src/view/pages/profile_view.tscn").instantiate()
+
+    # 入口：个人中心右侧菜单的第五项 = 跳到「系统设置」这条独立路由
+    var profile: ProfileView = load("res://src/view/pages/profile_view.tscn").instantiate()
+    profile.setup(app)
+    root.add_child(profile)
+    await _frames(8)
+    var settings_button := profile.find_child("MenuButtonSettings", true, false) as Button
+    _check(settings_button != null, "个人中心右侧菜单含系统设置入口")
+    if settings_button != null:
+        settings_button.pressed.emit()
+        await _frames(3)
+    _check(app.route == AppViewModel.Route.SETTINGS,
+        "点「系统设置」跳到独立路由（实际 %d）" % app.route)
+    profile.queue_free()
+    await _frames(2)
+
+    # 设置页本身是独立场景：直接实例化（不经过个人中心）
+    app.navigate(AppViewModel.Route.SETTINGS)
+    var view: SettingsView = load("res://src/view/pages/settings_view.tscn").instantiate()
     view.setup(app)
     root.add_child(view)
     await _frames(8)
     view.size = Vector2(1280, 720)
     await _frames(4)
 
-    _check(not view.settings_open(), "系统设置默认关闭")
-    # 右栏第五项打开浮层
-    var settings_button := view.find_child("MenuButtonSettings", true, false) as Button
-    _check(settings_button != null, "右侧菜单含系统设置入口")
-    if settings_button != null:
-        settings_button.pressed.emit()
-        await _frames(3)
-    _check(view.settings_open(), "点击系统设置后浮层打开")
-
-    for node_name in ["SettingsLayer", "SettingsPanel", "SettingsTitle", "SettingsSidebar",
-            "SettingsContent", "SettingsSave", "SettingsReset", "SettingsBack"]:
-        _check(view.find_child(node_name, true, false) != null, "设置浮层存在 %s" % node_name)
-    # 四个分类按钮
-    for i in ProfileView.SETTINGS_CATEGORIES.size():
+    _check(view.settings_open(), "设置页本身就是「打开着」的状态")
+    for node_name in ["SettingsPanel", "SettingsSidebar", "SettingsContent", "SettingsSave",
+            "SettingsReset", "BackButton"]:
+        _check(view.find_child(node_name, true, false) != null, "设置页存在 %s" % node_name)
+    # 分类按钮（数量与文案都跟页面常量对齐）
+    for i in SettingsView.SETTINGS_CATEGORIES.size():
         var tab := view.find_child("SettingsTab%d" % i, true, false) as Button
         _check(tab != null, "存在第 %d 个设置分类" % i)
         if tab != null:
             var label := tab.find_child("MenuLabel", true, false) as Label
-            _check(label != null and label.text == str(ProfileView.SETTINGS_CATEGORIES[i]["title"]),
-                "分类文案正确：%s" % str(ProfileView.SETTINGS_CATEGORIES[i]["title"]))
+            _check(label != null and label.text == str(SettingsView.SETTINGS_CATEGORIES[i]["title"]),
+                "分类文案正确：%s" % str(SettingsView.SETTINGS_CATEGORIES[i]["title"]))
 
     # 基础设置里的四种控件都要在
     _check(view.find_child("Setting_music_enabled", true, false) != null, "基础设置有音乐开关行")
@@ -232,29 +242,20 @@ func _test_settings_panel() -> void:
         _check(app.profile.hint_level == PlayerProfile.DEFAULT_HINT_LEVEL, "恢复默认还原提示强度")
         _check(not app.profile.auto_sort_hand, "恢复默认关闭自动整理")
 
-    # 保存 = 收起面板
+    # 保存 = 显式确认一次并回个人中心
     var save_button := view.find_child("SettingsSave", true, false) as Button
     _check(save_button != null, "存在保存设置按钮")
     if save_button != null:
+        app.navigate(AppViewModel.Route.SETTINGS)
         save_button.pressed.emit()
         await _frames(3)
-        _check(not view.settings_open(), "保存设置后面板收起")
+        _check(app.route == AppViewModel.Route.PROFILE,
+            "保存设置后回到个人中心（实际 %d）" % app.route)
 
-    # 返回键（手机返回 / ESC）先收浮层，不一路退到大厅
-    view.open_settings()
-    await _frames(2)
-    _check(view.settings_open(), "浮层可以再次打开")
-    _check(view.handle_back_request(), "返回键被设置浮层消费掉")
-    _check(not view.settings_open(), "返回键收起了浮层而不离开页面")
+    # 返回键（手机返回 / ESC）由设置页消费掉，回个人中心而不是继续往外退
+    app.navigate(AppViewModel.Route.SETTINGS)
+    _check(view.handle_back_request(), "返回键被设置页消费掉")
+    _check(app.route == AppViewModel.Route.PROFILE, "返回键回到个人中心")
 
-    # 牌桌齿轮 → 一次性标记 → 个人中心自动打开
-    app.pending_open_settings = true
-    var again: ProfileView = load("res://src/view/pages/profile_view.tscn").instantiate()
-    again.setup(app)
-    root.add_child(again)
-    await _frames(8)
-    _check(again.settings_open(), "带标记进入个人中心会自动打开设置")
-    _check(not app.pending_open_settings, "一次性标记已被消费掉")
-    again.queue_free()
     view.queue_free()
     await _frames(2)

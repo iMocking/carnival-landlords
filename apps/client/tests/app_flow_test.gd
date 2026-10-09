@@ -10,6 +10,7 @@ const HUMAN_SEAT := 0
 const LOGIN_SCENE := "res://src/view/pages/login_view.tscn"
 const LOBBY_SCENE := "res://src/view/pages/lobby_view.tscn"
 const PROFILE_SCENE := "res://src/view/pages/profile_view.tscn"
+const HISTORY_SCENE := "res://src/view/pages/history_view.tscn"
 const GAME_SCENE := "res://src/view/main_view.tscn"
 
 var _root: AppRoot
@@ -95,20 +96,23 @@ func _top_hit_under(page: Node, node: Control) -> Control:
             best = control
     return best
 
-## 命中优先级的排序键：先比有效 z_index，再比"绘制顺序"（父节点下的加入次序，越大越靠上）
+## 命中优先级的排序键：先比有效 z_index，再比"深度 + 绘制顺序"（越深、越靠后加入的越在上）。
+##
+## 这里**刻意不再做 24 层路径哈希**：`path = path * 97 + order` 累到十几层就会溢出 int64，
+## 深浅不同的控件可能算出完全相同的键（实测资料面板 `AccountCard` 与它里面的
+## `CopyIdButton` 撞成同一个值），于是命中判定退化成"看遍历顺序"，
+## 出现"按钮明明在最上层却报被面板挡住"的假失败。
+## 现在只取最近 6 层的次序（64^6 ≈ 6.9e10，远离 int64 上限），深度单独占一位。
 func _hit_key(control: Control) -> int:
-    var path := 0
-    var current: Node = control
+    var order := 0
     var depth := 0
+    var current: Node = control
     while current != null:
-        var order := current.get_index()
-        # 深度越浅权重越高，保证比较的是"先 z 后绘制顺序"
-        path = path * 97 + order
-        current = current.get_parent()
         depth += 1
-        if depth > 24:
-            break
-    return _effective_z(control) * 1000000 + path
+        if depth <= 6:
+            order = order * 64 + current.get_index()
+        current = current.get_parent()
+    return _effective_z(control) * 1000000000000 + depth * 10000000000 + order
 
 ## 断言某个控件在页面里「点得到」：命中它的必须是它自己或它的后代。
 ## 不可见的控件不算"点得到"（例如还没展开的改名行），所以先挡掉这一种。
@@ -214,13 +218,13 @@ func _tick() -> void:
             # 个人中心入口已从底栏移到顶部账号区（头像整块可点）
             _check(_page().node_named("ProfileButton") != null, "大厅顶部含个人中心入口（账号区）")
             _check(_page().node_named("BottomBar") == null, "底栏已移除，中部全部让给玩法卡片")
-            _check((_page().node_named("LogoutButton") as Button) != null, "退出登录已整合到顶栏")
+            # 顶栏不再有退出登录钮：按需求去掉后，退出登录只剩个人中心那一个入口
+            _check(_page().node_named("LogoutButton") == null, "大厅顶栏已去掉退出登录钮")
             # 大厅所有可点元素都必须真的点得到（浮层容器曾经整层吃掉点击）
             _check_all_interactive_clickable(_page(), "游戏大厅")
             _check_clickable(_page(), _page().node_named("ProfileButton") as Control, "账号入口")
             _check_clickable(_page(), _page().node_named("ActivityButton") as Control, "活动中心入口")
             _check_clickable(_page(), _page().node_named("ShopButton") as Control, "商城入口")
-            _check_clickable(_page(), _page().node_named("LogoutButton") as Control, "退出登录")
             if classic != null:
                 _check_clickable(_page(), classic, "经典场卡片")
             # 活动中心 / 商城的浮层容器默认必须整层隐藏 + 不吃鼠标
@@ -251,7 +255,9 @@ func _tick() -> void:
                 return
             # 牌桌上可点的元素也必须真的点得到（同样的全屏控件遮挡问题）
             _check_clickable(game, game.find_child("BackButton", true, false) as Control, "牌桌关闭按钮")
-            _check_clickable(game, game.find_child("SettingsButton", true, false) as Control, "牌桌齿轮")
+            # 牌桌**不该**有系统设置入口：设置统一从个人中心进（见本文件阶段 7 的菜单断言）
+            _check(game.find_child("SettingsButton", true, false) == null,
+                "牌桌右上角不再有设置齿轮（设置入口只在个人中心）")
             _check_clickable(game, game.find_child("ActionBar", true, false) as Control, "操作栏")
             var back := game.find_child("BackButton", true, false)
             _check(back is Button, "牌桌存在返回按钮")
@@ -356,11 +362,26 @@ func _tick() -> void:
             _check(rename_row != null and not rename_row.is_visible_in_tree(), "改名行默认收起")
             # 逐个验：个人中心里所有可见的按钮都必须点得到
             _check_all_interactive_clickable(_page(), "个人中心")
-            var settings_layer := _page().node_named("SettingsLayer") as Control
-            _check(settings_layer != null, "个人中心含系统设置浮层")
-            if settings_layer != null:
-                _check(not settings_layer.visible, "系统设置浮层默认隐藏")
-                _check(settings_layer.mouse_filter == Control.MOUSE_FILTER_IGNORE, "系统设置浮层容器不吃鼠标")
+            # 右侧菜单是"跳转到独立页面"的入口：点一项 → 换页 → 再回来
+            var history_entry := _page().node_named("MenuButton0") as Button
+            _check(history_entry != null, "个人中心含「我的战绩」入口")
+            if history_entry != null:
+                history_entry.pressed.emit()
+                _check(_app().route == AppViewModel.Route.HISTORY, "点菜单第一项跳到「我的战绩」路由")
+                _check(_page() is HistoryView, "我的战绩是独立页面")
+                _check(_page().scene_file_path == HISTORY_SCENE, "我的战绩由独立场景加载")
+                _check(_app().profile.games >= 1, "战绩页能读到对局数")
+                _app().navigate(AppViewModel.Route.PROFILE)
+                _check(_page() is ProfileView, "从战绩页回到个人中心")
+            # 第五项「系统设置」同样是独立页面（不再挂在个人中心里的浮层）
+            var settings_entry := _page().node_named("MenuButtonSettings") as Button
+            if settings_entry != null:
+                settings_entry.pressed.emit()
+                _check(_app().route == AppViewModel.Route.SETTINGS, "点菜单第五项跳到「系统设置」路由")
+                _check(_page() is SettingsView, "系统设置是独立页面")
+                _check(_page().find_child("SettingsPanel", true, false) != null, "系统设置页含设置面板")
+                _app().navigate(AppViewModel.Route.PROFILE)
+                _check(_page() is ProfileView, "从设置页回到个人中心")
             _check(_app().rename("改名后的我"), "个人中心改名成功")
             _check(_app().profile.nickname == "改名后的我", "昵称写入档案")
             _check(ProfileRepository.load_profile() != null, "档案已持久化")
@@ -398,12 +419,14 @@ func _test_skins() -> void:
     _check(reloaded != null and reloaded.table_skin_id == "table_ocean", "背景皮肤已持久化")
     _check(reloaded != null and reloaded.owns_skin("card_porcelain"), "已解锁皮肤记录在档")
 
-    # 购买确认：浮层先弹出来，只有点了「解锁并装备」才真的扣钻石
-    var view := _page() as ProfileView
-    _check(view != null, "个人中心页可访问确认浮层")
+    # 购买确认：切到「主题皮肤」这个独立页面，浮层先弹出来，
+    # 只有点了「解锁并装备」才真的扣钻石
+    _app().navigate(AppViewModel.Route.SKINS)
+    var view := _page() as SkinsView
+    _check(view != null, "「主题皮肤」是独立页面")
     if view != null:
         var layer := view.get("_confirm_layer") as Control
-        _check(layer != null, "个人中心含购买确认浮层")
+        _check(layer != null, "皮肤页含购买确认浮层")
         if layer != null:
             _check(not layer.visible, "确认浮层默认隐藏")
             view.call("_open_skin_confirm", "card_gold")
@@ -430,6 +453,8 @@ func _test_skins() -> void:
             var ok_button := view.get("_confirm_ok") as Button
             _check(ok_button != null and ok_button.disabled, "钻石不足时确认按钮禁用")
             view.call("_hide_skin_confirm")
+    _app().navigate(AppViewModel.Route.PROFILE)
+    _check(_page() is ProfileView, "皮肤购买流程结束后回到个人中心")
 
     # 恢复默认装扮：免费、立即生效，且不会重复提示
     profile.diamonds = 0

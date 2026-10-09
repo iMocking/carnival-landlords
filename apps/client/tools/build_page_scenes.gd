@@ -186,11 +186,8 @@ func _build_lobby() -> Control:
     assets.add_child(UiKit.asset_chip("0", ThemeFactory.DIAMOND, 16, "DiamondLabel", CurrencyIcon.Kind.DIAMOND))
     assets.add_child(UiKit.asset_chip("0", ThemeFactory.ROSE, 16, "PointsLabel", CurrencyIcon.Kind.STAR))
 
-    var logout_button := ThemeFactory.danger_button("退出登录", 15)
-    logout_button.name = "LogoutButton"
-    logout_button.custom_minimum_size = Vector2(112, 48)
-    logout_button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-    top_row.add_child(logout_button)
+    # 右上角**没有**退出登录钮：按需求去掉了那颗半透明幽灵图标钮，
+    # 退出登录只从个人中心进（那里有自己的 `LogoutButton`）。
 
     # 中部玩法区。滚动条一律不显示（AppPage.hide_scrollbars() 也会在运行时兜底），
     # 单独运行本场景调版式时行为一致。
@@ -276,10 +273,8 @@ func _build_profile_entry() -> Button:
     info.add_child(_label("NicknameLabel", "玩家", 26, ThemeFactory.CREAM))
     info.add_child(_label("LevelLabel", "Lv.1", 16, ThemeFactory.GOLD_LIGHT))
     info.add_child(_label("IdLabel", "ID --", 13, Color(1, 1, 1, 0.42)))
-
-    var chevron := _label("Chevron", "›", 26, ThemeFactory.GOLD_LIGHT, HORIZONTAL_ALIGNMENT_RIGHT)
-    chevron.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-    row.add_child(chevron)
+    # 昵称后面原来还有一个「›」右箭头（暗示"点进去"）。按需求去掉了：
+    # 账号区整块可点这件事由 hover 高亮表达，不需要再挂一个箭头。
     return button
 
 # ================================================================ 个人中心（三大板块 Tab 切换）

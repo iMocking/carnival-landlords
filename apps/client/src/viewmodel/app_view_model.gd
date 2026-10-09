@@ -21,7 +21,20 @@ signal service_mode_changed(mode: int)
 ## 离线欠账同步结束（成功/失败都会发，`result.ok` 区分）
 signal sync_finished(result: Dictionary)
 
-enum Route { LOGIN, LOBBY, PROFILE, GAME }
+enum Route {
+    LOGIN,
+    LOBBY,
+    PROFILE,
+    ## 个人中心右侧菜单里的五个界面都是**独立页面**（各有自己的场景与路由），
+    ## 菜单只当跳转入口 —— 这样皮肤购买确认、设置分类切换这些"页内状态"
+    ## 不会再把个人中心越撑越大。
+    HISTORY,
+    SKINS,
+    ACHIEVEMENTS,
+    MESSAGES,
+    SETTINGS,
+    GAME,
+}
 
 ## 昵称上限的对外别名。真实定义在契约层（服务层要用它校验，但不该依赖 ViewModel）。
 const NICKNAME_MAX := ServiceContract.NICKNAME_MAX
@@ -47,14 +60,6 @@ var profile: PlayerProfile:
 var active_mode: Dictionary:
     get:
         return hub.service().active_mode() if hub != null else {}
-
-## 系统设置：「请求打开设置面板」的一次性标记。
-##
-## 牌桌右上角的齿轮也想进系统设置，而设置浮层的实现挂在个人中心页上。
-## 让牌桌直接去拿另一个页面的节点会破坏"页面之间不互引用"的分层
-## （`AppRoot` 才是组合根），所以改成：牌桌置一个标记 + 切到个人中心，
-## 个人中心绑定完成时看到标记就自动把浮层打开，然后把标记清掉。
-var pending_open_settings := false
 
 func _init() -> void:
     hub = ServiceHub.new()

@@ -1,17 +1,20 @@
 class_name ShopOverlay
 extends Control
-## 商城（按《狂欢斗地主》商城设计图）。
+## 商城（按《狂欢斗地主》商城设计稿）。
 ##
 ## ```
-## ┌ ‹ 返回            商城                [● 1,105,300] [◆ 2,460] ┐
-## │ ┌  金币  │  钻石  │  道具  ┐（三段标签，选中那颗是正红）        │
-## │ ┌ 钱袋 ─────┐ ┌ 钱袋 ─────┐ ┌ 金锭 ·热销 ┐                    │
-## │ │ 10万金币   │ │ 50万金币   │ │ 200万金币  │                    │
-## │ │ ◆6  [领买] │ │ ◆28 [领买] │ │ ◆88 [领买] │                    │
-## │ └───────────┘ └───────────┘ └───────────┘                    │
-## │ …两行三列，共 6 件                                             │
-## └───────────────────────────────────────────────────────────────┘
+## ┌ ‹              商城              [● 1,105,300] [◆ 2,460] ☁ ┐ ← 58px 金渐变顶栏
+## │ ┌  金币  │  钻石  │  道具  ┐（三段标签，选中那颗是正红）    │
+## │ ┌ 钱袋 ─────┐ ┌ 钱袋 ─────┐ ┌ 金锭 ·热销 ┐                  │
+## │ │ 10万金币   │ │ 50万金币   │ │ 200万金币  │                  │
+## │ │ ◆6  [兑换] │ │ ◆28 [兑换] │ │ ◆88 [兑换] │                  │
+## │ └───────────┘ └───────────┘ └───────────┘                  │
+## │ …两行三列，共 6 件                                           │
+## └─────────────────────────────────────────────────────────────┘
 ## ```
+##
+## 面板语言与活动中心一致：顶栏金渐变，商品卡是**径向渐变的红底内板 + 1px 暗金描边 + 柔投影**
+## （`UiKit.board()`），角标「热销 / 超值」压在卡片右上角。
 ##
 ## ## 价格用钻石，不是人民币
 ##
@@ -22,12 +25,18 @@ extends Control
 
 signal closed()
 
+const BAR_HEIGHT := 58.0
 const COLUMNS := 3
 ## 商品卡固定高度与其中商品图的高度（图不再拉伸，六张卡永远等高）。
-## 高度必须容得下「图 + 名称 + 价格行 + 上下内边距」，否则 VBox 会把第一行顶出去，
-## 商品名就会压在图上面（实测卡高 208 + 图高 104 时正好压住）。
-const CARD_HEIGHT := 244.0
-const ART_HEIGHT := 118.0
+const CARD_HEIGHT := 226.0
+const ART_HEIGHT := 108.0
+const TAB_HEIGHT := 46.0
+## 商品卡内板配色（按分栏换中心色）：金币分栏暖红、钻石分栏蓝紫、道具分栏暗金
+const CARD_TINTS := {
+    "shop_gold": [Color("#7d1a16"), Color("#4a0d0c")],
+    "shop_diamond": [Color("#4a3f8f"), Color("#2a2050")],
+    "shop_item": [Color("#6b3418"), Color("#3a1a0c")],
+}
 
 var _app: AppViewModel
 var _header: OverlayHeader
@@ -64,38 +73,44 @@ func _build() -> void:
     var panel := PanelContainer.new()
     panel.name = "Panel"
     panel.add_theme_stylebox_override("panel", ThemeFactory.glossy(
-        Color(ThemeFactory.INK_700.r, ThemeFactory.INK_700.g, ThemeFactory.INK_700.b, 0.98),
-        Color(ThemeFactory.INK_900.r, ThemeFactory.INK_900.g, ThemeFactory.INK_900.b, 0.99),
-        ThemeFactory.GOLD, 20, 2, 0.08, 0.50, 8.0, 0.0, 0.0))
+        Color(ThemeFactory.ROOM_CENTER.r, ThemeFactory.ROOM_CENTER.g, ThemeFactory.ROOM_CENTER.b, 0.94),
+        Color(ThemeFactory.INK_600.r, ThemeFactory.INK_600.g, ThemeFactory.INK_600.b, 0.96),
+        Color(ThemeFactory.GOLD_BORDER.r, ThemeFactory.GOLD_BORDER.g, ThemeFactory.GOLD_BORDER.b, 0.55),
+        16, 1, 0.06, 0.46, 9.0, 0.0, 0.0))
     add_child(panel)
     panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
     var column := UiKit.column(8)
     panel.add_child(column)
 
-    _header = OverlayHeader.create("商城")
-    _header.back_pressed.connect(func() -> void: closed.emit())
-    var header_row := UiKit.row(0)
-    column.add_child(header_row)
-    UiKit.padded(header_row, 18, 4).add_child(_header)
+    _build_bar(column)
 
-    # 三段标签（金币 / 钻石 / 道具）
-    _tabs = UiKit.row(8)
+    # 三段标签（金币 / 钻石 / 道具）：一条 `#4A100B` 的暗条，选中那颗是正红
+    var tabs_bar := PanelContainer.new()
+    tabs_bar.name = "ShopTabsBar"
+    tabs_bar.custom_minimum_size = Vector2(0, TAB_HEIGHT)
+    tabs_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    tabs_bar.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+        Color("#4a100b"), Color("#3a0c08"), Color(0, 0, 0, 0), 10, 0, 0.05, 0.30, 4.0, 0.0, 0.0))
+    var tabs_wrap := UiKit.row(0)
+    UiKit.padded(tabs_bar, 14, 4).add_child(tabs_wrap)
+    _tabs = UiKit.row(0)
     _tabs.name = "ShopTabs"
     _tabs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    var tabs_row := UiKit.row(0)
-    column.add_child(tabs_row)
-    UiKit.padded(tabs_row, 18, 2).add_child(_tabs)
+    _tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    tabs_wrap.add_child(_tabs)
     for i in _shop_tabs().size():
         var tab: Dictionary = _shop_tabs()[i]
-        # 用 tab_button 而不是 MenuLabel 版式：商城的标签是纯文字 + 大红底，
-        # 与设计图一致；文字直接写在按钮上，不用图标。
-        var button := ThemeFactory.tab_button(str(tab["title"]), i == 0, 22)
+        # 用 tab_button 而不是 MenuLabel 版式：商城的标签是纯文字 + 大红底，与设计图一致
+        var button := ThemeFactory.tab_button(str(tab["title"]), i == 0, 26)
         button.name = "ShopTab%d" % i
-        button.custom_minimum_size = Vector2(0, 52)
+        button.custom_minimum_size = Vector2(0, TAB_HEIGHT - 8.0)
+        button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        button.size_flags_vertical = Control.SIZE_EXPAND_FILL
         button.pressed.connect(_select_tab.bind(i))
         _tabs.add_child(button)
         _tab_buttons.append(button)
+    column.add_child(tabs_bar)
 
     var scroll := ScrollContainer.new()
     scroll.name = "ShopScroll"
@@ -108,8 +123,7 @@ func _build() -> void:
     _grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     _grid.add_theme_constant_override("h_separation", 14)
     _grid.add_theme_constant_override("v_separation", 14)
-    UiKit.padded(scroll, 18, 6).add_child(_grid)
-    column.add_child(_gap(14))
+    UiKit.padded(scroll, 14, 10).add_child(_grid)
 
     _toast_label = ThemeFactory.outlined_label("", 18, Color("#fff2b2"), Color(0, 0, 0, 0.8), 4)
     _toast_label.name = "OverlayToast"
@@ -120,6 +134,36 @@ func _build() -> void:
     _toast_label.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
     _toast_label.offset_top = -64.0
     _toast_label.offset_bottom = -16.0
+
+## 顶部金栏：返回箭头 + 居中标题 + 右侧资产胶囊 + 右端细金线祥云
+func _build_bar(column: VBoxContainer) -> void:
+    var bar := PanelContainer.new()
+    bar.name = "OverlayBar"
+    bar.custom_minimum_size = Vector2(0, BAR_HEIGHT)
+    bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    bar.add_theme_stylebox_override("panel", ThemeFactory.top_bar_style())
+    column.add_child(bar)
+
+    _header = OverlayHeader.create("商城")
+    _header.back_pressed.connect(func() -> void: closed.emit())
+    bar.add_child(_header)
+
+    var rule := ColorRect.new()
+    rule.name = "BarRule"
+    rule.color = ThemeFactory.GOLD_EDGE
+    rule.custom_minimum_size = Vector2(0, 2)
+    rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    column.add_child(rule)
+
+    # 顶栏祥云：稿子里贴右上角、opacity 0.5（压在资产胶囊后面）
+    var wisp := Ornaments.cloud_wisp(Ornaments.WispCorner.TOP_RIGHT, 150.0, 0.5)
+    wisp.name = "BarWisp"
+    wisp.z_index = -1
+    bar.add_child(wisp)
+    var place := func() -> void:
+        wisp.position = Vector2(maxf(0.0, bar.size.x - wisp.size.x * 0.72), 4.0)
+    bar.resized.connect(place)
+    place.call()
 
 func _layout_overlay() -> void:
     var panel := find_child("Panel", true, false) as Control
@@ -133,15 +177,9 @@ func _layout_overlay() -> void:
     panel.offset_right = -side
     panel.offset_bottom = -16.0
 
-func _gap(height: float) -> Control:
-    var gap := Control.new()
-    gap.custom_minimum_size = Vector2(0, height)
-    gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-    return gap
-
 # ------------------------------------------------------------------ 商品卡
 
-## 一件商品：大图（程序化绘制）+ 数量 + 钻石价 + 兑换按钮，右上角可带「热销 / 超值」。
+## 一件商品（稿子：径向渐变内板 + 商品图 + 名称 + 钻石价 + 兑换按钮 + 右上角角标）。
 ##
 ## 卡片高度是固定的（`CARD_HEIGHT`）：商品图用**固定高度**而不是 EXPAND_FILL，
 ## 否则 `Container` 的行高会被图撑开，六张卡在不同视口下高低不一。
@@ -150,9 +188,10 @@ func _make_good_card(good: Dictionary) -> Control:
     card.name = "Good_%s" % str(good.get("id", ""))
     card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     card.custom_minimum_size = Vector2(0, CARD_HEIGHT)
-    card.add_theme_stylebox_override("panel", ThemeFactory.glossy(
-        Color(0.46, 0.06, 0.08, 0.96), Color(0.24, 0.02, 0.03, 0.97),
-        ThemeFactory.GOLD, 16, 2, 0.12, 0.44, 7.0, 0.0, 0.0))
+    var tints: Array = CARD_TINTS.get(_current_tab_id(), CARD_TINTS["shop_gold"])
+    card.add_theme_stylebox_override("panel",
+        ThemeFactory.board_style(tints[0], tints[1], 14, Color("#c68a43"), 1, 7.0, 0.40))
+    card.clip_contents = false
 
     var box := UiKit.column(4)
     UiKit.padded(card, 12, 10).add_child(box)
@@ -165,9 +204,10 @@ func _make_good_card(good: Dictionary) -> Control:
     art.custom_minimum_size = Vector2(0, ART_HEIGHT)
     box.add_child(art)
 
-    var name_label := ThemeFactory.label(str(good.get("name", "")), 21, Color("#fff3c4"))
+    var name_label := ThemeFactory.label(str(good.get("name", "")), 24, Color("#ffe9b8"))
     name_label.name = "GoodName"
     name_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    name_label.clip_text = true
     name_label.add_theme_color_override("font_outline_color", Color(0.24, 0.02, 0.03, 0.75))
     name_label.add_theme_constant_override("outline_size", 4)
     box.add_child(name_label)
@@ -180,33 +220,51 @@ func _make_good_card(good: Dictionary) -> Control:
     price.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     price.alignment = BoxContainer.ALIGNMENT_CENTER
     footer.add_child(price)
-    price.add_child(UiKit.currency_icon(CurrencyIcon.Kind.DIAMOND, ThemeFactory.DIAMOND, 22.0))
-    var price_label := ThemeFactory.label(str(int(good.get("price", 0))), 20, ThemeFactory.GOLD_LIGHT)
+    price.add_child(UiKit.currency_icon(CurrencyIcon.Kind.DIAMOND, ThemeFactory.DIAMOND, 24.0))
+    var price_label := ThemeFactory.label(UiKit.group_digits(int(good.get("price", 0))), 24,
+        Color.WHITE)
     price_label.name = "GoodPrice"
     price.add_child(price_label)
 
-    var buy := ThemeFactory.button("兑换", 17)
+    var buy := ThemeFactory.button("兑换", 18)
     buy.name = "GoodBuy"
-    buy.custom_minimum_size = Vector2(84, 38)
+    buy.custom_minimum_size = Vector2(88, 40)
     footer.add_child(buy)
     buy.pressed.connect(_on_buy_pressed.bind(str(good.get("id", ""))))
 
-    # 角标：热销 / 超值。压在**卡片右上角**（而不是图区），否则会盖住商品名
-    # —— 图区只有 96px 高，角标一旦按图区定位就会落到名字那一行上。
+    # 角标：热销（正红方角）/ 超值（金圆角）。压在**卡片右上角**（而不是图区），
+    # 否则会盖住商品名 —— 图区只有一百来像素高，角标一旦按图区定位就会落到名字那一行上。
     var badge := str(good.get("badge", ""))
     if not badge.is_empty():
-        var tag := ThemeFactory.label(badge, 14, Color("#fff6e8"))
+        var hot := badge == "热销"
+        var tag := PanelContainer.new()
         tag.name = "GoodBadge"
-        tag.add_theme_color_override("font_outline_color", Color(0.24, 0.02, 0.03, 0.90))
-        tag.add_theme_constant_override("outline_size", 5)
-        tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-        tag.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+        tag.mouse_filter = Control.MOUSE_FILTER_IGNORE
+        var tag_bg := Color("#e8332a") if hot else ThemeFactory.GOLD
+        tag.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+            tag_bg, tag_bg.darkened(0.18), Color("#fff7d9"), 999 if not hot else 8,
+            2, 0.20, 0.38, 4.0, 10.0, 4.0))
+        var tag_label := ThemeFactory.label(badge, 16,
+            Color("#ffe9b8") if hot else ThemeFactory.GOLD_INK)
+        tag_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+        tag_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+        tag.add_child(tag_label)
         card.add_child(tag)
+        # 角标必须垫一层普通 `Control` 再定位：`card` 是 `PanelContainer`，
+        # 它会把**每一个**直接子节点都拉满整块面板，角标于是变成"整卡一块红 / 金"，
+        # 把商品图和名字全盖住（实测过）。浮层容器不吃鼠标，角标在它里面按锚点贴右上角。
+        var overlay := Control.new()
+        overlay.name = "GoodOverlay"
+        overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+        card.add_child(overlay)
+        overlay.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+        card.remove_child(tag)
+        overlay.add_child(tag)
         tag.set_anchors_preset(Control.PRESET_TOP_RIGHT)
-        tag.offset_left = -72.0
-        tag.offset_top = 4.0
-        tag.offset_right = -6.0
-        tag.offset_bottom = 28.0
+        tag.offset_left = -80.0
+        tag.offset_top = -6.0
+        tag.offset_right = 8.0
+        tag.offset_bottom = 30.0
     return card
 
 # ------------------------------------------------------------------ 数据刷新
@@ -234,7 +292,8 @@ func _render_goods() -> void:
         var active := i == _tab_index
         for state in ["normal", "hover", "pressed"]:
             button.add_theme_stylebox_override(state, ThemeFactory.tab_box(active, state))
-        button.add_theme_color_override("font_color", Color("#fff6e8") if active else ThemeFactory.TEXT_DIM)
+        button.add_theme_color_override("font_color",
+            Color("#fff6e8") if active else ThemeFactory.TEXT_DIM)
     for child in _grid.get_children():
         _grid.remove_child(child)
         child.queue_free()
@@ -244,6 +303,14 @@ func _render_goods() -> void:
     var tab: Dictionary = tabs[_tab_index]
     for good in _shop_goods(str(tab["id"])):
         _grid.add_child(_make_good_card(good))
+
+## 当前分栏 id（决定商品卡的配色）。空目录时回退成空串 —— 视图层不 import 目录类，
+## 所以这里不能写 `ActivityCatalog.SHOP_GOLD`（`view_boundary_test` 会拦下来）。
+func _current_tab_id() -> String:
+    var tabs := _shop_tabs()
+    if tabs.is_empty():
+        return ""
+    return str((tabs[clampi(_tab_index, 0, tabs.size() - 1)] as Dictionary).get("id", ""))
 
 ## 目录数据统一经 ViewModel 取（视图层不 import 目录类）
 func _shop_tabs() -> Array:
@@ -318,13 +385,11 @@ class ShopArt:
     func _pouch(w: float, h: float, scale: float) -> void:
         var center := Vector2(w * 0.5, h * 0.46)
         # 尺寸必须整幅落在控件内：袋身 + 袋口 + **下方散落金币**三部分加起来才是真实占用高度。
-        # 上一版只按宽度取尺寸，袋子与金币纵向冲出控件，商品名就压在了图上。
         var body_w := minf(w * 0.42, h * 0.62) * scale
         var body_h := body_w * 1.16
         var half_top := body_w * 0.30
         var half_bottom := body_w * 0.60
         var top_y := center.y - body_h * 0.5
-        var bottom_y := center.y + body_h * 0.5
         # 散落金币（先画，被袋子压住一部分，像从袋口溢出来）
         for spot in [[-0.78, 0.40], [0.78, 0.42], [-0.52, 0.62], [0.54, 0.64], [0.0, 0.70]]:
             _coin(center + Vector2(float(spot[0]) * body_w, float(spot[1]) * body_h), body_w * 0.18)

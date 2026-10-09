@@ -5,16 +5,21 @@ extends RefCounted
 
 ## ---------------------------------------------------------------- 径向渐变
 ##
-## **为什么不用纹理**：实测本项目这套渲染设置（`mobile` 渲染器 + Windows/d3d12）下，
-## 把一张逐像素生成的 `ImageTexture` 交给 `draw_texture_rect()` /
-## `draw_texture_rect_region()` / `draw_texture()` 三者中的任何一个，
-## 屏幕上都会渲染成**纯白**（`Image.create` + `set_pixel` + `ImageTexture.create_from_image`
-## 读回来像素完全正确，`get_size()` 也正常）。牌桌台面因此整块发白，
-## 而厅堂底色也一直没真正显示过渐变。
-##
-## 因此径向渐变改为**顶点色多边形**：用同心环三角带（扇形网格）承载逐顶点颜色，
-## 由 GPU 在三角形内插值 —— 这与 `GlossyBox` 画按钮渐变走的是同一条可靠路径。
+## 这里用**顶点色多边形**画渐变：用同心环三角带（扇形网格）承载逐顶点颜色，
+## 由 GPU 在三角形内插值 —— 与 `GlossyBox` 画按钮渐变走的是同一条路径。
 ## 环间距压在约 20px 以内时人眼已看不出分环。
+##
+## **订正一条旧结论**（2026-10）：这里原本写着"本项目这套渲染设置下 `draw_texture_rect()` /
+## `draw_texture()` 会把纹理渲染成纯白"，并据此全面改用顶点色。实测那是**误判** ——
+## 真正的原因是贴图只被 `_draw()` 的**局部变量**引用，函数一返回引用就没了，
+## RefCounted 贴图随即释放，Godot 于是回退到 1x1 的白色占位贴图。
+## 贴图交给成员变量长期持有就一切正常（`assets/avatar/landlord.png` 现在就是这么画的，
+## 主题皮肤的预览也是这么烘成贴图的）。
+## 本函数仍保留顶点色画法 —— 它工作得很好，没有理由为了改而改。
+##
+## 另一条**确实**成立的限制：`draw_polygon(points, colors, uvs, texture)` 的逐顶点 uv
+## 对带透明角的贴图整块画不出来（同一张贴图给 `draw_texture_rect` 正常）。
+## 所以"把方图裁成圆"要在像素上做，别指望 uv 遮罩。
 
 ## 径向渐变的固定色标位置（中心 → 边缘）
 const RADIAL_STOPS := [0.0, 0.30, 0.58, 0.82, 1.0]
@@ -192,19 +197,23 @@ static func sample_stops(stops: Array, t: float) -> Color:
     var local := clampf(scaled - float(index), 0.0, 1.0)
     return (stops[index] as Color).lerp(stops[mini(index + 1, last)] as Color, local)
 
-## 厅堂底色的 5 档色标（中心 → 边缘）
+## 厅堂底色的 5 档色标（中心 → 边缘）。
+## 新稿的页底是一条三段径向渐变：中心色 → 中段（60%）→ 最外圈，
+## 例如大厅 `#9E3324 → #731C14(60%) → #540F0D`。这里把三段展开成 `radial_spotlight()`
+## 需要的 5 档（多出来的两档在相邻两色之间插值），于是渐变过渡更顺、不会出现色带。
 static func hall_stops(skin: Dictionary) -> Array:
-    var top := skin_color(skin, "top", ThemeFactory.INK_600)
-    var mid := skin_color(skin, "mid", ThemeFactory.INK_800)
-    var bottom := skin_color(skin, "bottom", ThemeFactory.INK_900)
-    return [top.lightened(0.20), top, mid, bottom.lightened(0.06), bottom.darkened(0.35)]
+    var center := skin_color(skin, "top", ThemeFactory.HALL_CENTER)
+    var mid := skin_color(skin, "mid", ThemeFactory.INK_500)
+    var edge := skin_color(skin, "bottom", ThemeFactory.INK_700)
+    return [center, center.lerp(mid, 0.68), mid, mid.lerp(edge, 0.72), edge]
 
-## 牌桌台面呢绒的 5 档色标（中心 → 边缘）
+## 牌桌台面呢绒的 5 档色标（中心 → 边缘）。
+## 新稿的红呢台面几乎是平的（只有很轻的一圈暗角），所以中间三档基本同色。
 static func felt_stops(skin: Dictionary) -> Array:
     var light := skin_color(skin, "felt_light", SkinCatalog.FELT_LIGHT)
     var mid := skin_color(skin, "felt", SkinCatalog.FELT)
     var dark := skin_color(skin, "felt_dark", SkinCatalog.FELT_DARK)
-    return [light.lightened(0.14), light, mid, dark.lightened(0.05), dark.darkened(0.30)]
+    return [mid.lerp(light, 0.35), mid, mid, mid.lerp(dark, 0.55), dark]
 
 ## 把皮肤应用到任意背景节点（当前的背景节点统一是 `TableBackdrop`）
 static func apply_background(target: Control, skin: Dictionary) -> void:
@@ -255,12 +264,37 @@ static func sub_panel(alpha: float = 0.9) -> PanelContainer:
     panel.add_theme_stylebox_override("panel", ThemeFactory.sub_panel_style(alpha))
     return panel
 
-## 页面主体内容面板：一整块连续的深色面（安静的发丝线，不描金边）。
+## 页面主体内容面板：一整块半透明的暗面（新稿的面板不描金边，只靠柔投影分层）。
 ## pad_x / pad_y 传 0 时面板不带内边距，由调用方自行分区（用于做通栏分隔线）。
-static func surface(alpha: float = 0.92, pad_x: float = 22.0, pad_y: float = 18.0) -> PanelContainer:
+static func surface(alpha: float = 0.60, pad_x: float = 22.0, pad_y: float = 18.0) -> PanelContainer:
     var panel := PanelContainer.new()
-    panel.add_theme_stylebox_override("panel", ThemeFactory.surface_style(alpha, 22, pad_x, pad_y))
+    panel.add_theme_stylebox_override("panel", ThemeFactory.surface_style(alpha, 20, pad_x, pad_y))
     return panel
+
+## ---------------------------------------------------------------- 新稿的卡片 / 图标
+##
+## 新视觉稿（`design_update/`）的卡片语言是「**椭圆径向渐变内板 + 2px 描边金 + 柔投影**」，
+## 玩法卡、商城商品卡、皮肤卡、成就卡都是同一套。这里做成唯一实现，
+## 各页面只给一组「中心色 / 边缘色」，不会再出现"每页各画一套渐变"。
+
+## 径向渐变卡片（返回可直接放进容器、也可以当按钮底的面板）。
+## 内边距交给 `UiKit.padded()`：面板里先放一个 MarginContainer 再放内容，
+## 是这套界面里统一的"面板 + 内边距"写法，避免每个面板各写一遍 margin 常量。
+static func board(center: Color, edge: Color, radius: int = 15,
+        border_color: Color = ThemeFactory.GOLD_BORDER, border_width: int = 2,
+        shadow_size: float = 8.0) -> PanelContainer:
+    var panel := PanelContainer.new()
+    panel.add_theme_stylebox_override("panel",
+        ThemeFactory.board_style(center, edge, radius, border_color, border_width, shadow_size))
+    return panel
+
+## SVG 图标控件（几何直接取自设计稿的 path，见 `SvgPath`）
+static func svg_icon(path: String, color: Color, size: float, stroke_width: float = 0.0) -> Control:
+    return SvgPath.icon(path, color, Vector2(size, size), stroke_width)
+
+## 设计稿的四角祥云（细细一道金线云纹，出现在登录页 / 牌桌页的四角）
+static func add_cloud_wisps(parent: Control, alpha: float = 0.55, width: float = 0.0) -> Array:
+    return Ornaments.add_wisp_corners(parent, alpha, width)
 
 ## 给控件四周加统一内边距的包装容器（面板内部分区用）。
 ## 横向必须 EXPAND_FILL：放进 ScrollContainer 时，不加这一条它会缩到内容最小宽度，
@@ -365,16 +399,26 @@ static func stat_cell(caption: String, value: String, value_size: int = 26) -> V
     box.add_child(caption_label)
     return box
 
-## 页面的**大标题**：设计图里是「米金正文 + 深红描边 + 金色外发光」的立体字。
+## 页面的**大标题**：设计图里是「鎏金本体 + 深红描边 + 红色外发光」的立体字。
+## 新稿的 Logo 用的是 `filter: drop-shadow(0 6px 6px rgba(0.35,0.08,0.02,0.9))`：
+## 一圈偏红的辉光压在字下面，字本身是 #F7D98C 的暖金。
 ## 描边用两层叠出来（外层粗深红、内层细亮金），比单层 outline 更接近设计图的金属感。
 static func title_label(text: String, font_size: int = 52) -> Label:
-    var label := ThemeFactory.label(text, font_size, ThemeFactory.GOLD_LIGHT)
+    var label := ThemeFactory.label(text, font_size, Color("#f7d98c"))
     label.add_theme_color_override("font_outline_color", Color("#5a0b0e"))
     label.add_theme_constant_override("outline_size", maxi(4, int(font_size * 0.14)))
     label.add_theme_constant_override("shadow_offset_x", 0)
-    label.add_theme_constant_override("shadow_offset_y", maxi(2, int(font_size * 0.05)))
-    label.add_theme_constant_override("shadow_outline_size", maxi(2, int(font_size * 0.06)))
-    label.add_theme_color_override("font_shadow_color", Color(0.30, 0.03, 0.04, 0.60))
+    label.add_theme_constant_override("shadow_offset_y", maxi(3, int(font_size * 0.07)))
+    label.add_theme_constant_override("shadow_outline_size", maxi(3, int(font_size * 0.10)))
+    label.add_theme_color_override("font_shadow_color", Color(0.35, 0.08, 0.02, 0.78))
+    return label
+
+## 品牌 Logo：比 `title_label` 更多一层红色辉光（设计稿的 drop-shadow 更大），
+## 用在启动页 / 登录页 / 大厅左栏这类"整页视觉锚点"上。
+static func logo_label(text: String, font_size: int = 88) -> Label:
+    var label := title_label(text, font_size)
+    label.add_theme_constant_override("shadow_outline_size", maxi(6, int(font_size * 0.16)))
+    label.add_theme_color_override("font_shadow_color", Color(0.35, 0.08, 0.02, 0.92))
     return label
 
 ## 副标题 / 标签条：设计图里标题下方常有一行**金字**说明（如「经典斗地主 天天赢金币」）
@@ -402,17 +446,18 @@ static func section_title(title: String, subtitle: String = "", title_size: int 
         box.add_child(hint)
     return box
 
-## 资产胶囊：货币图标 + 数值。图标本身就是"这是什么"的说明，因此不再带「金币 / 钻石 / 积分」字样。
+## 资产胶囊：货币图标 + 数值。图标本身就是"这是什么"的说明，因此不再带「金币 / 钻石 / 积分」字样；
+## 新稿里数值一律是**白色**（不再跟着币种染色），只有图标带色，胶囊才干净。
 ## `padding` 用于收紧内边距 —— 放进窄栏时（个人中心左栏）胶囊的最小宽度会直接决定那一栏的最小宽度。
 static func asset_chip(text: String, accent: Color, font_size: int = 16, label_name: String = "",
         kind: int = CurrencyIcon.Kind.COIN, padding: Vector2 = Vector2(14, 6)) -> PanelContainer:
     var panel := PanelContainer.new()
-    panel.add_theme_stylebox_override("panel", ThemeFactory.chip_style(accent, 0.72, padding))
+    panel.add_theme_stylebox_override("panel", ThemeFactory.chip_style(accent, 0.8, padding))
     panel.size_flags_vertical = Control.SIZE_SHRINK_CENTER
     var row_box := row(8)
     panel.add_child(row_box)
-    row_box.add_child(currency_icon(kind, accent, maxf(16.0, float(font_size) + 4.0)))
-    var label := ThemeFactory.label(text, font_size, accent.lightened(0.25))
+    row_box.add_child(currency_icon(kind, accent, maxf(16.0, float(font_size) + 6.0)))
+    var label := ThemeFactory.label(text, font_size, Color("#ffffff"))
     label.mouse_filter = Control.MOUSE_FILTER_IGNORE
     if not label_name.is_empty():
         label.name = label_name

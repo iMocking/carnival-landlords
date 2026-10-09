@@ -57,12 +57,16 @@ func restore_session() -> Dictionary:
     return ok_result({"profile": _profile})
 
 ## 昵称即账号（当前单机形态）。D-18 落地后改为真正的账号密码登录。
+##
+## 长度上限用 `ACCOUNT_MAX`（64）而不是 `NICKNAME_MAX`（12）：本机账号允许写成邮箱
+## ——打包版本预填的 `khddz@test.com` 就是 14 字，按昵称上限会被直接拒掉。
+## 密码在这一形态下仍然只是设计图上的装饰（不参与校验）。
 func login(nickname: String, password: String = "") -> Dictionary:
     var wanted := nickname.strip_edges()
     if wanted.is_empty():
         return fail_result(INVALID, "请输入昵称")
-    if wanted.length() > ServiceContract.NICKNAME_MAX:
-        return fail_result(INVALID, "昵称最多 %d 个字" % ServiceContract.NICKNAME_MAX)
+    if wanted.length() > ServiceContract.ACCOUNT_MAX:
+        return fail_result(INVALID, "账号最多 %d 个字符" % ServiceContract.ACCOUNT_MAX)
     var saved := ProfileRepository.load_profile()
     if saved != null and saved.nickname == wanted:
         _profile = saved

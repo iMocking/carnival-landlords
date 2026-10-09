@@ -1,4 +1,4 @@
-﻿# 客户端 headless 自测批量运行器（重构护栏）
+# 客户端 headless 自测批量运行器（重构护栏）
 #   用法：
 #     powershell -ExecutionPolicy Bypass -File tools\run_tests.ps1
 #     powershell -ExecutionPolicy Bypass -File tools\run_tests.ps1 -Only rules,settings
@@ -29,6 +29,7 @@ $Tests = @(
     "mode_rules_test",
     "mode_flow_test",
     "viewmodel_integration_test",
+    "deal_flow_test",
     "app_flow_test",
     "profile_menu_test",
     "ui_refactor_test",
@@ -36,6 +37,7 @@ $Tests = @(
     "result_ready_test",
     "font_theme_test",
     "branding_test",
+    "boot_splash_test",
     "version_test",
     "safe_area_test",
     "page_padding_test",

@@ -28,6 +28,13 @@ const INVALID := "invalid"
 ## ViewModel 侧保留同名常量作为对外别名，避免调用方到处改。
 const NICKNAME_MAX := 12
 
+## **登录账号**（离线形态下就是本机账号）的长度上限。
+##
+## 与 `NICKNAME_MAX` 分开是必须的：本机账号允许写成邮箱（打包版本的默认账号
+## `khddz@test.com` 就是 14 个字符，按 12 字上限会被直接拒掉），
+## 而「昵称」是显示用的短名字、仍然限制 12 字（见 `rename()`）。
+const ACCOUNT_MAX := 64
+
 ## 当前模式标识（由实现覆盖）
 func mode_name() -> String:
     return "unknown"

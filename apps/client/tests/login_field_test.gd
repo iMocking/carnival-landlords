@@ -1,4 +1,4 @@
-﻿extends SceneTree
+extends SceneTree
 ## 登录页输入框可用性回归测试。
 ##   godot --headless --path . --script res://tests/login_field_test.gd
 ##
@@ -14,10 +14,22 @@
 var _checks := 0
 var _failures := 0
 var _root: Window
+## 本机存档备份：默认账号只在「没有记住账号」时才生效，
+## 而全量跑时前面的测试会在 user:// 留下存档 —— 不隔离就会误判（实测就是这条挂了）。
+var _had_save := false
+var _save_backup := ""
 
 func _initialize() -> void:
     _root = get_root()
     _root.size = Vector2i(1280, 720)
+
+    _had_save = FileAccess.file_exists(ProfileRepository.SAVE_PATH)
+    if _had_save:
+        var file := FileAccess.open(ProfileRepository.SAVE_PATH, FileAccess.READ)
+        if file != null:
+            _save_backup = file.get_as_text()
+            file.close()
+    ProfileRepository.clear()
 
     var app := AppViewModel.new()
     var view: LoginView = load("res://src/view/pages/login_view.tscn").instantiate()
@@ -72,9 +84,30 @@ func _initialize() -> void:
         _check(field_panel.get_signal_connection_list("gui_input").size() > 0,
             "字段面板监听 gui_input（点击留白可聚焦输入框）")
 
+    # 6) 打包版本的默认账号：登录页开箱即带这两个值，且长度上限放得下
+    #    （离线形态的账号也允许写成邮箱，所以走 ACCOUNT_MAX 而不是昵称的 12）
+    _check(nick.text == LoginView.DEFAULT_ACCOUNT,
+        "账号框预填默认账号「%s」（实际「%s」）" % [LoginView.DEFAULT_ACCOUNT, nick.text])
+    _check(password.text == LoginView.DEFAULT_PASSWORD,
+        "密码框预填默认密码（实际「%s」）" % password.text)
+    _check(password.secret, "密码框仍是掩码输入")
+    _check(nick.max_length >= LoginView.DEFAULT_ACCOUNT.length(),
+        "账号框长度上限（%d）≥ 默认账号长度（%d），默认值不会被截断"
+            % [nick.max_length, LoginView.DEFAULT_ACCOUNT.length()])
+    _check(nick.max_length == ServiceContract.ACCOUNT_MAX,
+        "账号框上限用 ACCOUNT_MAX（%d），而不是昵称的 %d"
+            % [ServiceContract.ACCOUNT_MAX, ServiceContract.NICKNAME_MAX])
+
     _finish(view)
 
 func _finish(view: Node) -> void:
+    if _had_save:
+        var file := FileAccess.open(ProfileRepository.SAVE_PATH, FileAccess.WRITE)
+        if file != null:
+            file.store_string(_save_backup)
+            file.close()
+    else:
+        ProfileRepository.clear()
     print("checks=%d failures=%d" % [_checks, _failures])
     if _failures == 0:
         print("LOGIN FIELD PASS")

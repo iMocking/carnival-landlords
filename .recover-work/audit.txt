@@ -1,0 +1,3431 @@
+﻿history_view.gd:3	⟦。⟧⟪\n⟫
+history_view.gd:6	⟦┌⟧⟪␠⟫
+history_view.gd:6	⟦胜⟧⟪␠⟫
+history_view.gd:6	⟦负⟧⟪␠⟫
+history_view.gd:6	⟦┘⟧⟪\n⟫
+history_view.gd:6	⟦┌⟧⟪␠⟫
+history_view.gd:6	⟦┘⟧⟪\n⟫
+history_view.gd:6	⟦├⟧⟪␠⟫
+history_view.gd:6	⟦次⟧⟪␠⟫
+history_view.gd:6	⟦胜⟧⟪␠⟫
+history_view.gd:6	⟦┘⟧⟪\n⟫
+history_view.gd:6	⟦└⟧⟪␠⟫
+history_view.gd:6	⟦┘⟧⟪\n⟫
+history_view.gd:7	⟦（⟧⟪4⟫
+history_view.gd:7	⟦线⟧⟪␠⟫
+history_view.gd:7	⟦，⟧⟪\n⟫
+history_view.gd:7	⟦层⟧⟪␠⟫
+history_view.gd:7	⟦。⟧⟪\n⟫
+history_view.gd:8	⟦约⟧⟪*⟫
+history_view.gd:8	⟦为⟧⟪␠⟫
+history_view.gd:8	⟦。⟧⟪\n⟫
+history_view.gd:8	⟦合⟧⟪␠⟫
+history_view.gd:8	⟦从⟧⟪␠⟫
+history_view.gd:8	⟦。⟧⟪\n⟫
+history_view.gd:8	⟦稿⟧⟪*⟫
+history_view.gd:8	⟦卡⟧⟪*⟫
+history_view.gd:8	⟦。⟧⟪\r⟫
+history_view.gd:10	⟦稿⟧⟪␠⟫
+history_view.gd:10	⟦）⟧⟪\n⟫
+history_view.gd:29	⟦：⟧⟪5⟫
+history_view.gd:29	⟦）⟧⟪+⟫
+history_view.gd:29	⟦左⟧⟪␠⟫
+history_view.gd:29	⟦。⟧⟪\n⟫
+history_view.gd:29	⟦在⟧⟪␠⟫
+history_view.gd:29	⟦）⟧⟪\n⟫
+history_view.gd:29	⟦。⟧⟪\n⟫
+history_view.gd:84	⟦线⟧⟪\n⟫
+history_view.gd:93	⟦区⟧⟪\n⟫
+history_view.gd:104	⟦距⟧⟪␠⟫
+history_view.gd:104	⟦区⟧⟪␠⟫
+history_view.gd:104	⟦）⟧⟪\n⟫
+history_view.gd:120	⟦键⟧⟪␠⟫
+history_view.gd:135	⟦它⟧⟪*⟫
+history_view.gd:135	⟦见⟧⟪"⟫
+history_view.gd:175	⟦头⟧⟪␠⟫
+history_view.gd:176	⟦率⟧⟪"⟫
+history_view.gd:189	⟦数⟧⟪␠⟫
+history_view.gd:189	⟦胜⟧⟪␠⟫
+history_view.gd:198	⟦次⟧⟪"⟫
+history_view.gd:202	⟦胜⟧⟪"⟫
+history_view.gd:207	⟦近⟧⟪␠⟫
+history_view.gd:214	⟦表⟧⟪␠⟫
+history_view.gd:214	⟦格⟧⟪␠⟫
+history_view.gd:214	⟦边⟧⟪*⟫
+history_view.gd:214	⟦）⟧⟪\n⟫
+history_view.gd:218	⟦。⟧⟪\n⟫
+history_view.gd:218	⟦。⟧⟪\n⟫
+history_view.gd:239	⟦法⟧⟪␠⟫
+history_view.gd:239	⟦进⟧⟪␠⟫
+history_view.gd:239	⟦）⟧⟪\n⟫
+history_view.gd:239	⟦。⟧⟪\n⟫
+history_view.gd:260	⟦名⟧⟪␠⟫
+history_view.gd:260	⟦。⟧⟪\n⟫
+history_view.gd:260	⟦值⟧⟪␠⟫
+history_view.gd:260	⟦）⟧⟪\n⟫
+history_view.gd:272	⟦—⟧⟪"⟫
+history_view.gd:299	⟦值⟧⟪␠⟫
+history_view.gd:299	⟦小⟧⟪␠⟫
+history_view.gd:299	⟦，⟧⟪\n⟫
+history_view.gd:299	⟦。⟧⟪\n⟫
+history_view.gd:348	⟦在⟧⟪␠⟫
+history_view.gd:348	⟦）⟧⟪\n⟫
+history_view.gd:369	⟦免⟧⟪-⟫
+history_view.gd:383	⟦后⟧⟪"⟫
+history_view.gd:388	⟦章⟧⟪␠⟫
+history_view.gd:388	⟦。⟧⟪\n⟫
+history_view.gd:389	⟦度⟧⟪*⟫
+history_view.gd:390	⟦过⟧⟪␠⟫
+history_view.gd:390	⟦。⟧⟪\n⟫
+history_view.gd:390	⟦个⟧⟪␠⟫
+history_view.gd:390	⟦由⟧⟪␠⟫
+history_view.gd:390	⟦。⟧⟪\n⟫
+history_view.gd:404	⟦—⟧⟪"⟫
+history_view.gd:410	⟦）⟧⟪␠⟫
+history_view.gd:417	⟦让⟧⟪␠⟫
+---- 内联上下文 ----
+class_name HistoryView
+extends AppPage
+## 我的战绩（场景：history_view.tscn）⟦。⟧⟪\n⟫##
+## 从个人中心拆出来的独立页，内容与原来那一页完全一致：
+## ```
+## ⟦┌⟧⟪␠⟫三张战果卡（⟦胜⟧⟪␠⟫/ ⟦负⟧⟪␠⟫/ 平，径向渐变 + 同色系描边）──────────⟦┘⟧⟪\n⟫## ⟦┌⟧⟪␠⟫分玩法胜率（表头 + 每行：玩法名 / 胜率 / 场次）───────────⟦┘⟧⟪\n⟫## ⟦├⟧⟪␠⟫总览格（总场⟦次⟧⟪␠⟫/ 综合胜率 / 最高连⟦胜⟧⟪␠⟫/ 最高倍数）─────────⟦┘⟧⟪\n⟫## ⟦└⟧⟪␠⟫最近对局明细 ─────────────────────────────────────────────⟦┘⟧⟪\n⟫## ```
+## 页头是新稿的统一金色顶栏⟦（⟧⟪4⟫8px + 底边深金⟦线⟧⟪␠⟫+ 居中标题 + 右上角祥云）⟦，⟧⟪\n⟫## 设计稿这一页四角还有细金线祥云，因此整页铺一⟦层⟧⟪␠⟫`Ornaments` 的角祥云⟦。⟧⟪\n⟫##
+## **节点名契⟦约⟧⟪*⟫*：`StatWins` / `StatLosses` / `StatDraws`（各含名⟦为⟧⟪␠⟫`Value` 的子 Label）⟦。⟧⟪\n⟫## `ModeStatsTable`（≥3 行，首行⟦合⟧⟪␠⟫`ModeName`，`ModeRate` ⟦从⟧⟪␠⟫`%` 结尾）⟦。⟧⟪\n⟫## 这一页按设计⟦稿⟧⟪*⟫*没有左侧账号⟦卡⟧⟪*⟫*，保留一个隐藏的 `LeftColumn` 占位节点给既有断言用⟦。⟧⟪\r⟫
+const PAGE_TITLE := "我的战绩"
+## 金色顶栏高度（新⟦稿⟧⟪␠⟫58px⟦）⟧⟪\n⟫const TOP_BAR_HEIGHT := 58.0
+
+var _stat_values: Dictionary = {}
+var _mode_table: VBoxContainer
+var _history_list: VBoxContainer
+var _top_bar: Control
+var _top_bar_style: GlossyBox
+
+func _bind_scene() -> void:
+    _build_top_bar()
+    _build_body()
+    if app != null:
+        app.profile_changed.connect(_on_profile_changed)
+        app.skin_changed.connect(_on_skin_changed)
+        _on_skin_changed(app.skin_snapshot())
+    _refresh()
+
+# ---------------------------------------------------------------- 页头
+
+## 新稿的统一页头⟦：⟧⟪5⟫8px 金色顶栏（通栏⟦）⟧⟪+⟫ ⟦左⟧⟪␠⟫`‹` 返回 + 居中标题 + 右上角细金线祥云⟦。⟧⟪\n⟫## 顶栏挂在页面最外层（不⟦在⟧⟪␠⟫`content()` 里），所以能贴到屏幕两边⟦）⟧⟪\n⟫## 内容区的上边距在 `_apply_safe_area()` 里加上这一条高度⟦。⟧⟪\n⟫func _build_top_bar() -> void:
+    if _top_bar != null:
+        return
+    _top_bar_style = ThemeFactory.top_bar_style()
+    _top_bar = Control.new()
+    _top_bar.name = "TopBar"
+    _top_bar.custom_minimum_size = Vector2(0, TOP_BAR_HEIGHT)
+    _top_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    add_child(_top_bar)
+    _top_bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+    _top_bar.offset_bottom = TOP_BAR_HEIGHT
+
+    var bg := PanelContainer.new()
+    bg.name = "TopBarBg"
+    bg.mouse_filter = Control.MOUSE_FILTER_STOP
+    bg.add_theme_stylebox_override("panel", _top_bar_style)
+    _top_bar.add_child(bg)
+    bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+    var row := UiKit.row(12)
+    row.name = "TopBarRow"
+    bg.add_child(row)
+
+    # 左：返回箭头。占位宽 150 与右侧祥云等宽，标题才是真的居中
+    var left := Control.new()
+    left.custom_minimum_size = Vector2(150, 46)
+    left.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    row.add_child(left)
+    var back := ThemeFactory.bare_button(Vector2(46, 46), 12)
+    back.name = "BackButton"
+    back.tooltip_text = "返回"
+    back.pressed.connect(_on_back_pressed)
+    left.add_child(back)
+    back.set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
+    back.offset_right = 46.0
+    var arrow := DesignIcons.back_arrow(Color.WHITE, 30.0)
+    arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    back.add_child(arrow)
+    arrow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    arrow.offset_left = 8.0
+    arrow.offset_top = 8.0
+    arrow.offset_right = -8.0
+    arrow.offset_bottom = -8.0
+
+    var title := ThemeFactory.outlined_label(PAGE_TITLE, 34, Color("#fff5de"), Color("#6b3a06"), 6)
+    title.name = "TitleLabel"
+    title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    row.add_child(title)
+
+    var wisp := Ornaments.cloud_wisp(Ornaments.WispCorner.TOP_RIGHT, 150.0, 0.5)
+    wisp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    row.add_child(wisp)
+
+    # 底边那道深金⟦线⟧⟪\n⟫    var rule := ColorRect.new()
+    rule.name = "TopBarRule"
+    rule.color = ThemeFactory.gold_rule_color()
+    rule.custom_minimum_size = Vector2(0, 2)
+    rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _top_bar.add_child(rule)
+    rule.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+    _sync_top_bar_insets()
+
+## 顶栏高度与左右内缩：通栏贴边，但栏内内容要让开设备安全⟦区⟧⟪\n⟫func _sync_top_bar_insets() -> void:
+    if _top_bar == null:
+        return
+    var insets := SafeArea.insets(self)
+    _top_bar.offset_bottom = insets.y + TOP_BAR_HEIGHT
+    if _top_bar_style != null:
+        _top_bar_style.content_margin_left = insets.x + 12.0
+        _top_bar_style.content_margin_right = insets.z + 12.0
+        _top_bar_style.content_margin_top = insets.y
+        _top_bar_style.content_margin_bottom = 0.0
+
+## 内容区的上边⟦距⟧⟪␠⟫= 安全⟦区⟧⟪␠⟫+ 页面留白 + 顶栏高度（顶栏在 `content()` 之外⟦）⟧⟪\n⟫func _apply_safe_area() -> void:
+    super()
+    var box := content()
+    if box == null:
+        return
+    box.add_theme_constant_override("margin_top",
+        int(round(SafeArea.insets(self).y + page_padding() + TOP_BAR_HEIGHT)))
+
+func _on_page_resized() -> void:
+    super()
+    _sync_top_bar_insets()
+
+func _on_back_pressed() -> void:
+    if app != null:
+        app.navigate(AppViewModel.Route.PROFILE)
+
+## 手机返回⟦键⟧⟪␠⟫/ ESC：本页消费掉，回个人中心
+func handle_back_request() -> bool:
+    _on_back_pressed()
+    return true
+
+# ---------------------------------------------------------------- 内容
+
+func _build_body() -> void:
+    var safe := content()
+    if safe == null:
+        return
+    for child in safe.get_children():
+        safe.remove_child(child)
+        child.queue_free()
+
+    # 设计稿这一页没有左侧账号卡：留一个隐藏占位节点，既有断言查的就是⟦它⟧⟪*⟫不可⟦见⟧⟪"⟫
+    var placeholder := Control.new()
+    placeholder.name = "LeftColumn"
+    placeholder.visible = false
+    placeholder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    safe.add_child(placeholder)
+
+    var scroll := ScrollContainer.new()
+    scroll.name = "Scroll"
+    scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    safe.add_child(scroll)
+    var body := UiKit.column(16)
+    body.name = "Body"
+    body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    scroll.add_child(body)
+
+    var page := _build_history_tab()
+    body.add_child(page)
+
+    # 设计稿四角的细金线祥云（铺在整页之上、不吃鼠标）
+    UiKit.add_cloud_wisps(self, 0.42, 170.0)
+
+func _build_history_tab() -> Control:
+    var tab := UiKit.column(16)
+    tab.name = "TabHistory"
+    tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+    # 1) 三张战果卡：胜利 / 失败 / 平局
+    var cards := UiKit.row(14)
+    cards.name = "ResultCards"
+    cards.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    tab.add_child(cards)
+    cards.add_child(_make_result_card("StatWins", "胜利",
+        Color("#f4644a"), Color("#c2201f"), Color("#ffb08a")))
+    cards.add_child(_make_result_card("StatLosses", "失败",
+        Color("#8b939e"), Color("#454b55"), Color("#c9d2dc")))
+    cards.add_child(_make_result_card("StatDraws", "平局",
+        Color("#4b7cb8"), Color("#20436f"), Color("#9dc4ee")))
+
+    # 2) 分玩法胜率表：表⟦头⟧⟪␠⟫+ 三行（玩法名 / 胜率 / 数值）
+    tab.add_child(UiKit.section_title("分玩法胜⟦率⟧⟪"⟫, "按玩法统计本机账号的对局胜率"))
+    var table := PanelContainer.new()
+    table.name = "ModeStatsPanel"
+    table.add_theme_stylebox_override("panel", _list_row_style())
+    tab.add_child(table)
+    var table_box := UiKit.column(0)
+    UiKit.padded(table, 14, 10).add_child(table_box)
+    table_box.add_child(_make_mode_header())
+    _mode_table = UiKit.column(0)
+    _mode_table.name = "ModeStatsTable"
+    _mode_table.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    table_box.add_child(_mode_table)
+
+    # 3) 总览格：总局⟦数⟧⟪␠⟫/ 综合胜率 / 最高连⟦胜⟧⟪␠⟫/ 最高倍数
+    var stats_panel := PanelContainer.new()
+    stats_panel.name = "OverviewPanel"
+    stats_panel.add_theme_stylebox_override("panel", _list_row_style())
+    tab.add_child(stats_panel)
+    var stats := UiKit.row(0)
+    stats.name = "OverviewStats"
+    stats.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    UiKit.padded(stats_panel, 16, 14).add_child(stats)
+    stats.add_child(_make_stat_cell("StatGames", "总场⟦次⟧⟪"⟫))
+    stats.add_child(UiKit.v_hairline(46.0))
+    stats.add_child(_make_stat_cell("StatWinRate", "综合胜率"))
+    stats.add_child(UiKit.v_hairline(46.0))
+    stats.add_child(_make_stat_cell("StatStreak", "最高连⟦胜⟧⟪"⟫))
+    stats.add_child(UiKit.v_hairline(46.0))
+    stats.add_child(_make_stat_cell("StatMultiplier", "最高倍数"))
+
+    # 4) 最近对局明细
+    tab.add_child(UiKit.section_title("最近对局", "最多显示最⟦近⟧⟪␠⟫30 局"))
+    _history_list = UiKit.column(8)
+    _history_list.name = "HistoryList"
+    _history_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    tab.add_child(_history_list)
+    return tab
+
+## 列表行（胜率⟦表⟧⟪␠⟫/ 总览⟦格⟧⟪␠⟫/ 战绩明细）：暗底 + 柔投影，**不描⟦边⟧⟪*⟫*（一页里会有十几行，描边会吵⟦）⟧⟪\n⟫func _list_row_style() -> GlossyBox:
+    return ThemeFactory.glossy(Color(0.18, 0.04, 0.04, 0.82), Color(0.11, 0.02, 0.02, 0.86),
+        Color(0, 0, 0, 0), 12, 0, 0.04, 0.28, 6.0, 0.0, 0.0)
+
+## 战果卡（设计稿那三张：标题在上、大数字在中间、径向渐变底 + 同色系描边）⟦。⟧⟪\n⟫## `StatWins` / `StatLosses` / `StatDraws` 三个节点名由 `_refresh` 填值⟦。⟧⟪\n⟫func _make_result_card(node_name: String, caption: String, center: Color, edge: Color, border: Color) -> Control:
+    var card := UiKit.board(center, edge, 16, border, 2, 8.0)
+    card.name = node_name
+    card.custom_minimum_size = Vector2(150, 118)
+    card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    var box := UiKit.column(0)
+    UiKit.padded(card, 12, 12).add_child(box)
+    var cap := ThemeFactory.label(caption, 20, Color(1, 1, 1, 0.94))
+    cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    cap.add_theme_color_override("font_outline_color", Color(0.20, 0.02, 0.03, 0.55))
+    cap.add_theme_constant_override("outline_size", 3)
+    box.add_child(cap)
+    var value := ThemeFactory.label("-", 42, Color("#ffd44a"))
+    value.name = "Value"
+    value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    value.add_theme_color_override("font_outline_color", Color(0.24, 0.03, 0.04, 0.75))
+    value.add_theme_constant_override("outline_size", 5)
+    box.add_child(value)
+    _stat_values[node_name] = value
+    return card
+
+## 胜率表的表头：玩⟦法⟧⟪␠⟫/ 胜率 / 场次（表头不能放⟦进⟧⟪␠⟫`ModeStatsTable`⟦）⟧⟪\n⟫## 那张表的第一行必须是「经典场」——测试按行取 ModeName）⟦。⟧⟪\n⟫func _make_mode_header() -> Control:
+    var row := UiKit.row(10)
+    row.name = "ModeStatsHeader"
+    row.custom_minimum_size = Vector2(0, 34)
+    var name_cap := ThemeFactory.label("玩法", 15, ThemeFactory.TEXT_MUTED)
+    name_cap.custom_minimum_size = Vector2(120, 0)
+    name_cap.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    row.add_child(name_cap)
+    row.add_child(UiKit.spacer(true))
+    var rate_cap := ThemeFactory.label("胜率", 15, ThemeFactory.TEXT_MUTED)
+    rate_cap.custom_minimum_size = Vector2(72, 0)
+    rate_cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    rate_cap.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    row.add_child(rate_cap)
+    var games_cap := ThemeFactory.label("场次", 15, ThemeFactory.TEXT_MUTED)
+    games_cap.custom_minimum_size = Vector2(90, 0)
+    games_cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+    games_cap.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    row.add_child(games_cap)
+    return row
+
+## 分玩法胜率的一行：玩法⟦名⟧⟪␠⟫/ 「胜率⟦。⟧⟪\n⟫ 数⟦值⟧⟪␠⟫/ 场次（行底一条发丝线，行与行才分得开⟦）⟧⟪\n⟫func _make_mode_row(index: int) -> Control:
+    var row := UiKit.column(0)
+    row.name = "ModeRow%d" % index
+    row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    var line := UiKit.row(10)
+    line.custom_minimum_size = Vector2(0, 50)
+    var pad := MarginContainer.new()
+    pad.add_theme_constant_override("margin_left", 4)
+    pad.add_theme_constant_override("margin_right", 4)
+    pad.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    row.add_child(pad)
+    pad.add_child(line)
+    var name_label := ThemeFactory.label("⟦—⟧⟪"⟫, 20, Color("#f5e8c7"))
+    name_label.name = "ModeName"
+    name_label.custom_minimum_size = Vector2(120, 0)
+    name_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    name_label.clip_text = true
+    line.add_child(name_label)
+    line.add_child(UiKit.spacer(true))
+    var caption := ThemeFactory.label("胜率", 18, ThemeFactory.TEXT_LIGHT)
+    caption.custom_minimum_size = Vector2(72, 0)
+    caption.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    caption.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    line.add_child(caption)
+    var rate := ThemeFactory.label("--", 22, Color("#ffd24a"))
+    rate.name = "ModeRate"
+    rate.custom_minimum_size = Vector2(90, 0)
+    rate.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+    rate.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    line.add_child(rate)
+    var games := ThemeFactory.label("", 14, ThemeFactory.TEXT_FAINT)
+    games.name = "ModeGames"
+    games.custom_minimum_size = Vector2(76, 0)
+    games.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+    games.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    line.add_child(games)
+    row.add_child(UiKit.hairline(Color(1, 1, 1, 0.08)))
+    return row
+
+## 统计格：⟦值⟧⟪␠⟫+ 说明文字。显式给出最⟦小⟧⟪␠⟫*格子**宽度⟦，⟧⟪\n⟫ 格并排时最后一列才不会被挤出可视区⟦。⟧⟪\n⟫func _make_stat_cell(node_name: String, caption: String) -> Control:
+    var cell := UiKit.column(2)
+    cell.name = node_name
+    cell.custom_minimum_size = Vector2(92, 0)
+    cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    var value := ThemeFactory.label("-", 28, ThemeFactory.GOLD_LIGHT)
+    value.name = "Value"
+    value.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    value.clip_text = true
+    cell.add_child(value)
+    var cap := ThemeFactory.label(caption, 14, ThemeFactory.TEXT_FAINT)
+    cap.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    cap.clip_text = true
+    cell.add_child(cap)
+    _stat_values[node_name] = value
+    return cell
+
+# ---------------------------------------------------------------- 数据
+
+func _on_profile_changed(_snapshot: Dictionary) -> void:
+    _refresh()
+
+func _on_skin_changed(snapshot: Dictionary) -> void:
+    apply_background_skin(snapshot.get("table", {}))
+
+func _refresh() -> void:
+    if app == null:
+        return
+    var snapshot := app.profile_snapshot()
+    if not bool(snapshot.get("has_profile", false)):
+        return
+    var games := int(snapshot.get("games", 0))
+    var wins := int(snapshot.get("wins", 0))
+    _set_stat("StatWins", UiKit.group_digits(wins))
+    _set_stat("StatLosses", UiKit.group_digits(maxi(0, games - wins)))
+    # 斗地主三人局不存在平局：设计图上这一格照常保留，如实显示 0
+    _set_stat("StatDraws", "0")
+    _set_stat("StatGames", UiKit.group_digits(games))
+    _set_stat("StatWinRate", str(snapshot.get("win_rate_text", "0%")))
+    _set_stat("StatStreak", UiKit.group_digits(int(snapshot.get("streak", 0))))
+    _set_stat("StatMultiplier", "×%d" % int(snapshot.get("max_multiplier", 1)))
+    _refresh_mode_stats(snapshot.get("mode_stats", []))
+    _rebuild_history(snapshot.get("history", []))
+
+func _set_stat(key: String, text: String) -> void:
+    var label := _stat_values.get(key) as Label
+    if label != null:
+        label.text = text
+
+## 分玩法胜率表：按快照填三行（行数⟦在⟧⟪␠⟫`_build_history_tab` 里没有预建，这里按需生成⟦）⟧⟪\n⟫func _refresh_mode_stats(stats: Array) -> void:
+    if _mode_table == null:
+        return
+    while _mode_table.get_child_count() < stats.size():
+        _mode_table.add_child(_make_mode_row(_mode_table.get_child_count()))
+    for i in _mode_table.get_child_count():
+        var row := _mode_table.get_child(i) as Control
+        if row == null:
+            continue
+        if i >= stats.size():
+            row.visible = false
+            continue
+        row.visible = true
+        var entry: Dictionary = stats[i]
+        var name_label := row.find_child("ModeName", true, false) as Label
+        var rate_label := row.find_child("ModeRate", true, false) as Label
+        var games_label := row.find_child("ModeGames", true, false) as Label
+        if name_label != null:
+            name_label.text = str(entry.get("name", ""))
+        if rate_label != null:
+            rate_label.text = str(entry.get("rate_text", "--"))
+            # 无对局记录时用暗色，避⟦免⟧⟪-⟫--"看起来像"0%"那样刺眼
+            rate_label.add_theme_color_override("font_color",
+                Color("#ffd24a") if int(entry.get("games", 0)) > 0 else ThemeFactory.TEXT_FAINT)
+        if games_label != null:
+            var count := int(entry.get("games", 0))
+            games_label.text = "%d 局" % count if count > 0 else "暂无"
+
+func _rebuild_history(records: Array) -> void:
+    if _history_list == null:
+        return
+    for child in _history_list.get_children():
+        _history_list.remove_child(child)
+        child.queue_free()
+    if records.is_empty():
+        _history_list.add_child(ThemeFactory.label("暂无对局记录，去大厅开一局⟦后⟧⟪"⟫, 16, ThemeFactory.TEXT_FAINT))
+        return
+    for entry in records:
+        _history_list.add_child(_make_history_row(entry))
+
+## 单条战绩：胜负徽⟦章⟧⟪␠⟫/ 身份 / 倍数 / 金币 / 积分 / 对手 / 时间⟦。⟧⟪\n⟫##
+## 交互提示：这一行的**最小宽⟦度⟧⟪*⟫*决定了整块内容区的最小宽度（GridContainer / VBox 会把
+## 子项最小宽度一路往上顶），一旦超⟦过⟧⟪␠⟫ScrollContainer 的视口宽度，最右边那列就会被裁掉⟦。⟧⟪\n⟫## 因此这里每一⟦个⟧⟪␠⟫`Label` 都开 `clip_text`，并⟦由⟧⟪␠⟫`custom_minimum_size` 把下限锁死⟦。⟧⟪\n⟫func _make_history_row(entry: Dictionary) -> Control:
+    var panel := PanelContainer.new()
+    panel.name = "HistoryRow"
+    panel.add_theme_stylebox_override("panel", _list_row_style())
+    var row := HBoxContainer.new()
+    row.add_theme_constant_override("separation", 8)
+    UiKit.padded(panel, 16, 10).add_child(row)
+    var won := bool(entry.get("won", false))
+    row.add_child(_cell(str(entry.get("result_text", "")), 17,
+        ThemeFactory.MINT if won else ThemeFactory.ROSE, 48.0))
+    row.add_child(_cell(str(entry.get("role", "")), 16, ThemeFactory.TEXT_DIM, 40.0))
+    row.add_child(_cell("×%d" % int(entry.get("multiplier", 1)), 16, ThemeFactory.GOLD_LIGHT, 40.0))
+    row.add_child(_cell(str(entry.get("gold_text", "")), 16, ThemeFactory.GOLD, 68.0))
+    row.add_child(_cell(str(entry.get("points_text", "")), 16, ThemeFactory.ROSE, 56.0))
+    var opponents := ThemeFactory.label(str(entry.get("opponents", "⟦—⟧⟪"⟫)), 15, Color(1, 1, 1, 0.5))
+    opponents.custom_minimum_size = Vector2(56, 0)
+    opponents.clip_text = true
+    opponents.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+    opponents.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    row.add_child(opponents)
+    # 宽屏下把时间推到整行最右（内容列靠左，不再挤在中间⟦）⟧⟪␠⟫    row.add_child(UiKit.spacer(true))
+    row.add_child(_cell(str(entry.get("time_text", "")), 14, Color(1, 1, 1, 0.45), 88.0))
+    return panel
+
+func _cell(text: String, font_size: int, color: Color, width: float) -> Label:
+    var label := ThemeFactory.label(text, font_size, color)
+    label.custom_minimum_size = Vector2(width, 0)
+    # clip_text ⟦让⟧⟪␠⟫Label 的最小宽度不再跟着文字长度走（否则长文案会把整行顶宽）
+    label.clip_text = true
+    label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    return label
+
+skins_view.gd:3	⟦。⟧⟪\n⟫
+skins_view.gd:8	⟦—⟧⟪\n⟫
+skins_view.gd:9	⟦—⟧⟪\n⟫
+skins_view.gd:10	⟦中⟧⟪␠⟫
+skins_view.gd:10	⟦囊⟧⟪␠⟫
+skins_view.gd:10	⟦囊⟧⟪␠⟫
+skins_view.gd:11	⟦锁⟧⟪␠⟫
+skins_view.gd:11	⟦式⟧⟪*⟫
+skins_view.gd:11	⟦。⟧⟪\n⟫
+skins_view.gd:12	⟦约⟧⟪*⟫
+skins_view.gd:12	⟦、⟧⟪\n⟫
+skins_view.gd:12	⟦。⟧⟪\r⟫
+skins_view.gd:14	⟦稿⟧⟪␠⟫
+skins_view.gd:14	⟦）⟧⟪\n⟫
+skins_view.gd:15	⟦）⟧⟪\n⟫
+skins_view.gd:19	⟦高⟧⟪"⟫
+skins_view.gd:19	⟦。⟧⟪"⟫
+skins_view.gd:20	⟦加⟧⟪\n⟫
+skins_view.gd:43	⟦：⟧⟪5⟫
+skins_view.gd:43	⟦）⟧⟪+⟫
+skins_view.gd:43	⟦左⟧⟪␠⟫
+skins_view.gd:43	⟦。⟧⟪\n⟫
+skins_view.gd:43	⟦在⟧⟪␠⟫
+skins_view.gd:43	⟦）⟧⟪\n⟫
+skins_view.gd:43	⟦。⟧⟪\n⟫
+skins_view.gd:98	⟦线⟧⟪\n⟫
+skins_view.gd:107	⟦区⟧⟪\n⟫
+skins_view.gd:118	⟦距⟧⟪␠⟫
+skins_view.gd:118	⟦区⟧⟪␠⟫
+skins_view.gd:118	⟦）⟧⟪\n⟫
+skins_view.gd:134	⟦键⟧⟪␠⟫
+skins_view.gd:176	⟦，⟧⟪"⟫
+skins_view.gd:231	⟦‹⟧⟪␠⟫
+skins_view.gd:231	⟦‹⟧⟪␠⟫
+skins_view.gd:234	⟦—⟧⟪\n⟫
+skins_view.gd:234	⟦。⟧⟪\n⟫
+skins_view.gd:237	⟦）⟧⟪\n⟫
+skins_view.gd:247	⟦象⟧⟪\n⟫
+skins_view.gd:249	⟦「⟧⟪"⟫
+skins_view.gd:249	⟦」⟧⟪"⟫
+skins_view.gd:252	⟦耗⟧⟪␠⟫
+skins_view.gd:252	⟦→⟧⟪␠⟫
+skins_view.gd:254	⟦要⟧⟪␠⟫
+skins_view.gd:254	⟦有⟧⟪␠⟫
+skins_view.gd:256	⟦备⟧⟪"⟫
+skins_view.gd:276	⟦，⟧⟪*⟫
+skins_view.gd:276	⟦。⟧⟪\n⟫
+skins_view.gd:277	⟦值⟧⟪␠⟫
+skins_view.gd:277	⟦—⟧⟪\n⟫
+skins_view.gd:277	⟦。⟧⟪\n⟫
+skins_view.gd:277	⟦是⟧⟪␠⟫
+skins_view.gd:277	⟦。⟧⟪\n⟫
+skins_view.gd:278	⟦口⟧⟪*⟫
+skins_view.gd:278	⟦的⟧⟪␠⟫
+skins_view.gd:278	⟦—⟧⟪\n⟫
+skins_view.gd:278	⟦。⟧⟪\n⟫
+skins_view.gd:294	⟦切⟧⟪\n⟫
+skins_view.gd:299	⟦是⟧⟪*⟫
+skins_view.gd:299	⟦态⟧⟪*⟫
+skins_view.gd:299	⟦页⟧⟪␠⟫
+skins_view.gd:300	⟦才⟧⟪␠⟫
+skins_view.gd:300	⟦。⟧⟪\n⟫
+skins_view.gd:300	⟦。⟧⟪\n⟫
+skins_view.gd:312	⟦性⟧⟪*⟫
+skins_view.gd:313	⟦现⟧⟪"⟫
+skins_view.gd:313	⟦是⟧⟪"⟫
+skins_view.gd:313	⟦来⟧⟪"⟫
+skins_view.gd:313	⟦。⟧⟪"⟫
+skins_view.gd:314	⟦时⟧⟪*⟫
+skins_view.gd:314	⟦拿⟧⟪␠⟫
+skins_view.gd:315	⟦按⟧⟪␠⟫
+skins_view.gd:315	⟦空⟧⟪\n⟫
+skins_view.gd:315	⟦里⟧⟪␠⟫
+skins_view.gd:315	⟦。⟧⟪\n⟫
+skins_view.gd:347	⟦掉⟧⟪\n⟫
+skins_view.gd:384	⟦罩⟧⟪␠⟫
+skins_view.gd:384	⟦。⟧⟪\n⟫
+skins_view.gd:384	⟦用⟧⟪␠⟫
+skins_view.gd:384	⟦。⟧⟪\n⟫
+skins_view.gd:433	⟦情⟧⟪"⟫
+skins_view.gd:438	⟦备⟧⟪"⟫
+---- 内联上下文 ----
+class_name SkinsView
+extends AppPage
+## 主题皮肤（场景：skins_view.tscn）⟦。⟧⟪\n⟫##
+## 从个人中心拆出来的独立页，内容与原来那一页一致：
+## ```
+## 当前装扮  <桌布 · 牌面>                          [ 恢复默认 ]
+## ────────────────────────────────────────────────────────────
+## 对局背景      [皮肤卡] [皮肤卡] [皮肤卡] ⟦—⟧⟪\n⟫## ────────────────────────────────────────────────────────────
+## 卡牌皮肤      [皮肤卡] [皮肤卡] [皮肤卡] ⟦—⟧⟪\n⟫## ```
+## 皮肤卡是**竖版卡片**：预览板 + 名称 + 状态胶囊（使用⟦中⟧⟪␠⟫= 金胶⟦囊⟧⟪␠⟫/ 使用 = 暗金边胶⟦囊⟧⟪␠⟫/
+## 未解⟦锁⟧⟪␠⟫= 钻石价）；未解锁的卡点一下只⟦式⟧⟪*⟫*确认浮层**，确认后才扣钻石并装备⟦。⟧⟪\n⟫##
+## **节点名契⟦约⟧⟪*⟫*（测试与工具在用）：`_open_skin_confirm(skin_id)`、`_confirm_layer`、`_confirm_ok`⟦、⟧⟪\n⟫## `LookValue`、`ResetSkinButton`、`TableSkinList`、`CardSkinList`、`TabSkins`⟦。⟧⟪\r⟫
+const PAGE_TITLE := "主题皮肤"
+## 金色顶栏高度（新⟦稿⟧⟪␠⟫58px⟦）⟧⟪\n⟫const TOP_BAR_HEIGHT := 58.0
+## 皮肤卡的横向间距（与 `SkinChip.MIN_SIZE` 一起决定一行放得下几张⟦）⟧⟪\n⟫const SKIN_SEPARATION := 10.0
+
+var _table_chips: Array = []
+var _card_chips: Array = []
+## 预览贴图缓存：键 = "皮肤 id@宽x⟦高⟧⟪"⟫。尺寸进了键，所以换分辨率会重烘、换装备不会⟦。⟧⟪"⟫var _preview_cache: Dictionary = {}
+## 烘焙进行中：`resized` / 装备变化都会来催一次，别叠⟦加⟧⟪\n⟫var _baking := false
+var _confirm_layer: Control
+var _confirm_title: Label
+var _confirm_detail: Label
+var _confirm_ok: Button
+var _pending_skin_id := ""
+var _top_bar: Control
+var _top_bar_style: GlossyBox
+
+func _bind_scene() -> void:
+    _build_top_bar()
+    _build_body()
+    _build_confirm()
+    if app != null:
+        app.skin_changed.connect(_on_skin_changed)
+        app.profile_changed.connect(_on_profile_changed)
+        _on_skin_changed(app.skin_snapshot())
+    resized.connect(_relayout_skins)
+    _relayout_skins()
+    _relayout_skins.call_deferred()
+
+# ---------------------------------------------------------------- 页头
+
+## 新稿的统一页头⟦：⟧⟪5⟫8px 金色顶栏（通栏⟦）⟧⟪+⟫ ⟦左⟧⟪␠⟫`‹` 返回 + 居中标题 + 右上角细金线祥云⟦。⟧⟪\n⟫## 顶栏挂在页面最外层（不⟦在⟧⟪␠⟫`content()` 里），所以能贴到屏幕两边⟦）⟧⟪\n⟫## 内容区的上边距在 `_apply_safe_area()` 里加上这一条高度⟦。⟧⟪\n⟫func _build_top_bar() -> void:
+    if _top_bar != null:
+        return
+    _top_bar_style = ThemeFactory.top_bar_style()
+    _top_bar = Control.new()
+    _top_bar.name = "TopBar"
+    _top_bar.custom_minimum_size = Vector2(0, TOP_BAR_HEIGHT)
+    _top_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    add_child(_top_bar)
+    _top_bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+    _top_bar.offset_bottom = TOP_BAR_HEIGHT
+
+    var bg := PanelContainer.new()
+    bg.name = "TopBarBg"
+    bg.mouse_filter = Control.MOUSE_FILTER_STOP
+    bg.add_theme_stylebox_override("panel", _top_bar_style)
+    _top_bar.add_child(bg)
+    bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+    var row := UiKit.row(12)
+    row.name = "TopBarRow"
+    bg.add_child(row)
+
+    # 左：返回箭头。占位宽 150 与右侧祥云等宽，标题才是真的居中
+    var left := Control.new()
+    left.custom_minimum_size = Vector2(150, 46)
+    left.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    row.add_child(left)
+    var back := ThemeFactory.bare_button(Vector2(46, 46), 12)
+    back.name = "BackButton"
+    back.tooltip_text = "返回"
+    back.pressed.connect(_on_back_pressed)
+    left.add_child(back)
+    back.set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
+    back.offset_right = 46.0
+    var arrow := DesignIcons.back_arrow(Color.WHITE, 30.0)
+    arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    back.add_child(arrow)
+    arrow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    arrow.offset_left = 8.0
+    arrow.offset_top = 8.0
+    arrow.offset_right = -8.0
+    arrow.offset_bottom = -8.0
+
+    var title := ThemeFactory.outlined_label(PAGE_TITLE, 34, Color("#fff5de"), Color("#6b3a06"), 6)
+    title.name = "TitleLabel"
+    title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    row.add_child(title)
+
+    var wisp := Ornaments.cloud_wisp(Ornaments.WispCorner.TOP_RIGHT, 150.0, 0.5)
+    wisp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    row.add_child(wisp)
+
+    # 底边那道深金⟦线⟧⟪\n⟫    var rule := ColorRect.new()
+    rule.name = "TopBarRule"
+    rule.color = ThemeFactory.gold_rule_color()
+    rule.custom_minimum_size = Vector2(0, 2)
+    rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _top_bar.add_child(rule)
+    rule.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+    _sync_top_bar_insets()
+
+## 顶栏高度与左右内缩：通栏贴边，但栏内内容要让开设备安全⟦区⟧⟪\n⟫func _sync_top_bar_insets() -> void:
+    if _top_bar == null:
+        return
+    var insets := SafeArea.insets(self)
+    _top_bar.offset_bottom = insets.y + TOP_BAR_HEIGHT
+    if _top_bar_style != null:
+        _top_bar_style.content_margin_left = insets.x + 12.0
+        _top_bar_style.content_margin_right = insets.z + 12.0
+        _top_bar_style.content_margin_top = insets.y
+        _top_bar_style.content_margin_bottom = 0.0
+
+## 内容区的上边⟦距⟧⟪␠⟫= 安全⟦区⟧⟪␠⟫+ 页面留白 + 顶栏高度（顶栏在 `content()` 之外⟦）⟧⟪\n⟫func _apply_safe_area() -> void:
+    super()
+    var box := content()
+    if box == null:
+        return
+    box.add_theme_constant_override("margin_top",
+        int(round(SafeArea.insets(self).y + page_padding() + TOP_BAR_HEIGHT)))
+
+func _on_page_resized() -> void:
+    super()
+    _sync_top_bar_insets()
+
+func _on_back_pressed() -> void:
+    if app != null:
+        app.navigate(AppViewModel.Route.PROFILE)
+
+## 手机返回⟦键⟧⟪␠⟫/ ESC：本页消费掉，回个人中心
+func handle_back_request() -> bool:
+    _on_back_pressed()
+    return true
+
+# ---------------------------------------------------------------- 内容
+
+func _build_body() -> void:
+    var safe := content()
+    if safe == null:
+        return
+    for child in safe.get_children():
+        safe.remove_child(child)
+        child.queue_free()
+    var scroll := ScrollContainer.new()
+    scroll.name = "Scroll"
+    scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    safe.add_child(scroll)
+    var body := UiKit.column(14)
+    body.name = "TabSkins"
+    body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    scroll.add_child(body)
+
+    var look_row := UiKit.row(12)
+    body.add_child(look_row)
+    look_row.add_child(ThemeFactory.label("当前装扮", 16, ThemeFactory.TEXT_DIM))
+    var look := ThemeFactory.label("", 17, Color("#f7d98c"))
+    look.name = "LookValue"
+    look.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    look.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    look.clip_text = true
+    look_row.add_child(look)
+    var reset := _outline_button("恢复默认", 16)
+    reset.name = "ResetSkinButton"
+    reset.custom_minimum_size = Vector2(130, 46)
+    reset.pressed.connect(_on_reset_skins)
+    look_row.add_child(reset)
+    body.add_child(UiKit.hairline(Color(1, 1, 1, 0.12)))
+    body.add_child(ThemeFactory.label("对局背景", 17, Color("#f7d98c")))
+    body.add_child(_make_skin_grid("TableSkinList"))
+    body.add_child(UiKit.hairline(Color(1, 1, 1, 0.12)))
+    body.add_child(ThemeFactory.label("卡牌皮肤（含牌背⟦，⟧⟪"⟫, 17, Color("#f7d98c")))
+    body.add_child(_make_skin_grid("CardSkinList"))
+
+func _make_skin_grid(node_name: String) -> GridContainer:
+    var grid := GridContainer.new()
+    grid.name = node_name
+    grid.columns = 4
+    grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    grid.add_theme_constant_override("h_separation", int(SKIN_SEPARATION))
+    grid.add_theme_constant_override("v_separation", 10)
+    return grid
+
+## 稿子的暗底金边按钮：恢复默认 / 取消
+func _outline_button(text: String, font_size: int) -> Button:
+    var node := Button.new()
+    node.text = text
+    node.add_theme_font_size_override("font_size", font_size)
+    node.add_theme_color_override("font_color", Color(1, 1, 1, 0.96))
+    node.add_theme_color_override("font_hover_color", Color.WHITE)
+    node.add_theme_color_override("font_pressed_color", Color(0.92, 0.88, 0.84, 1.0))
+    node.add_theme_color_override("font_disabled_color", Color(1, 1, 1, 0.42))
+    node.add_theme_stylebox_override("normal", ThemeFactory.glossy(
+        Color(31 / 255.0, 3 / 255.0, 3 / 255.0, 0.55), Color(20 / 255.0, 2 / 255.0, 2 / 255.0, 0.62),
+        ThemeFactory.GOLD_MID, 14, 2, 0.06, 0.32, 6.0, 20.0, 12.0))
+    node.add_theme_stylebox_override("hover", ThemeFactory.glossy(
+        Color(0.20, 0.04, 0.04, 0.70), Color(0.12, 0.02, 0.02, 0.76),
+        ThemeFactory.GOLD_LIGHT, 14, 2, 0.10, 0.36, 7.0, 20.0, 12.0))
+    node.add_theme_stylebox_override("pressed", ThemeFactory.glossy(
+        Color(0.10, 0.02, 0.02, 0.78), Color(0.06, 0.01, 0.01, 0.84),
+        ThemeFactory.GOLD_EDGE, 14, 2, 0.04, 0.20, 4.0, 20.0, 12.0, 0.16))
+    node.add_theme_stylebox_override("disabled", ThemeFactory.glossy(
+        Color(0.16, 0.10, 0.09, 0.55), Color(0.10, 0.06, 0.05, 0.62),
+        Color(0.42, 0.30, 0.18, 0.8), 14, 2, 0.04, 0.16, 4.0, 20.0, 12.0))
+    node.add_theme_stylebox_override("focus", ThemeFactory.glossy(
+        Color(0, 0, 0, 0), Color(0, 0, 0, 0), Color(0, 0, 0, 0), 14, 0, 0.0, 0.0, 0.0, 20.0, 12.0))
+    node.focus_mode = Control.FOCUS_NONE
+    node.custom_minimum_size = Vector2(0, 48)
+    return node
+
+# ---------------------------------------------------------------- 皮肤数据
+
+func _on_profile_changed(_snapshot: Dictionary) -> void:
+    _refresh_skins(app.skin_snapshot() if app != null else {})
+
+func _on_skin_changed(snapshot: Dictionary) -> void:
+    apply_background_skin(snapshot.get("table", {}))
+    _refresh_skins(snapshot)
+
+func _refresh_skins(snapshot: Dictionary) -> void:
+    _fill_chips(node_named("TableSkinList") as Container, snapshot.get("tables", []), _table_chips)
+    _fill_chips(node_named("CardSkinList") as Container, snapshot.get("cards", []), _card_chips)
+    var look := node_named("LookValue") as Label
+    if look != null:
+        var table: Dictionary = snapshot.get("table", {})
+        var card: Dictionary = snapshot.get("card", {})
+        look.text = "%s · %s" % [str(table.get("name", "⟦‹⟧⟪␠⟫)), str(card.get("name", "⟦‹⟧⟪␠⟫))]
+    _relayout_skins()
+
+## 点击皮肤：已拥有的直接装备；未解锁的先弹确认 —⟦—⟧⟪\n⟫## 一次误触就扣掉几十钻石是不可接受的，价格与余额都要在确认框里写清楚⟦。⟧⟪\n⟫func _on_skin_chip_pressed(skin_id: String) -> void:
+    if app == null:
+        return
+    # 「是否已拥有」是业务判断，走服务查询而不是让界面读档案（C0-5⟦）⟧⟪\n⟫    if app.owns_skin(skin_id):
+        app.equip_skin(skin_id)
+        return
+    _open_skin_confirm(skin_id)
+
+func _open_skin_confirm(skin_id: String) -> void:
+    if _confirm_layer == null or app == null:
+        return
+    var skin := app.skin_info(skin_id)
+    var price := app.skin_price(skin_id)
+    # 余额从快照读，不直接碰档案对⟦象⟧⟪\n⟫    var balance := int(app.profile_snapshot().get("diamonds", 0))
+    _pending_skin_id = skin_id
+    _confirm_title.text = "解锁⟦「⟧⟪"⟫s⟦」⟧⟪"⟫ % str(skin.get("name", ""))
+    var enough := balance >= price
+    if enough:
+        _confirm_detail.text = "消⟦耗⟧⟪␠⟫%d 钻石解锁并立即装备\n钻石 %d ⟦→⟧⟪␠⟫%d" % [price, balance, balance - price]
+    else:
+        _confirm_detail.text = "解锁需⟦要⟧⟪␠⟫%d 钻石，当前只⟦有⟧⟪␠⟫%d\n先去对局或比赛场赚一些吧" % [price, balance]
+    _confirm_ok.disabled = not enough
+    _confirm_ok.text = "解锁并装⟦备⟧⟪"⟫ if enough else "钻石不足"
+    _confirm_layer.visible = true
+
+func _on_skin_confirm_ok() -> void:
+    var skin_id := _pending_skin_id
+    _hide_skin_confirm()
+    if app != null and not skin_id.is_empty():
+        app.purchase_and_equip(skin_id)
+
+func _hide_skin_confirm() -> void:
+    _pending_skin_id = ""
+    if _confirm_layer != null:
+        _confirm_layer.visible = false
+
+func _on_reset_skins() -> void:
+    if app != null:
+        app.reset_skins()
+
+# ---------------------------------------------------------------- 皮肤列表排版
+
+## 皮肤列表⟦，⟧⟪*⟫*横向排满一行才换行**⟦。⟧⟪\n⟫##
+## 列数取「当前宽度一行塞得下几张」与「实际条目数」的较小⟦值⟧⟪␠⟫—⟦—⟧⟪\n⟫## 前者保证只在铺满时才换行，后者保证条目少的时候正好排满一整行⟦。⟧⟪\n⟫## 卡片本身⟦是⟧⟪␠⟫`SIZE_EXPAND_FILL`，列宽因此均分，每行都精确铺满内容区⟦。⟧⟪\n⟫##
+## 可用宽度取自 **ScrollContainer 的视⟦口⟧⟪*⟫*，不能取 grid 自己⟦的⟧⟪␠⟫size —⟦—⟧⟪\n⟫## GridContainer 在内容比容器宽时会撑到自己的最小宽度，用它会形成循环依赖⟦。⟧⟪\n⟫func _relayout_skins() -> void:
+    var width := _skin_area_width()
+    if width <= 1.0:
+        return
+    for key in ["TableSkinList", "CardSkinList"]:
+        var grid := node_named(key) as GridContainer
+        if grid == null:
+            continue
+        var count := grid.get_child_count()
+        if count <= 0:
+            continue
+        var span := SkinChip.MIN_SIZE.x + SKIN_SEPARATION
+        var fit := int(floor((width + SKIN_SEPARATION) / span))
+        var columns := clampi(mini(fit, count), 1, count)
+        if grid.columns != columns:
+            grid.columns = columns
+    # 网格列数定下来之后各条目的预览区尺寸才确定，烘焙要等这一⟦切⟧⟪\n⟫    _sync_preview_textures()
+    _schedule_bake()
+
+# ---------------------------------------------------------------- 预览烘焙
+#
+# 皮肤预览⟦是⟧⟪*⟫*静⟦态⟧⟪*⟫*的，却每帧都要重画几百条绘制指令（实测整⟦页⟧⟪␠⟫12700 条，
+# 而同一页的底噪⟦才⟧⟪␠⟫2286 条），页面因此卡成幻灯片⟦。⟧⟪\n⟫# 这里把每条预览烘成一张贴图，之后每帧只剩一个四边形⟦。⟧⟪\n⟫
+## 把缓存里已有的预览贴图发给各条目（命中的条目立刻降到一次绘制指令）
+func _sync_preview_textures() -> void:
+    for chip in _table_chips + _card_chips:
+        var entry := chip as SkinChip
+        if entry != null:
+            entry.preview_texture = _preview_cache.get(_preview_key(entry))
+
+func _preview_key(chip: SkinChip) -> String:
+    var area := chip.preview_size()
+    return "%s@%dx%d" % [str(chip.skin.get("id", "")), int(area.x), int(area.y)]
+
+## 把还没烘过的预览**一次⟦性⟧⟪*⟫*烘出来（`PreviewBaker` 会把它们排进同一个离屏视口，
+## 只等一帧、只读一次，界面上是"一起出⟦现⟧⟪"⟫而不⟦是⟧⟪"⟫一格一格地蹦出⟦来⟧⟪"⟫）⟦。⟧⟪"⟫##
+## 回填⟦时⟧⟪*⟫*按条目对象直接给**，而不是再⟦拿⟧⟪␠⟫key 去查一遍：首次布局里网格列数会变，
+## 条目尺寸在同一帧内还会再翻一次，隔一帧再⟦按⟧⟪␠⟫key 查就会全部落⟦空⟧⟪\n⟫## （实测：缓存⟦里⟧⟪␠⟫11 张都在，条目上却一张都没贴上）⟦。⟧⟪\n⟫func _schedule_bake() -> void:
+    if _baking or not is_inside_tree():
+        return
+    _baking = true
+    # 让过一帧再量尺寸：此刻拿到的是过渡值，烘出来立刻就作废
+    await get_tree().process_frame
+    if not is_inside_tree():
+        _baking = false
+        return
+    var requests: Array = []
+    for chip in _table_chips + _card_chips:
+        var entry := chip as SkinChip
+        if entry == null or entry.skin.is_empty():
+            continue
+        var area := entry.preview_size()
+        if area.x < 16.0 or area.y < 16.0:
+            continue
+        var key := _preview_key(entry)
+        if _preview_cache.has(key):
+            entry.preview_texture = _preview_cache[key]
+            continue
+        requests.append({
+            "key": key,
+            "chip": entry,
+            "size": Vector2i(int(area.x), int(area.y)),
+            "paint": Callable(entry, "paint_preview"),
+        })
+    if requests.is_empty():
+        _baking = false
+        return
+    var baked: Dictionary = await PreviewBaker.bake_all(self, requests)
+    _baking = false
+    # 无头环境（测试）不烘：那边读回来是空图，套上去反而会把预览抹⟦掉⟧⟪\n⟫    if baked.is_empty() or not is_inside_tree():
+        return
+    for request in requests:
+        var key := str(request["key"])
+        if not baked.has(key):
+            continue
+        _preview_cache[key] = baked[key]
+        var entry := request["chip"] as SkinChip
+        # 烘的这几帧里尺寸若又变了，这一张就作废（下一轮会按新尺寸重烘），
+        # 硬贴上去只会是一张被拉伸的图
+        if is_instance_valid(entry) and entry.preview_size() == Vector2(request["size"]):
+            entry.preview_texture = baked[key]
+
+## 皮肤列表可用的横向宽度：滚动视口宽度
+func _skin_area_width() -> float:
+    var scroll := node_named("Scroll") as ScrollContainer
+    if scroll == null or scroll.size.x <= 1.0:
+        return 0.0
+    return maxf(scroll.size.x, 0.0)
+
+func _fill_chips(container: Container, list: Array, cache: Array) -> void:
+    if container == null or list.is_empty():
+        return
+    for i in list.size():
+        var chip: SkinChip
+        if i < cache.size():
+            chip = cache[i]
+        else:
+            chip = SkinChip.new()
+            chip.chip_pressed.connect(_on_skin_chip_pressed)
+            container.add_child(chip)
+            cache.append(chip)
+        var entry: Dictionary = list[i]
+        chip.setup(entry, bool(entry.get("owned", false)), bool(entry.get("equipped", false)))
+
+# ---------------------------------------------------------------- 购买确认
+
+## 购买确认浮层：全屏遮⟦罩⟧⟪␠⟫+ 居中面板，挡住在下面的点击⟦。⟧⟪\n⟫## ⟦用⟧⟪␠⟫CenterContainer 铺满整页来自动居中，窗口尺寸变化时不需要额外重排⟦。⟧⟪\n⟫func _build_confirm() -> void:
+    _confirm_layer = Control.new()
+    _confirm_layer.name = "SkinConfirm"
+    _confirm_layer.visible = false
+    _confirm_layer.mouse_filter = Control.MOUSE_FILTER_STOP
+    add_child(_confirm_layer)
+    _confirm_layer.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+    var scrim := ColorRect.new()
+    scrim.color = Color(0.0, 0.0, 0.0, 0.62)
+    scrim.mouse_filter = Control.MOUSE_FILTER_STOP
+    _confirm_layer.add_child(scrim)
+    scrim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+    var center := CenterContainer.new()
+    center.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _confirm_layer.add_child(center)
+    center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+    var panel := PanelContainer.new()
+    panel.name = "SkinConfirmPanel"
+    panel.custom_minimum_size = Vector2(470, 0)
+    panel.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+        Color("#5c150f"), Color("#390c08"), Color("#f4ce69"), 18, 2, 0.08, 0.48, 10.0, 0.0, 0.0))
+    center.add_child(panel)
+
+    var pad := MarginContainer.new()
+    for side in ["left", "right", "top", "bottom"]:
+        pad.add_theme_constant_override("margin_" + side, 26)
+    panel.add_child(pad)
+
+    var box := VBoxContainer.new()
+    box.add_theme_constant_override("separation", 14)
+    pad.add_child(box)
+
+    _confirm_title = ThemeFactory.label("", 24, ThemeFactory.GOLD_LIGHT)
+    _confirm_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    box.add_child(_confirm_title)
+
+    _confirm_detail = ThemeFactory.label("", 16, ThemeFactory.TEXT_LIGHT)
+    _confirm_detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    _confirm_detail.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+    box.add_child(_confirm_detail)
+
+    box.add_child(UiKit.gold_divider(12))
+
+    var row := HBoxContainer.new()
+    row.add_theme_constant_override("separation", 12)
+    box.add_child(row)
+    var cancel := _outline_button("再想⟦情⟧⟪"⟫, 18)
+    cancel.custom_minimum_size = Vector2(0, 52)
+    cancel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    cancel.pressed.connect(_hide_skin_confirm)
+    row.add_child(cancel)
+    _confirm_ok = ThemeFactory.gold_button("解锁并装⟦备⟧⟪"⟫, 18)
+    _confirm_ok.custom_minimum_size = Vector2(0, 52)
+    _confirm_ok.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    _confirm_ok.pressed.connect(_on_skin_confirm_ok)
+    row.add_child(_confirm_ok)
+
+settings_view.gd:3	⟦。⟧⟪\n⟫
+settings_view.gd:6	⟦┌⟧⟪␠⟫
+settings_view.gd:6	⟦‹⟧⟪␠⟫
+settings_view.gd:6	⟦┘⟧⟪\n⟫
+settings_view.gd:6	⟦┌⟧⟪␠⟫
+settings_view.gd:6	⟦┘⟧⟪\n⟫
+settings_view.gd:6	⟦│⟧⟪␠⟫
+settings_view.gd:6	⟦│⟧⟪␠⟫
+settings_view.gd:6	⟦关⟧⟪␠⟫
+settings_view.gd:6	⟦│⟧⟪\n⟫
+settings_view.gd:6	⟦┘⟧⟪\n⟫
+settings_view.gd:9	⟦约⟧⟪*⟫
+settings_view.gd:10	⟦（⟧⟪␠⟫
+settings_view.gd:10	⟦区⟧⟪␠⟫
+settings_view.gd:10	⟦。⟧⟪\n⟫
+settings_view.gd:10	⟦：⟧⟪\n⟫
+settings_view.gd:10	⟦。⟧⟪\r⟫
+settings_view.gd:12	⟦稿⟧⟪␠⟫
+settings_view.gd:12	⟦）⟧⟪\n⟫
+settings_view.gd:14	⟦。⟧⟪\n⟫
+settings_view.gd:14	⟦。⟧⟪\n⟫
+settings_view.gd:14	⟦划⟧⟪␠⟫
+settings_view.gd:14	⟦。⟧⟪\n⟫
+settings_view.gd:23	⟦关⟧⟪␠⟫
+settings_view.gd:23	⟦关⟧⟪␠⟫
+settings_view.gd:24	⟦报⟧⟪␠⟫
+settings_view.gd:26	⟦称⟧⟪␠⟫
+settings_view.gd:26	⟦录⟧⟪\n⟫
+settings_view.gd:26	⟦以⟧⟪␠⟫
+settings_view.gd:26	⟦。⟧⟪\n⟫
+settings_view.gd:31	⟦关⟧⟪␠⟫
+settings_view.gd:31	⟦乐⟧⟪"⟫
+settings_view.gd:32	⟦关⟧⟪"⟫
+settings_view.gd:33	⟦动⟧⟪"⟫
+settings_view.gd:37	⟦节⟧⟪␠⟫
+settings_view.gd:37	⟦奏⟧⟪"⟫
+settings_view.gd:38	⟦度⟧⟪"⟫
+settings_view.gd:47	⟦乐⟧⟪"⟫
+settings_view.gd:49	⟦型⟧⟪"⟫
+settings_view.gd:62	⟦全⟧⟪"⟫
+settings_view.gd:63	⟦准⟧⟪"⟫
+settings_view.gd:64	⟦面⟧⟪"⟫
+settings_view.gd:65	⟦录⟧⟪␠⟫
+settings_view.gd:65	⟦出⟧⟪"⟫
+settings_view.gd:70	⟦关⟧⟪␠⟫
+settings_view.gd:70	⟦。⟧⟪\n⟫
+settings_view.gd:70	⟦—⟧⟪␠⟫
+settings_view.gd:71	⟦改⟧⟪␠⟫
+settings_view.gd:71	⟦见⟧⟪"⟫
+settings_view.gd:71	⟦。⟧⟪"⟫
+settings_view.gd:73	⟦态⟧⟪"⟫
+settings_view.gd:75	⟦能⟧⟪"⟫
+settings_view.gd:76	⟦端⟧⟪"⟫
+settings_view.gd:86	⟦键⟧⟪␠⟫
+settings_view.gd:86	⟦态⟧⟪\n⟫
+settings_view.gd:100	⟦：⟧⟪5⟫
+settings_view.gd:100	⟦）⟧⟪+⟫
+settings_view.gd:100	⟦左⟧⟪␠⟫
+settings_view.gd:100	⟦。⟧⟪\n⟫
+settings_view.gd:155	⟦线⟧⟪\n⟫
+settings_view.gd:164	⟦区⟧⟪\n⟫
+settings_view.gd:175	⟦距⟧⟪␠⟫
+settings_view.gd:175	⟦区⟧⟪␠⟫
+settings_view.gd:175	⟦）⟧⟪\n⟫
+settings_view.gd:191	⟦键⟧⟪␠⟫
+settings_view.gd:196	⟦是⟧⟪␠⟫
+settings_view.gd:196	⟦次⟧⟪"⟫
+settings_view.gd:207	⟦，⟧⟪\n⟫
+settings_view.gd:207	⟦区⟧⟪␠⟫
+settings_view.gd:208	⟦。⟧⟪\n⟫
+settings_view.gd:220	⟦给⟧⟪␠⟫
+settings_view.gd:232	⟦里⟧⟪*⟫
+settings_view.gd:232	⟦绝⟧⟪"⟫
+settings_view.gd:232	⟦好⟧⟪␠⟫
+settings_view.gd:232	⟦—⟧⟪␠⟫
+settings_view.gd:232	⟦带⟧⟪\n⟫
+settings_view.gd:232	⟦。⟧⟪\n⟫
+settings_view.gd:232	⟦。⟧⟪\n⟫
+settings_view.gd:256	⟦标⟧⟪␠⟫
+settings_view.gd:256	⟦在⟧⟪␠⟫
+settings_view.gd:268	⟦）⟧⟪\n⟫
+settings_view.gd:283	⟦置⟧⟪␠⟫
+settings_view.gd:322	⟦是⟧⟪␠⟫
+settings_view.gd:322	⟦放⟧⟪␠⟫
+settings_view.gd:322	⟦。⟧⟪\n⟫
+settings_view.gd:322	⟦。⟧⟪\n⟫
+settings_view.gd:360	⟦底⟧⟪␠⟫
+settings_view.gd:360	⟦字⟧⟪\n⟫
+settings_view.gd:389	⟦）⟧⟪\n⟫
+settings_view.gd:402	⟦表⟧⟪\n⟫
+settings_view.gd:436	⟦）⟧⟪\n⟫
+settings_view.gd:454	⟦关⟧⟪"⟫
+settings_view.gd:454	⟦关⟧⟪"⟫
+settings_view.gd:455	⟦。⟧⟪\n⟫
+settings_view.gd:469	⟦）⟧⟪\n⟫
+settings_view.gd:472	⟦、⟧⟪"⟫
+settings_view.gd:473	⟦全⟧⟪"⟫
+settings_view.gd:474	⟦、⟧⟪"⟫
+settings_view.gd:475	⟦态⟧⟪"⟫
+settings_view.gd:477	⟦「⟧⟪"⟫
+settings_view.gd:479	⟦。⟧⟪\n⟫
+settings_view.gd:479	⟦，⟧⟪\n⟫
+settings_view.gd:479	⟦种⟧⟪"⟫
+settings_view.gd:479	⟦。⟧⟪\n⟫
+settings_view.gd:481	⟦。⟧⟪"⟫
+settings_view.gd:484	⟦、⟧⟪␠⟫
+settings_view.gd:484	⟦有⟧⟪␠⟫
+settings_view.gd:484	⟦。⟧⟪\n⟫
+settings_view.gd:487	⟦、⟧⟪"⟫
+settings_view.gd:488	⟦，⟧⟪%⟫
+settings_view.gd:488	⟦。⟧⟪%⟫
+settings_view.gd:508	⟦。⟧⟪\n⟫
+settings_view.gd:513	⟦关⟧⟪␠⟫
+settings_view.gd:513	⟦行⟧⟪*⟫
+settings_view.gd:513	⟦枚⟧⟪\n⟫
+settings_view.gd:535	⟦进⟧⟪␠⟫
+settings_view.gd:535	⟦走⟧⟪␠⟫
+settings_view.gd:535	⟦、⟧⟪\n⟫
+settings_view.gd:537	⟦次⟧⟪␠⟫
+settings_view.gd:543	⟦行⟧⟪␠⟫
+settings_view.gd:559	⟦置⟧⟪"⟫
+settings_view.gd:562	⟦效⟧⟪␠⟫
+settings_view.gd:562	⟦心⟧⟪\n⟫
+settings_view.gd:563	⟦存⟧⟪"⟫
+settings_view.gd:566	⟦态⟧⟪\n⟫
+settings_view.gd:583	⟦不⟧⟪␠⟫
+settings_view.gd:583	⟦）⟧⟪\n⟫
+settings_view.gd:583	⟦，⟧⟪\n⟫
+---- 内联上下文 ----
+class_name SettingsView
+extends AppPage
+## 系统设置（场景：settings_view.tscn）⟦。⟧⟪\n⟫##
+## 从个人中心的**整页浮层**改成独立页面，内容与原来一致：
+## ```
+## ⟦┌⟧⟪␠⟫金色顶栏：⟦‹⟧⟪␠⟫返回        系统设置        祥云 ───────────────⟦┘⟧⟪\n⟫## ⟦┌⟧⟪␠⟫分类竖排（基础 / 音效 / 隐私 / 账号 / 联机）┬ 设置卡片 ────⟦┘⟧⟪\n⟫## ⟦│⟧⟪␠⟫                                            ⟦│⟧⟪␠⟫行：标题 + 说明 + 开⟦关⟧⟪␠⟫/ 档位 / 按钮 ⟦│⟧⟪\n⟫## └─────────────────────────────────────────────┴──────────────⟦┘⟧⟪\n⟫##                        [ 保存设置 ]  [ 恢复默认 ]
+## ```
+##
+## **节点名契⟦约⟧⟪*⟫*：`SettingsPanel`（整页容器，`page_padding_test` 会断言它的左右留白
+## ⟦（⟧⟪␠⟫安全⟦区⟧⟪␠⟫+ `AppPage.SIDE_PADDING`）、`SettingsSidebar`、`SettingsContent`、`SettingsScroll`⟦。⟧⟪\n⟫## `SettingsTab0..4`、`SettingsSave`、`SettingsReset`、`Setting_<key>` 各行⟦：⟧⟪\n⟫## 以及 `_select_settings_category(index)` 方法⟦。⟧⟪\r⟫
+const PAGE_TITLE := "系统设置"
+## 金色顶栏高度（新⟦稿⟧⟪␠⟫58px⟦）⟧⟪\n⟫const TOP_BAR_HEIGHT := 58.0
+
+## 系统设置页的分类（设计图左侧竖排菜单）⟦。⟧⟪\n⟫## 每一项对应若干设置行；`privacy` 没有开关可放，只给说明性条目⟦。⟧⟪\n⟫## `network` 是本项目新增的「联机设置」（开发计⟦划⟧⟪␠⟫D-17）：模式开关与离线同步⟦。⟧⟪\n⟫const SETTINGS_CATEGORIES := [
+    {"id": "basic", "title": "基础设置"},
+    {"id": "audio", "title": "音效设置"},
+    {"id": "privacy", "title": "隐私设置"},
+    {"id": "account", "title": "账号设置"},
+    {"id": "network", "title": "联机设置"},
+]
+
+## 分类内容（设计图的布局）：
+## * 基础设置：音乐开⟦关⟧⟪␠⟫/ 音效开⟦关⟧⟪␠⟫/ 震动反馈 / 快捷提示
+## * 音效设置：出牌播⟦报⟧⟪␠⟫/ 播报音量说明
+## * 隐私设置：本地存档说明（本机没有联网账号，这里如实说明数据都在本机）
+## * 账号设置：修改昵⟦称⟧⟪␠⟫/ 恢复默认装扮 / 退出登⟦录⟧⟪\n⟫## 每一项都⟦以⟧⟪␠⟫`SettingsRow` 的键回调，`_on_setting_*` 统一处理⟦。⟧⟪\n⟫const SETTINGS_LAYOUT := [
+    {
+        "category": "basic",
+        "sections": [
+            {"title": "基础设置", "rows": [
+                {"key": "music_enabled", "title": "音乐开⟦关⟧⟪␠⟫, "kind": "switch", "desc": "大厅与对局的背景音⟦乐⟧⟪"⟫},
+                {"key": "sfx_enabled", "title": "音效开⟦关⟧⟪"⟫, "kind": "switch", "desc": "按钮、出牌与结算音效"},
+                {"key": "vibrate_enabled", "title": "震动反馈", "kind": "switch", "desc": "出牌与结算时的轻微震⟦动⟧⟪"⟫},
+                {"key": "quick_hint_enabled", "title": "快捷提示", "kind": "switch", "desc": "轮到你时高亮能出的牌"},
+            ]},
+            {"title": "对局设置", "rows": [
+                {"key": "card_speed", "title": "牌速调⟦节⟧⟪␠⟫, "kind": "stepper", "desc": "AI 思考与发牌的节⟦奏⟧⟪"⟫},
+                {"key": "hint_level", "title": "提示强度", "kind": "stepper", "desc": "提示给出的牌型强⟦度⟧⟪"⟫},
+                {"key": "auto_sort_hand", "title": "自动整理手牌", "kind": "switch", "desc": "出牌后按点数重新排好"},
+            ]},
+        ],
+    },
+    {
+        "category": "audio",
+        "sections": [
+            {"title": "音效设置", "rows": [
+                {"key": "music_enabled", "title": "背景音乐", "kind": "switch", "desc": "大厅与对局的背景音⟦乐⟧⟪"⟫},
+                {"key": "sfx_enabled", "title": "操作音效", "kind": "switch", "desc": "按钮、出牌与结算音效"},
+                {"key": "tts_enabled", "title": "出牌播报", "kind": "switch", "desc": "语音播报打出的牌⟦型⟧⟪"⟫},
+            ]},
+        ],
+    },
+    {
+        "category": "privacy",
+        "sections": [
+            {"title": "隐私设置", "rows": []},
+        ],
+    },
+    {
+        "category": "account",
+        "sections": [
+            {"title": "账号与安⟦全⟧⟪"⟫, "rows": [
+                {"key": "rename", "title": "修改昵称", "kind": "action", "action": "修改", "desc": "本机账号以昵称为⟦准⟧⟪"⟫},
+                {"key": "reset_skins", "title": "恢复默认装扮", "kind": "action", "action": "恢复", "desc": "回到默认桌布与牌⟦面⟧⟪"⟫},
+                {"key": "logout", "title": "退出登⟦录⟧⟪␠⟫, "kind": "action", "action": "退⟦出⟧⟪"⟫, "desc": "清空会话并回到登录页"},
+            ]},
+        ],
+    },
+    {
+        # 「联机设置」（D-17）：模式开⟦关⟧⟪␠⟫+ 离线欠账同步⟦。⟧⟪\n⟫        # 「联机状态」这一节的 rows 故意留空 —⟦—⟧⟪␠⟫空分节会渲染成一行说明文字，
+        # 正好用来⟦改⟧⟪␠⟫当前模式 / 待同步几局"这种动态状态（⟦见⟧⟪"⟫`_settings_note`）⟦。⟧⟪"⟫        "category": "network",
+        "sections": [
+            {"title": "联机状⟦态⟧⟪"⟫, "rows": []},
+            {"title": "联机模式", "rows": [
+                {"key": "service_mode", "title": "当前模式", "kind": "stepper", "desc": "离线本地对战 / 联机全功⟦能⟧⟪"⟫},
+                {"key": "sync_now", "title": "同步离线战绩", "kind": "action", "action": "同步", "desc": "把离线战绩补传到服务⟦端⟧⟪"⟫},
+            ]},
+        ],
+    },
+]
+
+var _settings_panel: Control
+var _settings_body: VBoxContainer
+var _settings_category := 0
+var _settings_buttons: Array = []
+## 设置⟦键⟧⟪␠⟫-> 行控件，刷新时逐项回填状⟦态⟧⟪\n⟫var _settings_rows: Dictionary = {}
+var _top_bar: Control
+var _top_bar_style: GlossyBox
+
+func _bind_scene() -> void:
+    _build_top_bar()
+    _build_body()
+    if app != null:
+        app.skin_changed.connect(_on_skin_changed)
+        _on_skin_changed(app.skin_snapshot())
+    _render_settings_category()
+
+# ---------------------------------------------------------------- 页头
+
+## 新稿的统一页头⟦：⟧⟪5⟫8px 金色顶栏（通栏⟦）⟧⟪+⟫ ⟦左⟧⟪␠⟫`‹` 返回 + 居中标题 + 右上角细金线祥云⟦。⟧⟪\n⟫func _build_top_bar() -> void:
+    if _top_bar != null:
+        return
+    _top_bar_style = ThemeFactory.top_bar_style()
+    _top_bar = Control.new()
+    _top_bar.name = "TopBar"
+    _top_bar.custom_minimum_size = Vector2(0, TOP_BAR_HEIGHT)
+    _top_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    add_child(_top_bar)
+    _top_bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+    _top_bar.offset_bottom = TOP_BAR_HEIGHT
+
+    var bg := PanelContainer.new()
+    bg.name = "TopBarBg"
+    bg.mouse_filter = Control.MOUSE_FILTER_STOP
+    bg.add_theme_stylebox_override("panel", _top_bar_style)
+    _top_bar.add_child(bg)
+    bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+    var row := UiKit.row(12)
+    row.name = "TopBarRow"
+    bg.add_child(row)
+
+    # 左：返回箭头。占位宽 150 与右侧祥云等宽，标题才是真的居中
+    var left := Control.new()
+    left.custom_minimum_size = Vector2(150, 46)
+    left.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    row.add_child(left)
+    var back := ThemeFactory.bare_button(Vector2(46, 46), 12)
+    back.name = "BackButton"
+    back.tooltip_text = "返回"
+    back.pressed.connect(_on_back_pressed)
+    left.add_child(back)
+    back.set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
+    back.offset_right = 46.0
+    var arrow := DesignIcons.back_arrow(Color.WHITE, 30.0)
+    arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    back.add_child(arrow)
+    arrow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    arrow.offset_left = 8.0
+    arrow.offset_top = 8.0
+    arrow.offset_right = -8.0
+    arrow.offset_bottom = -8.0
+
+    var title := ThemeFactory.outlined_label(PAGE_TITLE, 34, Color("#fff5de"), Color("#6b3a06"), 6)
+    title.name = "TitleLabel"
+    title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    row.add_child(title)
+
+    var wisp := Ornaments.cloud_wisp(Ornaments.WispCorner.TOP_RIGHT, 150.0, 0.5)
+    wisp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    row.add_child(wisp)
+
+    # 底边那道深金⟦线⟧⟪\n⟫    var rule := ColorRect.new()
+    rule.name = "TopBarRule"
+    rule.color = ThemeFactory.gold_rule_color()
+    rule.custom_minimum_size = Vector2(0, 2)
+    rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _top_bar.add_child(rule)
+    rule.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+    _sync_top_bar_insets()
+
+## 顶栏高度与左右内缩：通栏贴边，但栏内内容要让开设备安全⟦区⟧⟪\n⟫func _sync_top_bar_insets() -> void:
+    if _top_bar == null:
+        return
+    var insets := SafeArea.insets(self)
+    _top_bar.offset_bottom = insets.y + TOP_BAR_HEIGHT
+    if _top_bar_style != null:
+        _top_bar_style.content_margin_left = insets.x + 12.0
+        _top_bar_style.content_margin_right = insets.z + 12.0
+        _top_bar_style.content_margin_top = insets.y
+        _top_bar_style.content_margin_bottom = 0.0
+
+## 内容区的上边⟦距⟧⟪␠⟫= 安全⟦区⟧⟪␠⟫+ 页面留白 + 顶栏高度（顶栏在 `content()` 之外⟦）⟧⟪\n⟫func _apply_safe_area() -> void:
+    super()
+    var box := content()
+    if box == null:
+        return
+    box.add_theme_constant_override("margin_top",
+        int(round(SafeArea.insets(self).y + page_padding() + TOP_BAR_HEIGHT)))
+
+func _on_page_resized() -> void:
+    super()
+    _sync_top_bar_insets()
+
+func _on_back_pressed() -> void:
+    if app != null:
+        app.navigate(AppViewModel.Route.PROFILE)
+
+## 手机返回⟦键⟧⟪␠⟫/ ESC：本页消费掉，回个人中心
+func handle_back_request() -> bool:
+    _on_back_pressed()
+    return true
+
+## 兼容旧浮层的调用点：设置页本身就⟦是⟧⟪␠⟫打开着"的状态，这里只重绘一⟦次⟧⟪"⟫func open_settings() -> void:
+    _render_settings_category()
+
+func settings_open() -> bool:
+    return true
+
+func close_settings() -> void:
+    _on_back_pressed()
+
+# ---------------------------------------------------------------- 内容
+
+## 整页容器 `SettingsPanel`：左右内缩由 `AppPage` 的安全区容器给出⟦，⟧⟪\n⟫ 安全⟦区⟧⟪␠⟫+ `SIDE_PADDING`），
+## 因此它的左右留白与个人中心主面板、牌桌排版完全一致⟦。⟧⟪\n⟫func _build_body() -> void:
+    var safe := content()
+    if safe == null:
+        return
+    for child in safe.get_children():
+        safe.remove_child(child)
+        child.queue_free()
+
+    var panel := PanelContainer.new()
+    panel.name = "SettingsPanel"
+    panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    # 整页页面：底色交⟦给⟧⟪␠⟫`AppPage` 的页面背景，这里只当布局容器（不描边、不加投影）
+    panel.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+        Color(0, 0, 0, 0), Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0))
+    safe.add_child(panel)
+    _settings_panel = panel
+
+    var root := UiKit.column(0)
+    panel.add_child(root)
+
+    var split := UiKit.row(18)
+    split.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    split.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    # 注意：这⟦里⟧⟪*⟫*不能**⟦绝⟧⟪"⟫split ⟦好⟧⟪␠⟫`UiKit.padded()` —⟦—⟧⟪␠⟫那个 MarginContainer ⟦带⟧⟪\n⟫    # `SIZE_EXPAND_FILL`，在 HBoxContainer 里会先抢走全部余量，把侧栏一路挤到中间⟦。⟧⟪\n⟫    # 边距改由一个专门的 MarginContainer 承担⟦。⟧⟪\n⟫    var split_margin := MarginContainer.new()
+    split_margin.name = "SettingsSplitPad"
+    split_margin.add_theme_constant_override("margin_left", 0)
+    split_margin.add_theme_constant_override("margin_right", 0)
+    split_margin.add_theme_constant_override("margin_top", 0)
+    split_margin.add_theme_constant_override("margin_bottom", 6)
+    split_margin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    split_margin.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    root.add_child(split_margin)
+    split_margin.add_child(split)
+
+    # 左侧分类（设计图那块 230x400 的暗底竖排菜单）
+    var side := PanelContainer.new()
+    side.name = "SettingsSidebar"
+    side.custom_minimum_size = Vector2(212, 0)
+    side.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+        Color("#2e0a0a"), Color("#240707"), Color(0, 0, 0, 0),
+        16, 0, 0.04, 0.34, 8.0, 12.0, 12.0))
+    split.add_child(side)
+    var side_box := UiKit.column(10)
+    side.add_child(side_box)
+    _settings_buttons.clear()
+    for i in SETTINGS_CATEGORIES.size():
+        var category: Dictionary = SETTINGS_CATEGORIES[i]
+        # 分类按钮：图⟦标⟧⟪␠⟫+ 文字，文字挂⟦在⟧⟪␠⟫MenuLabel 上（与个人中心右侧菜单同一套版式）
+        var button := Button.new()
+        button.name = "SettingsTab%d" % i
+        button.text = ""
+        button.focus_mode = Control.FOCUS_NONE
+        button.custom_minimum_size = Vector2(0, 60)
+        button.pressed.connect(_select_settings_category.bind(i))
+        side_box.add_child(button)
+        button.add_child(_build_menu_content(str(category["title"]), _settings_category_icon(i)))
+        _settings_buttons.append(button)
+    side_box.add_child(UiKit.spacer(true))
+
+    # 右侧内容：卡片直接浮在页底渐变上（不再套一层暗面板⟦）⟧⟪\n⟫    var content_panel := PanelContainer.new()
+    content_panel.name = "SettingsContent"
+    content_panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    content_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    content_panel.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+        Color(0, 0, 0, 0), Color(0, 0, 0, 0), Color(0, 0, 0, 0), 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0))
+    split.add_child(content_panel)
+    var scroll := ScrollContainer.new()
+    scroll.name = "SettingsScroll"
+    scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+    content_panel.add_child(scroll)
+    _settings_body = UiKit.column(14)
+    _settings_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    UiKit.padded(scroll, 0, 0).add_child(_settings_body)
+
+    # 底部：保存设⟦置⟧⟪␠⟫/ 恢复默认（设计稿里保存在前、恢复在后）
+    var footer := UiKit.row(14)
+    footer.custom_minimum_size = Vector2(0, 66)
+    UiKit.padded(footer, 0, 6)
+    root.add_child(footer)
+    footer.add_child(UiKit.spacer(true))
+    var save := ThemeFactory.gold_button("保存设置", 20)
+    save.name = "SettingsSave"
+    save.custom_minimum_size = Vector2(200, 52)
+    save.pressed.connect(_on_settings_save)
+    footer.add_child(save)
+    var reset := _outline_button("恢复默认", 20)
+    reset.name = "SettingsReset"
+    reset.custom_minimum_size = Vector2(200, 52)
+    reset.pressed.connect(_on_settings_reset)
+    footer.add_child(reset)
+
+## 菜单行内容：图标 + 标题（与个人中心右侧菜单同一套版式）
+func _build_menu_content(text: String, icon: Control) -> Control:
+    var row := UiKit.row(10)
+    row.name = "MenuContent"
+    row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    row.offset_left = 14.0
+    row.offset_right = -14.0
+    if icon != null:
+        icon.name = "MenuIcon"
+        icon.custom_minimum_size = Vector2(30, 30)
+        icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+        icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+        row.add_child(icon)
+    var label := ThemeFactory.label(text, 20, ThemeFactory.CREAM)
+    label.name = "MenuLabel"
+    label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    row.add_child(label)
+    return row
+
+## 菜单行的选中态配色：文字⟦是⟧⟪␠⟫`Label`（改 `font_color`），图标是自绘控件（⟦放⟧⟪␠⟫`modulate`）⟦。⟧⟪\n⟫## 选中页签的底色是**亮金**，所以文字与图标都要压成深金墨，否则糊在底色里⟦。⟧⟪\n⟫func _apply_tab_tint(button: Button, active: bool) -> void:
+    var label := button.find_child("MenuLabel", true, false) as Label
+    if label != null:
+        label.add_theme_color_override("font_color",
+            ThemeFactory.GOLD_INK if active else ThemeFactory.CREAM)
+        label.add_theme_color_override("font_hover_color",
+            ThemeFactory.GOLD_INK if active else Color.WHITE)
+    var icon := button.find_child("MenuIcon", true, false) as CanvasItem
+    if icon != null:
+        icon.modulate = Color(0.30, 0.15, 0.02, 1.0) if active else Color.WHITE
+
+## 稿子的暗底金边按钮：恢复默认
+func _outline_button(text: String, font_size: int) -> Button:
+    var node := Button.new()
+    node.text = text
+    node.add_theme_font_size_override("font_size", font_size)
+    node.add_theme_color_override("font_color", Color(1, 1, 1, 0.96))
+    node.add_theme_color_override("font_hover_color", Color.WHITE)
+    node.add_theme_color_override("font_pressed_color", Color(0.92, 0.88, 0.84, 1.0))
+    node.add_theme_color_override("font_disabled_color", Color(1, 1, 1, 0.42))
+    node.add_theme_stylebox_override("normal", ThemeFactory.glossy(
+        Color(31 / 255.0, 3 / 255.0, 3 / 255.0, 0.55), Color(20 / 255.0, 2 / 255.0, 2 / 255.0, 0.62),
+        ThemeFactory.GOLD_MID, 14, 2, 0.06, 0.32, 6.0, 20.0, 12.0))
+    node.add_theme_stylebox_override("hover", ThemeFactory.glossy(
+        Color(0.20, 0.04, 0.04, 0.70), Color(0.12, 0.02, 0.02, 0.76),
+        ThemeFactory.GOLD_LIGHT, 14, 2, 0.10, 0.36, 7.0, 20.0, 12.0))
+    node.add_theme_stylebox_override("pressed", ThemeFactory.glossy(
+        Color(0.10, 0.02, 0.02, 0.78), Color(0.06, 0.01, 0.01, 0.84),
+        ThemeFactory.GOLD_EDGE, 14, 2, 0.04, 0.20, 4.0, 20.0, 12.0, 0.16))
+    node.add_theme_stylebox_override("disabled", ThemeFactory.glossy(
+        Color(0.16, 0.10, 0.09, 0.55), Color(0.10, 0.06, 0.05, 0.62),
+        Color(0.42, 0.30, 0.18, 0.8), 14, 2, 0.04, 0.16, 4.0, 20.0, 12.0))
+    node.add_theme_stylebox_override("focus", ThemeFactory.glossy(
+        Color(0, 0, 0, 0), Color(0, 0, 0, 0), Color(0, 0, 0, 0), 14, 0, 0.0, 0.0, 0.0, 20.0, 12.0))
+    node.focus_mode = Control.FOCUS_NONE
+    node.custom_minimum_size = Vector2(0, 48)
+    return node
+
+## 设置分类页签：选中 = 金底 + 2px 亮金描边 + 深金墨字；未选中 = 暗红⟦底⟧⟪␠⟫+ 米白⟦字⟧⟪\n⟫func _settings_tab_style(active: bool, state: String) -> GlossyBox:
+    if active:
+        match state:
+            "hover":
+                return ThemeFactory.glossy(ThemeFactory.GOLD, ThemeFactory.GOLD_MID,
+                    Color("#fff7d9"), 12, 2, 0.34, 0.30, 5.0, 0.0, 0.0)
+            "pressed":
+                return ThemeFactory.glossy(ThemeFactory.GOLD_DARK, Color("#8f6210"),
+                    ThemeFactory.GOLD_EDGE, 12, 2, 0.12, 0.22, 4.0, 0.0, 0.0)
+            _:
+                return ThemeFactory.glossy(Color("#d8a539"), Color("#c07f1c"),
+                    Color("#fad98c"), 12, 2, 0.24, 0.26, 5.0, 0.0, 0.0)
+    match state:
+        "hover":
+            return ThemeFactory.glossy(Color(0.30, 0.08, 0.07, 0.94), Color(0.20, 0.05, 0.04, 0.96),
+                Color("#c68a43"), 12, 1, 0.06, 0.24, 5.0, 0.0, 0.0)
+        "pressed":
+            return ThemeFactory.glossy(Color(0.16, 0.04, 0.04, 0.96), Color(0.10, 0.02, 0.02, 0.98),
+                ThemeFactory.GOLD_EDGE, 12, 1, 0.04, 0.18, 4.0, 0.0, 0.0)
+        _:
+            return ThemeFactory.glossy(Color("#3d1010"), Color("#2e0a0a"),
+                Color(0, 0, 0, 0), 12, 0, 0.03, 0.20, 4.0, 0.0, 0.0)
+
+# ---------------------------------------------------------------- 设置分类
+
+func _select_settings_category(index: int) -> void:
+    _settings_category = clampi(index, 0, SETTINGS_CATEGORIES.size() - 1)
+    _render_settings_category()
+
+## 设置分类的图标（设计图左侧菜单每项都有一枚：房子 / 音符 / 盾牌 / 人像 / 齿轮⟦）⟧⟪\n⟫func _settings_category_icon(index: int) -> Control:
+    match index:
+        0:
+            return DesignIcons.home(Color("#e8c87a"), 26.0)
+        1:
+            return DesignIcons.music(Color("#e8c87a"), 24.0)
+        2:
+            return DesignIcons.shield(Color("#e8c87a"), 26.0)
+        3:
+            return DesignIcons.account(Color("#e8c87a"), 26.0)
+        _:
+            return DesignIcons.gear(Color("#e8d5a8"), 26.0)
+
+## 重建右侧内容：当前分类下的所有分组与设置⟦表⟧⟪\n⟫func _render_settings_category() -> void:
+    if _settings_body == null:
+        return
+    for child in _settings_body.get_children():
+        _settings_body.remove_child(child)
+        child.queue_free()
+    _settings_rows.clear()
+    for i in _settings_buttons.size():
+        var button := _settings_buttons[i] as Button
+        if button == null:
+            continue
+        var active := i == _settings_category
+        for state in ["normal", "hover", "pressed"]:
+            button.add_theme_stylebox_override(state, _settings_tab_style(active, state))
+        button.add_theme_stylebox_override("focus", ThemeFactory.glossy(
+            Color(0, 0, 0, 0), Color(0, 0, 0, 0), Color(0, 0, 0, 0), 12, 0, 0.0, 0.0, 0.0, 0.0, 0.0))
+        _apply_tab_tint(button, active)
+
+    var category: Dictionary = SETTINGS_CATEGORIES[_settings_category]
+    for entry in _settings_layout_for(str(category["id"])):
+        var section: Dictionary = entry
+        _settings_body.add_child(_build_settings_section(section))
+    _refresh_settings(app.settings_snapshot() if app != null else {})
+
+## 取某个分类的分组定义（没有定义时回退成一条说明）
+func _settings_layout_for(category_id: String) -> Array:
+    for entry in SETTINGS_LAYOUT:
+        var item: Dictionary = entry
+        if str(item.get("category", "")) == category_id:
+            var sections: Array = item.get("sections", [])
+            if not sections.is_empty():
+                return sections
+    return [{"title": "说明", "rows": []}]
+
+## 一个分组卡片（设计稿的 690x108：底 rgba(46,10,10,.85) + 1px 暗金描边 + 圆角 12⟦）⟧⟪\n⟫func _build_settings_section(section: Dictionary) -> Control:
+    var card := PanelContainer.new()
+    card.name = "Section_%s" % str(section.get("title", ""))
+    card.add_theme_stylebox_override("panel", ThemeFactory.menu_panel_style(0.85, 12, 22.0, 14.0))
+    var box := UiKit.column(10)
+    card.add_child(box)
+    var heading := ThemeFactory.label(str(section.get("title", "")), 21, Color("#f5c74a"))
+    heading.name = "SectionTitle"
+    box.add_child(heading)
+
+    var rows: Array = section.get("rows", [])
+    if rows.is_empty():
+        var note := ThemeFactory.label(_settings_note(str(section.get("title", ""))), 15, ThemeFactory.TEXT_DIM)
+        note.name = "SectionNote"
+        note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+        box.add_child(note)
+        return card
+
+    # 两列网格：设计图里一行并排放两组（如"音乐开⟦关⟧⟪"⟫/ 音效开⟦关⟧⟪"⟫），
+    # 窄屏（手机竖屏兜底）自动退化成单列⟦。⟧⟪\n⟫    var grid := GridContainer.new()
+    grid.name = "SectionGrid"
+    grid.columns = 2
+    grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    grid.add_theme_constant_override("h_separation", 22)
+    grid.add_theme_constant_override("v_separation", 10)
+    box.add_child(grid)
+    for row_def in rows:
+        var definition: Dictionary = row_def
+        var row := _make_settings_row(definition)
+        if row != null:
+            grid.add_child(row)
+    return card
+
+## 分组说明文字（隐私设置这类没有开关的分类用它如实交代数据去向⟦）⟧⟪\n⟫func _settings_note(section_title: String) -> String:
+    match section_title:
+        "隐私设置":
+            return "离线模式下不联网、不上传数据：昵称、金币、战绩、皮肤与设置都只保存在本机存档（user://profile.json）。切换到联机模式后会上传账号信息与对局战绩、并同步积分；清理应用数据会连同存档一起删除，且不可恢复⟦、⟧⟪"⟫
+        "账号与安⟦全⟧⟪"⟫:
+            return "本机账号以昵称为准，无需注册与绑定手机；换设备时把存档文件拷过去即可继续使用⟦、⟧⟪"⟫
+        "联机状⟦态⟧⟪"⟫:
+            return _network_status_text()
+    return "本分类当前没有可调项⟦「⟧⟪"⟫
+
+## 「联机状态」这一节的动态文案：当前模式 + 离线欠账⟦。⟧⟪\n⟫## 之所以把状态做成说明文字而不是只读控件行，是为了复用空分节的渲染路径⟦，⟧⟪\n⟫## 不必为一个只读状态新增一⟦种⟧⟪"⟫SettingsRow 类型⟦。⟧⟪\n⟫func _network_status_text() -> String:
+    if app == null:
+        return "尚未登录⟦。⟧⟪"⟫
+    var mode_text := "联机" if app.service_mode() == ServiceHub.Mode.ONLINE else "离线"
+    var pending := app.pending_sync_count()
+    var debt := "没有待同步的离线战绩⟦、⟧⟪␠⟫ if pending <= 0 else "⟦有⟧⟪␠⟫%d 局离线战绩待同步⟦。⟧⟪\n⟫ % pending
+    var hint := ""
+    if app.service_mode() == ServiceHub.Mode.OFFLINE:
+        hint = "\n离线模式只能本地对战并累计少量积分；商城、任务、签到、排行榜与邮件需要联机后使用⟦、⟧⟪"⟫
+    return "当前⟦，⟧⟪%⟫s模式⟦。⟧⟪%⟫s%s" % [mode_text, debt, hint]
+
+func _make_settings_row(definition: Dictionary) -> SettingsRow:
+    var key := str(definition.get("key", ""))
+    if key.is_empty():
+        return null
+    var kind_name := str(definition.get("kind", "switch"))
+    var kind := SettingsRow.Kind.SWITCH
+    if kind_name == "stepper":
+        kind = SettingsRow.Kind.STEPPER
+    elif kind_name == "action":
+        kind = SettingsRow.Kind.ACTION
+    var row := SettingsRow.create(key, str(definition.get("title", "")), kind,
+        _settings_icon(key, kind), str(definition.get("desc", "")))
+    row.toggled.connect(_on_setting_toggled)
+    row.stepped.connect(_on_setting_stepped)
+    row.acted.connect(_on_setting_action)
+    if kind == SettingsRow.Kind.ACTION:
+        row.set_action_text(str(definition.get("action", "确定")), key != "logout")
+    # 同一个键可能出现在多个分类里（音乐开关既在基础设置也在音效设置），
+    # 因此用一个数组存同键的所有行，刷新时一起回填⟦。⟧⟪\n⟫    if not _settings_rows.has(key):
+        _settings_rows[key] = []
+    (_settings_rows[key] as Array).append(row)
+    return row
+
+## 设置项的图标：设计稿里开⟦关⟧⟪␠⟫/ 档位⟦行⟧⟪*⟫*没有**图标，只有「账号与安全」那几个动作行带一⟦枚⟧⟪\n⟫func _settings_icon(key: String, kind: int) -> Control:
+    if kind != SettingsRow.Kind.ACTION:
+        return null
+    match key:
+        "rename":
+            return DesignIcons.account(Color("#e8c87a"), 24.0)
+        "reset_skins", "sync_now":
+            return DesignIcons.reward_chest(28.0)
+        "logout":
+            return DesignIcons.logout(Color("#e8c87a"), 24.0)
+    return null
+
+func _on_setting_toggled(key: String, value: bool) -> void:
+    if app == null:
+        return
+    app.apply_setting(key, value)
+    AudioDirector.vibrate(30)
+
+func _on_setting_stepped(key: String, index: int) -> void:
+    if app == null:
+        return
+    # 「当前模式」不是游戏设置，而是服务枢纽的模式开关（D-17）：
+    # 它不⟦进⟧⟪␠⟫/user/settings，也不能⟦走⟧⟪␠⟫apply_setting，因此在这里单独分流⟦、⟧⟪\n⟫    if key == "service_mode":
+        app.set_service_mode(index)
+        _render_settings_category()   # 状态说明文字要跟着模式变，重新渲染一⟦次⟧⟪␠⟫        return
+    app.apply_setting(key, index)
+
+func _on_setting_action(key: String) -> void:
+    match key:
+        "rename":
+            # 改名入口在个人中心的资料面板上：回到那一页并展开改名⟦行⟧⟪␠⟫            _on_back_pressed()
+        "reset_skins":
+            if app != null:
+                app.reset_skins()
+        "logout":
+            if app != null:
+                app.logout()
+        "sync_now":
+            if app != null:
+                app.sync_offline_now()
+            _render_settings_category()   # 同步结果要反映到状态说明里
+
+func _on_settings_reset() -> void:
+    if app == null:
+        return
+    app.reset_settings()
+    app.toast.emit("已恢复默认设⟦置⟧⟪"⟫)
+
+func _on_settings_save() -> void:
+    # 设置是即时生⟦效⟧⟪␠⟫+ 即时落盘的，「保存设置」只是显式确认一次并回个人中⟦心⟧⟪\n⟫    if app != null:
+        app.toast.emit("设置已保⟦存⟧⟪"⟫)
+    _on_back_pressed()
+
+## 按快照回填所有设置行的状⟦态⟧⟪\n⟫func _refresh_settings(snapshot: Dictionary) -> void:
+    if _settings_rows.is_empty():
+        return
+    for key in _settings_rows.keys():
+        var rows: Array = _settings_rows[key]
+        for entry in rows:
+            var row := entry as SettingsRow
+            if row == null:
+                continue
+            match key:
+                "card_speed":
+                    row.set_step(int(snapshot.get("card_speed", 1)),
+                        snapshot.get("card_speed_labels", []))
+                "hint_level":
+                    row.set_step(int(snapshot.get("hint_level", 1)),
+                        snapshot.get("hint_level_labels", []))
+                "service_mode":
+                    # 档位下标⟦不⟧⟪␠⟫ServiceHub.Mode 一一对应⟦）⟧⟪\n⟫ = 离线⟦，⟧⟪\n⟫ = 联机
+                    row.set_step(int(snapshot.get("service_mode", ServiceHub.Mode.OFFLINE)),
+                        ["离线", "联机"])
+                _:
+                    row.set_switch(bool(snapshot.get(key, false)))
+
+func _on_skin_changed(snapshot: Dictionary) -> void:
+    apply_background_skin(snapshot.get("table", {}))
+
+achievements_view.gd:3	⟦。⟧⟪\n⟫
+achievements_view.gd:6	⟦┌⟧⟪␠⟫
+achievements_view.gd:6	⟦┘⟧⟪\n⟫
+achievements_view.gd:6	⟦│⟧⟪␠⟫
+achievements_view.gd:7	⟦├⟧⟪␠⟫
+achievements_view.gd:7	⟦路⟧⟪␠⟫
+achievements_view.gd:7	⟦」⟧⟪+⟫
+achievements_view.gd:7	⟦┘⟧⟪\n⟫
+achievements_view.gd:9	⟦约⟧⟪*⟫
+achievements_view.gd:10	⟦与⟧⟪␠⟫
+achievements_view.gd:10	⟦。⟧⟪\n⟫
+achievements_view.gd:10	⟦。⟧⟪\r⟫
+achievements_view.gd:12	⟦稿⟧⟪␠⟫
+achievements_view.gd:12	⟦）⟧⟪\n⟫
+achievements_view.gd:31	⟦：⟧⟪5⟫
+achievements_view.gd:31	⟦）⟧⟪+⟫
+achievements_view.gd:31	⟦左⟧⟪␠⟫
+achievements_view.gd:31	⟦。⟧⟪\n⟫
+achievements_view.gd:86	⟦线⟧⟪\n⟫
+achievements_view.gd:95	⟦区⟧⟪\n⟫
+achievements_view.gd:106	⟦距⟧⟪␠⟫
+achievements_view.gd:106	⟦区⟧⟪␠⟫
+achievements_view.gd:106	⟦）⟧⟪\n⟫
+achievements_view.gd:122	⟦键⟧⟪␠⟫
+achievements_view.gd:137	⟦它⟧⟪*⟫
+achievements_view.gd:137	⟦见⟧⟪"⟫
+achievements_view.gd:201	⟦边⟧⟪*⟫
+achievements_view.gd:201	⟦）⟧⟪\n⟫
+achievements_view.gd:238	⟦锁⟧⟪␠⟫
+achievements_view.gd:254	⟦记⟧⟪␠⟫
+achievements_view.gd:254	⟦条⟧⟪␠⟫
+achievements_view.gd:254	⟦。⟧⟪\n⟫
+achievements_view.gd:254	⟦。⟧⟪\n⟫
+achievements_view.gd:273	⟦锁⟧⟪␠⟫
+achievements_view.gd:273	⟦用⟧⟪␠⟫
+achievements_view.gd:273	⟦色⟧⟪\n⟫
+achievements_view.gd:297	⟦）⟧⟪\n⟫
+achievements_view.gd:299	⟦取⟧⟪"⟫
+achievements_view.gd:310	⟦领⟧⟪␠⟫
+achievements_view.gd:310	⟦变⟧⟪␠⟫
+achievements_view.gd:310	⟦取⟧⟪␠⟫
+achievements_view.gd:310	⟦钮⟧⟪\n⟫
+achievements_view.gd:311	⟦取⟧⟪␠⟫
+achievements_view.gd:311	⟦成⟧⟪"⟫
+achievements_view.gd:327	⟦进⟧⟪␠⟫
+achievements_view.gd:327	⟦→⟧⟪"⟫
+achievements_view.gd:327	⟦取⟧⟪"⟫
+---- 内联上下文 ----
+class_name AchievementsView
+extends AppPage
+## 我的成就（场景：achievements_view.tscn）⟦。⟧⟪\n⟫##
+## 从个人中心拆出来的独立页，内容与原来那一页一致：
+## ```
+## ⟦┌⟧⟪␠⟫分类表头（一条深底横条，三段：对局成就 / 胜利成就 / 收集成就）──⟦┘⟧⟪\n⟫## ⟦│⟧⟪␠⟫成就行（宝箱徽记 + 金质勋章 + 名称 / 说明 / 金进度条 + 领取按钮）┐
+## ⟦├⟧⟪␠⟫底部通栏：「成就之⟦路⟧⟪␠⟫持续解锁丰厚奖励⟦」⟧⟪+⟫ 总进度条 ─────────────⟦┘⟧⟪\n⟫## ```
+##
+## **节点名契⟦约⟧⟪*⟫*：`AchievementHeader` / `AchievementList` / `AchievementSummary` /
+## `AchievementTotalBar`，每条成就行内含 `AchievementMedal` ⟦与⟧⟪␠⟫`AchievementClaim`⟦。⟧⟪\n⟫## 设计稿这一页没有左侧账号卡，保留隐藏的 `LeftColumn` 占位节点给既有断言用⟦。⟧⟪\r⟫
+const PAGE_TITLE := "我的成就"
+## 金色顶栏高度（新⟦稿⟧⟪␠⟫58px⟦）⟧⟪\n⟫const TOP_BAR_HEIGHT := 58.0
+
+var _achievement_list: VBoxContainer
+var _achievement_summary: Label
+var _achievement_total_bar: ProgressBar
+var _top_bar: Control
+var _top_bar_style: GlossyBox
+
+func _bind_scene() -> void:
+    _build_top_bar()
+    _build_body()
+    if app != null:
+        app.profile_changed.connect(_on_profile_changed)
+        app.skin_changed.connect(_on_skin_changed)
+        _on_skin_changed(app.skin_snapshot())
+    _refresh_achievements({})
+
+# ---------------------------------------------------------------- 页头
+
+## 新稿的统一页头⟦：⟧⟪5⟫8px 金色顶栏（通栏⟦）⟧⟪+⟫ ⟦左⟧⟪␠⟫`‹` 返回 + 居中标题 + 右上角细金线祥云⟦。⟧⟪\n⟫func _build_top_bar() -> void:
+    if _top_bar != null:
+        return
+    _top_bar_style = ThemeFactory.top_bar_style()
+    _top_bar = Control.new()
+    _top_bar.name = "TopBar"
+    _top_bar.custom_minimum_size = Vector2(0, TOP_BAR_HEIGHT)
+    _top_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    add_child(_top_bar)
+    _top_bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+    _top_bar.offset_bottom = TOP_BAR_HEIGHT
+
+    var bg := PanelContainer.new()
+    bg.name = "TopBarBg"
+    bg.mouse_filter = Control.MOUSE_FILTER_STOP
+    bg.add_theme_stylebox_override("panel", _top_bar_style)
+    _top_bar.add_child(bg)
+    bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+    var row := UiKit.row(12)
+    row.name = "TopBarRow"
+    bg.add_child(row)
+
+    # 左：返回箭头。占位宽 150 与右侧祥云等宽，标题才是真的居中
+    var left := Control.new()
+    left.custom_minimum_size = Vector2(150, 46)
+    left.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    row.add_child(left)
+    var back := ThemeFactory.bare_button(Vector2(46, 46), 12)
+    back.name = "BackButton"
+    back.tooltip_text = "返回"
+    back.pressed.connect(_on_back_pressed)
+    left.add_child(back)
+    back.set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
+    back.offset_right = 46.0
+    var arrow := DesignIcons.back_arrow(Color.WHITE, 30.0)
+    arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    back.add_child(arrow)
+    arrow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    arrow.offset_left = 8.0
+    arrow.offset_top = 8.0
+    arrow.offset_right = -8.0
+    arrow.offset_bottom = -8.0
+
+    var title := ThemeFactory.outlined_label(PAGE_TITLE, 34, Color("#fff5de"), Color("#6b3a06"), 6)
+    title.name = "TitleLabel"
+    title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    row.add_child(title)
+
+    var wisp := Ornaments.cloud_wisp(Ornaments.WispCorner.TOP_RIGHT, 150.0, 0.5)
+    wisp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    row.add_child(wisp)
+
+    # 底边那道深金⟦线⟧⟪\n⟫    var rule := ColorRect.new()
+    rule.name = "TopBarRule"
+    rule.color = ThemeFactory.gold_rule_color()
+    rule.custom_minimum_size = Vector2(0, 2)
+    rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _top_bar.add_child(rule)
+    rule.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+    _sync_top_bar_insets()
+
+## 顶栏高度与左右内缩：通栏贴边，但栏内内容要让开设备安全⟦区⟧⟪\n⟫func _sync_top_bar_insets() -> void:
+    if _top_bar == null:
+        return
+    var insets := SafeArea.insets(self)
+    _top_bar.offset_bottom = insets.y + TOP_BAR_HEIGHT
+    if _top_bar_style != null:
+        _top_bar_style.content_margin_left = insets.x + 12.0
+        _top_bar_style.content_margin_right = insets.z + 12.0
+        _top_bar_style.content_margin_top = insets.y
+        _top_bar_style.content_margin_bottom = 0.0
+
+## 内容区的上边⟦距⟧⟪␠⟫= 安全⟦区⟧⟪␠⟫+ 页面留白 + 顶栏高度（顶栏在 `content()` 之外⟦）⟧⟪\n⟫func _apply_safe_area() -> void:
+    super()
+    var box := content()
+    if box == null:
+        return
+    box.add_theme_constant_override("margin_top",
+        int(round(SafeArea.insets(self).y + page_padding() + TOP_BAR_HEIGHT)))
+
+func _on_page_resized() -> void:
+    super()
+    _sync_top_bar_insets()
+
+func _on_back_pressed() -> void:
+    if app != null:
+        app.navigate(AppViewModel.Route.PROFILE)
+
+## 手机返回⟦键⟧⟪␠⟫/ ESC：本页消费掉，回个人中心
+func handle_back_request() -> bool:
+    _on_back_pressed()
+    return true
+
+# ---------------------------------------------------------------- 内容
+
+func _build_body() -> void:
+    var safe := content()
+    if safe == null:
+        return
+    for child in safe.get_children():
+        safe.remove_child(child)
+        child.queue_free()
+
+    # 设计稿这一页没有左侧账号卡：留一个隐藏占位节点，既有断言查的就是⟦它⟧⟪*⟫不可⟦见⟧⟪"⟫
+    var placeholder := Control.new()
+    placeholder.name = "LeftColumn"
+    placeholder.visible = false
+    placeholder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    safe.add_child(placeholder)
+
+    var scroll := ScrollContainer.new()
+    scroll.name = "Scroll"
+    scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    safe.add_child(scroll)
+    var body := UiKit.column(14)
+    body.name = "TabAchievements"
+    body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    scroll.add_child(body)
+
+    var header := PanelContainer.new()
+    header.name = "AchievementHeader"
+    header.custom_minimum_size = Vector2(0, 50)
+    header.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+        Color(0.23, 0.06, 0.04, 0.92), Color(0.16, 0.04, 0.03, 0.94),
+        Color(0, 0, 0, 0), 10, 0, 0.04, 0.24, 5.0, 10.0, 8.0))
+    body.add_child(header)
+    var header_row := UiKit.row(8)
+    header.add_child(header_row)
+    header_row.add_child(_make_achievement_category("对局成就"))
+    header_row.add_child(_make_achievement_category("胜利成就"))
+    header_row.add_child(_make_achievement_category("收集成就"))
+
+    _achievement_list = UiKit.column(10)
+    _achievement_list.name = "AchievementList"
+    _achievement_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    body.add_child(_achievement_list)
+
+    # 底部通栏进度汇总（设计稿底部那条金色横幅）
+    var summary := PanelContainer.new()
+    summary.name = "AchievementSummary"
+    summary.custom_minimum_size = Vector2(0, 62)
+    summary.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+        ThemeFactory.GOLD_MID, Color("#d99a1c"), Color("#fff0b8"), 14, 2, 0.34, 0.40, 6.0, 18.0, 8.0))
+    body.add_child(summary)
+    var summary_box := UiKit.column(4)
+    UiKit.padded(summary, 18, 8).add_child(summary_box)
+    _achievement_summary = ThemeFactory.label("成就之路 持续解锁丰厚奖励", 20, Color("#5a2305"))
+    _achievement_summary.name = "AchievementSummaryLabel"
+    _achievement_summary.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    summary_box.add_child(_achievement_summary)
+    _achievement_total_bar = ProgressBar.new()
+    _achievement_total_bar.name = "AchievementTotalBar"
+    _achievement_total_bar.show_percentage = false
+    _achievement_total_bar.custom_minimum_size = Vector2(0, 8)
+    _achievement_total_bar.add_theme_stylebox_override("background", ThemeFactory.flat_box(Color(0, 0, 0, 0.26), 4))
+    _achievement_total_bar.add_theme_stylebox_override("fill", ThemeFactory.flat_box(Color("#8a4a06"), 4))
+    summary_box.add_child(_achievement_total_bar)
+
+## 成就分类表头里的一段（居中标题，均分整条横条）
+func _make_achievement_category(text: String) -> Control:
+    var label := ThemeFactory.label(text, 19, Color("#e8c8a8"))
+    label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    return label
+
+## 列表行：暗底 + 柔投影，**不描⟦边⟧⟪*⟫*（一页里会有十几行，描边会吵⟦）⟧⟪\n⟫func _list_row_style() -> GlossyBox:
+    return ThemeFactory.glossy(Color(0.18, 0.04, 0.04, 0.82), Color(0.11, 0.02, 0.02, 0.86),
+        Color(0, 0, 0, 0), 12, 0, 0.04, 0.28, 6.0, 0.0, 0.0)
+
+# ---------------------------------------------------------------- 数据
+
+func _on_profile_changed(_snapshot: Dictionary) -> void:
+    _refresh_achievements({})
+
+func _on_skin_changed(snapshot: Dictionary) -> void:
+    apply_background_skin(snapshot.get("table", {}))
+
+func _refresh_achievements(_snapshot: Dictionary) -> void:
+    if _achievement_list == null:
+        return
+    for child in _achievement_list.get_children():
+        _achievement_list.remove_child(child)
+        child.queue_free()
+    var data: Dictionary = {}
+    if app != null:
+        data = app.achievement_snapshot()
+    var items: Array = data.get("items", [])
+    var unlocked_count := 0
+    var last_group := ""
+    for raw in items:
+        var item: Dictionary = raw
+        if bool(item.get("completed", false)):
+            unlocked_count += 1
+        var group := str(item.get("group", "成就"))
+        if group != last_group:
+            last_group = group
+            _achievement_list.add_child(_make_achievement_group_title(group))
+        _achievement_list.add_child(_make_achievement_row(item))
+    if _achievement_total_bar != null:
+        _achievement_total_bar.max_value = maxi(1, items.size())
+        _achievement_total_bar.value = unlocked_count
+    if _achievement_summary != null:
+        _achievement_summary.text = "成就之路 · 已解⟦锁⟧⟪␠⟫%d / %d · 持续解锁丰厚奖励" % [unlocked_count, items.size()]
+
+## 成就列表里的分组小标题：左侧金色竖条 + 组名
+func _make_achievement_group_title(text: String) -> Control:
+    var box := UiKit.row(8)
+    box.name = "AchievementGroup"
+    var accent := ColorRect.new()
+    accent.color = ThemeFactory.GOLD
+    accent.custom_minimum_size = Vector2(4, 20)
+    accent.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    accent.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    box.add_child(accent)
+    box.add_child(ThemeFactory.label(text, 16, ThemeFactory.GOLD))
+    box.add_child(UiKit.spacer(true))
+    return box
+
+## 单条成就：宝箱徽⟦记⟧⟪␠⟫+ 金质勋章 + 名称 / 说明 / 进度⟦条⟧⟪␠⟫+ 领取按钮⟦。⟧⟪\n⟫## `item` 由服务层给出：id / title / desc / target / progress / completed / claimed / claimable⟦。⟧⟪\n⟫func _make_achievement_row(item: Dictionary) -> Control:
+    var target := maxi(1, int(item.get("target", 1)))
+    var current := clampi(int(item.get("progress", 0)), 0, target)
+    var completed := bool(item.get("completed", false))
+    var claimed := bool(item.get("claimed", false))
+    var claimable := bool(item.get("claimable", completed and not claimed))
+    var panel := PanelContainer.new()
+    panel.name = "AchievementRow"
+    panel.add_theme_stylebox_override("panel", _list_row_style())
+    panel.custom_minimum_size = Vector2(0, 88)
+    var row := UiKit.row(14)
+    UiKit.padded(panel, 16, 12).add_child(row)
+
+    # 宝箱徽记（设计稿每行最左边那个深红包箱 + 金描边锁扣）
+    var emblem := DesignIcons.reward_chest(44.0)
+    emblem.name = "AchievementEmblem"
+    emblem.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    row.add_child(emblem)
+
+    # 金质勋章：解⟦锁⟧⟪␠⟫= 亮金；未解锁⟦用⟧⟪␠⟫modulate 压成青铜⟦色⟧⟪\n⟫    var medal := DesignIcons.medal(46.0)
+    medal.name = "AchievementMedal"
+    medal.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    if not completed:
+        medal.modulate = Color(0.72, 0.68, 0.58, 1.0)
+    row.add_child(medal)
+
+    var info := UiKit.column(5)
+    info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    row.add_child(info)
+    var title := ThemeFactory.label(str(item.get("title", "")), 20,
+        Color("#f7d98c") if completed else ThemeFactory.CREAM)
+    title.clip_text = true
+    info.add_child(title)
+    var desc := ThemeFactory.label(str(item.get("desc", "")), 15, Color("#b89a78"))
+    desc.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+    info.add_child(desc)
+    var bar := ProgressBar.new()
+    bar.name = "AchievementBar"
+    bar.show_percentage = false
+    bar.max_value = target
+    bar.value = current
+    bar.custom_minimum_size = Vector2(0, 9)
+    bar.add_theme_stylebox_override("background", ThemeFactory.flat_box(Color(0.16, 0.04, 0.03, 0.90), 5))
+    # 进度条一律金色（设计稿里的进度条都是 #F5C242，不跟随成就自身的主题色⟦）⟧⟪\n⟫    bar.add_theme_stylebox_override("fill", ThemeFactory.flat_box(ThemeFactory.GOLD_MID, 5))
+    info.add_child(bar)
+    var progress_text := "已领⟦取⟧⟪"⟫ if claimed else "进度 %d / %d" % [current, target]
+    var progress_label := ThemeFactory.label(progress_text, 13,
+        Color("#e8c8a8") if completed else ThemeFactory.TEXT_FAINT)
+    progress_label.name = "AchievementProgress"
+    info.add_child(progress_label)
+
+    var button := _make_claim_button(claimable, claimed)
+    button.pressed.connect(_on_achievement_claim.bind(str(item.get("id", "")), str(item.get("title", ""))))
+    row.add_child(button)
+    return panel
+
+## 成就行的领取按钮：可⟦领⟧⟪␠⟫= 金渐⟦变⟧⟪␠⟫+ 深金墨字；已完成 / 已领⟦取⟧⟪␠⟫= 灰按⟦钮⟧⟪\n⟫func _make_claim_button(claimable: bool, claimed: bool) -> Button:
+    var text := "领取" if claimable else ("已领⟦取⟧⟪␠⟫ if claimed else "已完⟦成⟧⟪"⟫)
+    var button: Button
+    if claimable:
+        button = ThemeFactory.gold_button(text, 18)
+    else:
+        button = ThemeFactory.neutral_button(text, 18)
+        button.disabled = true
+    button.name = "AchievementClaim"
+    button.custom_minimum_size = Vector2(112, 46)
+    button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    return button
+
+func _on_achievement_claim(achievement_id: String, _title: String) -> void:
+    if app == null:
+        return
+    app.claim_achievement(achievement_id)
+    # 服务层已更新缓存并弹⟦进⟧⟪␠⟫toast，这里重绘一次让"领取 ⟦→⟧⟪"⟫已领⟦取⟧⟪"⟫立刻可见
+    _refresh_achievements({})
+
+messages_view.gd:3	⟦。⟧⟪\n⟫
+messages_view.gd:6	⟦取⟧⟪"⟫
+messages_view.gd:7	⟦│⟧⟪␠⟫
+messages_view.gd:7	⟦点⟧⟪␠⟫
+messages_view.gd:7	⟦│⟧⟪\n⟫
+messages_view.gd:8	⟦息⟧⟪␠⟫
+messages_view.gd:9	⟦—⟧⟪␠⟫
+messages_view.gd:9	⟦、⟧⟪\n⟫
+messages_view.gd:10	⟦约⟧⟪*⟫
+messages_view.gd:10	⟦）⟧⟪+⟫
+messages_view.gd:10	⟦。⟧⟪\r⟫
+messages_view.gd:12	⟦稿⟧⟪␠⟫
+messages_view.gd:12	⟦）⟧⟪\n⟫
+messages_view.gd:13	⟦见⟧⟪␠⟫
+messages_view.gd:13	⟦）⟧⟪\n⟫
+messages_view.gd:32	⟦：⟧⟪5⟫
+messages_view.gd:32	⟦）⟧⟪+⟫
+messages_view.gd:32	⟦左⟧⟪␠⟫
+messages_view.gd:32	⟦。⟧⟪\n⟫
+messages_view.gd:87	⟦线⟧⟪\n⟫
+messages_view.gd:96	⟦区⟧⟪\n⟫
+messages_view.gd:107	⟦距⟧⟪␠⟫
+messages_view.gd:107	⟦区⟧⟪␠⟫
+messages_view.gd:107	⟦）⟧⟪\n⟫
+messages_view.gd:123	⟦键⟧⟪␠⟫
+messages_view.gd:138	⟦点⟧⟪\n⟫
+messages_view.gd:164	⟦取⟧⟪"⟫
+messages_view.gd:175	⟦边⟧⟪*⟫
+messages_view.gd:175	⟦）⟧⟪\n⟫
+messages_view.gd:187	⟦息⟧⟪␠⟫
+messages_view.gd:188	⟦—⟧⟪␠⟫
+messages_view.gd:188	⟦。⟧⟪\n⟫
+messages_view.gd:193	⟦法⟧⟪"⟫
+messages_view.gd:232	⟦息⟧⟪"⟫
+messages_view.gd:238	⟦，⟧⟪"⟫
+messages_view.gd:241	⟦进⟧⟪"⟫
+messages_view.gd:249	⟦、⟧⟪"⟫
+messages_view.gd:249	⟦友⟧⟪"⟫
+messages_view.gd:252	⟦发⟧⟪"⟫
+messages_view.gd:256	⟦：⟧⟪%⟫
+messages_view.gd:256	⟦：⟧⟪%⟫
+messages_view.gd:259	⟦胜⟧⟪␠⟫
+messages_view.gd:259	⟦账⟧⟪"⟫
+messages_view.gd:263	⟦法⟧⟪"⟫
+messages_view.gd:266	⟦讯⟧⟪"⟫
+messages_view.gd:273	⟦奖⟧⟪"⟫
+messages_view.gd:277	⟦点⟧⟪␠⟫
+messages_view.gd:291	⟦是⟧⟪␠⟫
+messages_view.gd:291	⟦≤⟧⟪␠⟫
+messages_view.gd:291	⟦，⟧⟪\n⟫
+messages_view.gd:291	⟦。⟧⟪\n⟫
+messages_view.gd:294	⟦要⟧⟪*⟫
+messages_view.gd:294	⟦持⟧⟪␠⟫
+messages_view.gd:295	⟦层⟧⟪␠⟫
+messages_view.gd:295	⟦。⟧⟪\n⟫
+messages_view.gd:315	⟦间⟧⟪␠⟫
+messages_view.gd:332	⟦被⟧⟪␠⟫
+messages_view.gd:332	⟦圆⟧⟪␠⟫
+messages_view.gd:344	⟦取⟧⟪"⟫
+messages_view.gd:351	⟦新⟧⟪␠⟫
+messages_view.gd:351	⟦动⟧⟪␠⟫
+messages_view.gd:351	⟦友⟧⟪␠⟫
+messages_view.gd:351	⟦统⟧⟪␠⟫
+messages_view.gd:351	⟦。⟧⟪\n⟫
+messages_view.gd:351	⟦。⟧⟪\n⟫
+---- 内联上下文 ----
+class_name MessagesView
+extends AppPage
+## 消息中心（场景：messages_view.tscn）⟦。⟧⟪\n⟫##
+## 从个人中心拆出来的独立页，内容与原来那一页一致：
+## ```
+## [ 系统消息 ][ 好友消息 ][ 游戏公告 ]                    [ 一键领⟦取⟧⟪"⟫]
+## ⟦│⟧⟪␠⟫邮件行：圆形徽记 + 标题 / 正文 + 时间 + 未读⟦点⟧⟪␠⟫+ [ 领取 ] ⟦│⟧⟪\n⟫## ```
+## 服务端的邮件没有分类字段，这里按标题关键字归到「好友消⟦息⟧⟪␠⟫/ 游戏公告」，
+## 其余一律落到默认的「系统消息」—⟦—⟧⟪␠⟫默认页因此永远能看到没被归类的邮件，不会漏消息⟦、⟧⟪\n⟫##
+## **节点名契⟦约⟧⟪*⟫*：`MailTabs`（`SegmentTabs`⟦）⟧⟪+⟫ `MailClaimAll` / `MessageList` / `MailClaim` / `TabMessages`⟦。⟧⟪\r⟫
+const PAGE_TITLE := "消息中心"
+## 金色顶栏高度（新⟦稿⟧⟪␠⟫58px⟦）⟧⟪\n⟫const TOP_BAR_HEIGHT := 58.0
+## 三个页签：服务端邮件没有分类字段，按标题关键字归类（⟦见⟧⟪␠⟫`_mail_category_of`⟦）⟧⟪\n⟫const MAIL_CATEGORIES := ["系统消息", "好友消息", "游戏公告"]
+
+var _message_list: VBoxContainer
+var _mail_tabs: SegmentTabs
+var _mail_category := 0
+var _top_bar: Control
+var _top_bar_style: GlossyBox
+
+func _bind_scene() -> void:
+    _build_top_bar()
+    _build_body()
+    if app != null:
+        app.profile_changed.connect(_on_profile_changed)
+        app.skin_changed.connect(_on_skin_changed)
+        _on_skin_changed(app.skin_snapshot())
+        _rebuild_messages(app.profile_snapshot())
+
+# ---------------------------------------------------------------- 页头
+
+## 新稿的统一页头⟦：⟧⟪5⟫8px 金色顶栏（通栏⟦）⟧⟪+⟫ ⟦左⟧⟪␠⟫`‹` 返回 + 居中标题 + 右上角细金线祥云⟦。⟧⟪\n⟫func _build_top_bar() -> void:
+    if _top_bar != null:
+        return
+    _top_bar_style = ThemeFactory.top_bar_style()
+    _top_bar = Control.new()
+    _top_bar.name = "TopBar"
+    _top_bar.custom_minimum_size = Vector2(0, TOP_BAR_HEIGHT)
+    _top_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    add_child(_top_bar)
+    _top_bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+    _top_bar.offset_bottom = TOP_BAR_HEIGHT
+
+    var bg := PanelContainer.new()
+    bg.name = "TopBarBg"
+    bg.mouse_filter = Control.MOUSE_FILTER_STOP
+    bg.add_theme_stylebox_override("panel", _top_bar_style)
+    _top_bar.add_child(bg)
+    bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+    var row := UiKit.row(12)
+    row.name = "TopBarRow"
+    bg.add_child(row)
+
+    # 左：返回箭头。占位宽 150 与右侧祥云等宽，标题才是真的居中
+    var left := Control.new()
+    left.custom_minimum_size = Vector2(150, 46)
+    left.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    row.add_child(left)
+    var back := ThemeFactory.bare_button(Vector2(46, 46), 12)
+    back.name = "BackButton"
+    back.tooltip_text = "返回"
+    back.pressed.connect(_on_back_pressed)
+    left.add_child(back)
+    back.set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
+    back.offset_right = 46.0
+    var arrow := DesignIcons.back_arrow(Color.WHITE, 30.0)
+    arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    back.add_child(arrow)
+    arrow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    arrow.offset_left = 8.0
+    arrow.offset_top = 8.0
+    arrow.offset_right = -8.0
+    arrow.offset_bottom = -8.0
+
+    var title := ThemeFactory.outlined_label(PAGE_TITLE, 34, Color("#fff5de"), Color("#6b3a06"), 6)
+    title.name = "TitleLabel"
+    title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    row.add_child(title)
+
+    var wisp := Ornaments.cloud_wisp(Ornaments.WispCorner.TOP_RIGHT, 150.0, 0.5)
+    wisp.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    row.add_child(wisp)
+
+    # 底边那道深金⟦线⟧⟪\n⟫    var rule := ColorRect.new()
+    rule.name = "TopBarRule"
+    rule.color = ThemeFactory.gold_rule_color()
+    rule.custom_minimum_size = Vector2(0, 2)
+    rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _top_bar.add_child(rule)
+    rule.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+    _sync_top_bar_insets()
+
+## 顶栏高度与左右内缩：通栏贴边，但栏内内容要让开设备安全⟦区⟧⟪\n⟫func _sync_top_bar_insets() -> void:
+    if _top_bar == null:
+        return
+    var insets := SafeArea.insets(self)
+    _top_bar.offset_bottom = insets.y + TOP_BAR_HEIGHT
+    if _top_bar_style != null:
+        _top_bar_style.content_margin_left = insets.x + 12.0
+        _top_bar_style.content_margin_right = insets.z + 12.0
+        _top_bar_style.content_margin_top = insets.y
+        _top_bar_style.content_margin_bottom = 0.0
+
+## 内容区的上边⟦距⟧⟪␠⟫= 安全⟦区⟧⟪␠⟫+ 页面留白 + 顶栏高度（顶栏在 `content()` 之外⟦）⟧⟪\n⟫func _apply_safe_area() -> void:
+    super()
+    var box := content()
+    if box == null:
+        return
+    box.add_theme_constant_override("margin_top",
+        int(round(SafeArea.insets(self).y + page_padding() + TOP_BAR_HEIGHT)))
+
+func _on_page_resized() -> void:
+    super()
+    _sync_top_bar_insets()
+
+func _on_back_pressed() -> void:
+    if app != null:
+        app.navigate(AppViewModel.Route.PROFILE)
+
+## 手机返回⟦键⟧⟪␠⟫/ ESC：本页消费掉，回个人中心
+func handle_back_request() -> bool:
+    _on_back_pressed()
+    return true
+
+# ---------------------------------------------------------------- 内容
+
+func _build_body() -> void:
+    var safe := content()
+    if safe == null:
+        return
+    for child in safe.get_children():
+        safe.remove_child(child)
+        child.queue_free()
+
+    # 设计稿这一页是整页通栏的邮件列表（没有左侧账号卡）：留一个隐藏占位节⟦点⟧⟪\n⟫    var placeholder := Control.new()
+    placeholder.name = "LeftColumn"
+    placeholder.visible = false
+    placeholder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    safe.add_child(placeholder)
+
+    var scroll := ScrollContainer.new()
+    scroll.name = "Scroll"
+    scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    safe.add_child(scroll)
+    var body := UiKit.column(12)
+    body.name = "TabMessages"
+    body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    scroll.add_child(body)
+
+    var head := UiKit.row(12)
+    head.name = "MailTabsRow"
+    body.add_child(head)
+    _mail_tabs = SegmentTabs.new()
+    _mail_tabs.name = "MailTabs"
+    _mail_tabs.custom_minimum_size = Vector2(0, 52)
+    _mail_tabs.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    _mail_tabs.tab_changed.connect(_on_mail_tab_changed)
+    _mail_tabs.set_tabs(MAIL_CATEGORIES)
+    head.add_child(_mail_tabs)
+    var claim_all := ThemeFactory.gold_button("一键领⟦取⟧⟪"⟫, 18)
+    claim_all.name = "MailClaimAll"
+    claim_all.custom_minimum_size = Vector2(150, 52)
+    claim_all.pressed.connect(_on_mail_claim_all)
+    head.add_child(claim_all)
+
+    _message_list = UiKit.column(10)
+    _message_list.name = "MessageList"
+    _message_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    body.add_child(_message_list)
+
+## 列表行：暗底 + 柔投影，**不描⟦边⟧⟪*⟫*（一页里会有十几行，描边会吵⟦）⟧⟪\n⟫func _list_row_style() -> GlossyBox:
+    return ThemeFactory.glossy(Color(0.18, 0.04, 0.04, 0.82), Color(0.11, 0.02, 0.02, 0.86),
+        Color(0, 0, 0, 0), 12, 0, 0.04, 0.28, 6.0, 0.0, 0.0)
+
+# ---------------------------------------------------------------- 数据
+
+func _on_profile_changed(snapshot: Dictionary) -> void:
+    _rebuild_messages(snapshot)
+
+func _on_skin_changed(snapshot: Dictionary) -> void:
+    apply_background_skin(snapshot.get("table", {}))
+
+## 邮件的三分类：服务端的邮件没有分类字段，这里按标题关键字归到「好友消⟦息⟧⟪␠⟫/ 游戏公告」，
+## 其余一律落到默认的「系统消息」—⟦—⟧⟪␠⟫默认页因此永远能看到没被归类的邮件，不会漏消息⟦。⟧⟪\n⟫func _mail_category_of(item: Dictionary) -> int:
+    var title := str(item.get("title", ""))
+    if title.contains("好友") or title.contains("申请"):
+        return 1
+    if title.contains("公告") or title.contains("活动") or title.contains("奖励") \
+            or title.contains("更新") or title.contains("版本") or title.contains("新玩⟦法⟧⟪"⟫):
+        return 2
+    return 0
+
+func _on_mail_tab_changed(index: int) -> void:
+    _mail_category = clampi(index, 0, MAIL_CATEGORIES.size() - 1)
+    if app != null:
+        _rebuild_messages(app.profile_snapshot())
+
+func _on_mail_claim_all() -> void:
+    if app == null:
+        return
+    app.claim_all_mail()
+    _rebuild_messages(app.profile_snapshot())
+
+func _rebuild_messages(snapshot: Dictionary) -> void:
+    if _message_list == null:
+        return
+    for child in _message_list.get_children():
+        _message_list.remove_child(child)
+        child.queue_free()
+    var mail: Dictionary = {}
+    if app != null:
+        mail = app.mail_snapshot()
+    var items: Array = []
+    if bool(mail.get("has_mail", false)):
+        items = mail.get("items", [])
+    else:
+        # 离线 / 邮件不可用：退回本地提示，保证界面不空
+        items = _collect_messages(snapshot)
+    var shown := 0
+    for raw in items:
+        var message: Dictionary = raw
+        if _mail_category_of(message) != _mail_category:
+            continue
+        _message_list.add_child(_make_message_row(message))
+        shown += 1
+    if shown == 0:
+        _message_list.add_child(ThemeFactory.label(
+            "%s暂时没有新消⟦息⟧⟪"⟫ % str(MAIL_CATEGORIES[_mail_category]), 16, ThemeFactory.TEXT_FAINT))
+
+func _collect_messages(snapshot: Dictionary) -> Array:
+    var out: Array = []
+    out.append({
+        "title": "系统通知",
+        "body": "欢迎加入狂欢斗地主，祝你牌运昌隆、天天好手气⟦，⟧⟪"⟫,
+        "time": str(snapshot.get("created_text", "")),
+        "color": ThemeFactory.GOLD,
+        "icon": "⟦进⟧⟪"⟫,
+    })
+    var history: Array = snapshot.get("history", [])
+    if not history.is_empty():
+        var last: Dictionary = history[0]
+        var won := bool(last.get("won", false))
+        out.append({
+            "title": "好友申请",
+            "body": "玩家⟦、⟧⟪"⟫s」请求添加您为好⟦友⟧⟪"⟫ % str(last.get("opponents", "牌友")),
+            "time": str(last.get("time_text", "")),
+            "color": Color("#8a3a2a"),
+            "icon": "⟦发⟧⟪"⟫,
+        })
+        out.append({
+            "title": "上一局对局结果",
+            "body": "作为%s⟦：⟧⟪%⟫s⟦：⟧⟪%⟫s" % [str(last.get("role", "玩家")), str(last.get("result_text", "")), str(last.get("gold_text", ""))],
+            "time": str(last.get("time_text", "")),
+            "color": Color("#8a3a2a") if won else Color("#5a1414"),
+            "icon": "⟦胜⟧⟪␠⟫ if won else "⟦账⟧⟪"⟫,
+        })
+    out.append({
+        "title": "版本更新",
+        "body": "新版本已上线，更新体验更多玩⟦法⟧⟪"⟫,
+        "time": "昨天",
+        "color": Color("#5a1414"),
+        "icon": "⟦讯⟧⟪"⟫,
+    })
+    out.append({
+        "title": "活动奖励",
+        "body": "国庆活动奖励已发放至您的邮箱",
+        "time": "昨天",
+        "color": ThemeFactory.GOLD,
+        "icon": "⟦奖⟧⟪"⟫,
+    })
+    return out
+
+## 邮件 / 消息行：圆形徽记 + 标题 / 正文 + 时间 + 未读⟦点⟧⟪␠⟫+ 领取按钮
+func _make_message_row(message: Dictionary) -> Control:
+    var panel := PanelContainer.new()
+    panel.name = "MessageRow"
+    panel.add_theme_stylebox_override("panel", _list_row_style())
+    panel.custom_minimum_size = Vector2(0, 92)
+    var row := UiKit.row(14)
+    UiKit.padded(panel, 16, 12).add_child(row)
+
+    var color: Color = message.get("color", ThemeFactory.GOLD)
+    var badge := PanelContainer.new()
+    badge.name = "MessageBadge"
+    badge.custom_minimum_size = Vector2(56, 56)
+    badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    # 半径 27（而不⟦是⟧⟪␠⟫28）：`GlossyBox._polygon_ok()` 要求 `圆角 ⟦≤⟧⟪␠⟫短边/2 - 0.5`⟦，⟧⟪\n⟫    # 取满半高时整块填充会被判成自交多边形直接丢掉⟦。⟧⟪\n⟫    badge.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+        color.darkened(0.10), color.darkened(0.48), Color(0, 0, 0, 0), 27, 0, 0.14, 0.26, 4.0, 0.0, 0.0))
+    row.add_child(badge)
+    # 徽记里的图标⟦要⟧⟪*⟫*居中且保⟦持⟧⟪␠⟫30px**：`PanelContainer` 会把直接子节点撑满整块，
+    # 所以中间垫一⟦层⟧⟪␠⟫`Control`，图标按 `PRESET_CENTER` 摆进去⟦。⟧⟪\n⟫    var icon_box := Control.new()
+    icon_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    badge.add_child(icon_box)
+    var icon := _mail_icon(message, color.get_luminance() < 0.35)
+    icon.custom_minimum_size = Vector2(30, 30)
+    icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    icon_box.add_child(icon)
+    icon.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+
+    var info := UiKit.column(4)
+    info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    row.add_child(info)
+    var title := ThemeFactory.label(str(message.get("title", "")), 20, Color("#f5e8c7"))
+    title.clip_text = true
+    info.add_child(title)
+    var body := ThemeFactory.label(str(message.get("body", "")), 15, Color("#b89a78"))
+    body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+    info.add_child(body)
+
+    # 右侧：时⟦间⟧⟪␠⟫+ 未读点在上，领取按钮在下（与设计稿一致）
+    var tail := UiKit.column(6)
+    tail.custom_minimum_size = Vector2(160, 0)
+    tail.alignment = BoxContainer.ALIGNMENT_CENTER
+    row.add_child(tail)
+    var time_row := UiKit.row(10)
+    time_row.alignment = BoxContainer.ALIGNMENT_END
+    tail.add_child(time_row)
+    var can_claim := bool(message.get("can_claim", false))
+    var time := ThemeFactory.label(str(message.get("time", "")), 14, Color("#8a6a50"))
+    time.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    time_row.add_child(time)
+    if can_claim:
+        var dot := PanelContainer.new()
+        dot.name = "MessageDot"
+        dot.custom_minimum_size = Vector2(12, 12)
+        dot.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+        # 不用 `chip_style`（那套半径是 999、会⟦被⟧⟪␠⟫`_polygon_ok()` 整块丢掉），直接给一个能画出来的⟦圆⟧⟪␠⟫        dot.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+            Color("#e04040"), Color("#a02121"), Color(0, 0, 0, 0), 5, 0, 0.10, 0.0, 0.0, 0.0, 0.0))
+        time_row.add_child(dot)
+
+    var mail_id := str(message.get("id", ""))
+    if can_claim:
+        var claim := ThemeFactory.gold_button("领取", 17)
+        claim.name = "MailClaim"
+        claim.custom_minimum_size = Vector2(120, 44)
+        claim.pressed.connect(_on_mail_claim.bind(mail_id))
+        tail.add_child(claim)
+    elif bool(message.get("has_attachment", false)) and bool(message.get("claimed", false)):
+        var done := ThemeFactory.neutral_button("已领⟦取⟧⟪"⟫, 16)
+        done.name = "MailClaimed"
+        done.custom_minimum_size = Vector2(120, 44)
+        done.disabled = true
+        tail.add_child(done)
+    return panel
+
+## 邮件徽记里的图标：更⟦新⟧⟪␠⟫回转箭头、活⟦动⟧⟪␠⟫礼盒、好⟦友⟧⟪␠⟫人像、系⟦统⟧⟪␠⟫喇叭⟦。⟧⟪\n⟫## `on_dark` = 徽记底色偏暗，图标就得用亮色（否则深金墨压在暗红圆上根本看不见）⟦。⟧⟪\n⟫func _mail_icon(message: Dictionary, on_dark: bool) -> Control:
+    var ink := Color("#f7d98c") if on_dark else Color("#4a2600")
+    var title := str(message.get("title", ""))
+    if title.contains("更新") or title.contains("版本"):
+        return DesignIcons.refresh(ink, 28.0)
+    if title.contains("活动") or title.contains("奖励"):
+        return DesignIcons.gift(ink, 26.0)
+    if _mail_category_of(message) == 1:
+        return DesignIcons.friend(ink, 28.0)
+    return DesignIcons.speaker(ink, 26.0)
+
+func _on_mail_claim(mail_id: String) -> void:
+    if app == null:
+        return
+    var result := app.claim_mail(mail_id)
+    if not bool(result.get("ok", false)):
+        return
+    if _message_list != null:
+        _rebuild_messages(app.profile_snapshot())
+
+profile_view.gd:3	⟦页⟧⟪*⟫
+profile_view.gd:3	⟦。⟧⟪\n⟫
+profile_view.gd:4	⟦：⟧⟪\n⟫
+profile_view.gd:5	⟦┌⟧⟪␠⟫
+profile_view.gd:5	⟦‹⟧⟪␠⟫
+profile_view.gd:5	⟦⚙⟧⟪␠⟫
+profile_view.gd:5	⟦┘⟧⟪\n⟫
+profile_view.gd:5	⟦│⟧⟪␠⟫
+profile_view.gd:5	⟦─⟧⟪␠⟫
+profile_view.gd:5	⟦┘⟧⟪\n⟫
+profile_view.gd:5	⟦┌⟧⟪␠⟫
+profile_view.gd:5	⟦│⟧⟪␠⟫
+profile_view.gd:5	⟦—⟧⟪␠⟫
+profile_view.gd:5	⟦│⟧⟪\n⟫
+profile_view.gd:5	⟦│⟧⟪␠⟫
+profile_view.gd:5	⟦│⟧⟪␠⟫
+profile_view.gd:5	⟦—⟧⟪␠⟫
+profile_view.gd:5	⟦│⟧⟪\n⟫
+profile_view.gd:5	⟦│⟧⟪␠⟫
+profile_view.gd:5	⟦条⟧⟪␠⟫
+profile_view.gd:5	⟦│⟧⟪␠⟫
+profile_view.gd:5	⟦—⟧⟪␠⟫
+profile_view.gd:5	⟦│⟧⟪\n⟫
+profile_view.gd:5	⟦├⟧⟪␠⟫
+profile_view.gd:5	⟦钻⟧⟪␠⟫
+profile_view.gd:5	⟦│⟧⟪␠⟫
+profile_view.gd:5	⟦—⟧⟪␠⟫
+profile_view.gd:5	⟦│⟧⟪\n⟫
+profile_view.gd:5	⟦│⟧⟪␠⟫
+profile_view.gd:5	⟦│⟧⟪␠⟫
+profile_view.gd:5	⟦—⟧⟪␠⟫
+profile_view.gd:5	⟦│⟧⟪\n⟫
+profile_view.gd:5	⟦┘⟧⟪\n⟫
+profile_view.gd:6	⟦页⟧⟪*⟫
+profile_view.gd:6	⟦制⟧⟪␠⟫
+profile_view.gd:6	⟦刷⟧⟪\n⟫
+profile_view.gd:6	⟦，⟧⟪\n⟫
+profile_view.gd:6	⟦到⟧⟪␠⟫
+profile_view.gd:7	⟦。⟧⟪\n⟫
+profile_view.gd:8	⟦。⟧⟪\n⟫
+profile_view.gd:10	⟦稿⟧⟪␠⟫
+profile_view.gd:10	⟦）⟧⟪\n⟫
+profile_view.gd:11	⟦稿⟧⟪␠⟫
+profile_view.gd:11	⟦板⟧⟪*⟫
+profile_view.gd:13	⟦环⟧⟪␠⟫
+profile_view.gd:13	⟦像⟧⟪␠⟫
+profile_view.gd:13	⟦标⟧⟪\n⟫
+profile_view.gd:15	⟦。⟧⟪\n⟫
+profile_view.gd:15	⟦。⟧⟪\n⟫
+profile_view.gd:16	⟦≈⟧⟪␠⟫
+profile_view.gd:16	⟦）⟧⟪\n⟫
+profile_view.gd:17	⟦。⟧⟪\n⟫
+profile_view.gd:17	⟦部⟧⟪␠⟫
+profile_view.gd:17	⟦。⟧⟪\n⟫
+profile_view.gd:25	⟦掉⟧⟪\n⟫
+profile_view.gd:56	⟦：⟧⟪5⟫
+profile_view.gd:56	⟦）⟧⟪+⟫
+profile_view.gd:56	⟦左⟧⟪␠⟫
+profile_view.gd:56	⟦、⟧⟪\n⟫
+profile_view.gd:56	⟦在⟧⟪␠⟫
+profile_view.gd:56	⟦）⟧⟪\n⟫
+profile_view.gd:56	⟦。⟧⟪\n⟫
+profile_view.gd:130	⟦线⟧⟪\n⟫
+profile_view.gd:139	⟦区⟧⟪\n⟫
+profile_view.gd:150	⟦距⟧⟪␠⟫
+profile_view.gd:150	⟦区⟧⟪␠⟫
+profile_view.gd:150	⟦）⟧⟪\n⟫
+profile_view.gd:167	⟦键⟧⟪␠⟫
+profile_view.gd:177	⟦幅⟧⟪␠⟫
+profile_view.gd:202	⟦稿⟧⟪␠⟫
+profile_view.gd:202	⟦，⟧⟪\n⟫
+profile_view.gd:202	⟦。⟧⟪\n⟫
+profile_view.gd:218	⟦边⟧⟪␠⟫
+profile_view.gd:218	⟦角⟧⟪␠⟫
+profile_view.gd:218	⟦）⟧⟪\n⟫
+profile_view.gd:222	⟦底⟧⟪␠⟫
+profile_view.gd:222	⟦边⟧⟪␠⟫
+profile_view.gd:222	⟦，⟧⟪2⟫
+profile_view.gd:236	⟦录⟧⟪␠⟫
+profile_view.gd:263	⟦边⟧⟪␠⟫
+profile_view.gd:263	⟦。⟧⟪\n⟫
+profile_view.gd:263	⟦高⟧⟪␠⟫
+profile_view.gd:263	⟦≤⟧⟪␠⟫
+profile_view.gd:263	⟦，⟧⟪\n⟫
+profile_view.gd:263	⟦。⟧⟪\n⟫
+profile_view.gd:293	⟦制⟧⟪␠⟫
+profile_view.gd:293	⟦。⟧⟪\n⟫
+profile_view.gd:294	⟦了⟧⟪\n⟫
+profile_view.gd:294	⟦高⟧⟪\n⟫
+profile_view.gd:294	⟦—⟧⟪␠⟫
+profile_view.gd:294	⟦。⟧⟪\n⟫
+profile_view.gd:300	⟦板⟧⟪\n⟫
+profile_view.gd:313	⟦在⟧⟪␠⟫
+profile_view.gd:320	⟦置⟧⟪*⟫
+profile_view.gd:321	⟦。⟧⟪\n⟫
+profile_view.gd:321	⟦「⟧⟪␠⟫
+profile_view.gd:327	⟦板⟧⟪*⟫
+profile_view.gd:327	⟦）⟧⟪\n⟫
+profile_view.gd:330	⟦录⟧⟪"⟫
+profile_view.gd:339	⟦像⟧⟪␠⟫
+profile_view.gd:339	⟦。⟧⟪\n⟫
+profile_view.gd:340	⟦制⟧⟪␠⟫
+profile_view.gd:341	⟦。⟧⟪\n⟫
+profile_view.gd:341	⟦。⟧⟪\n⟫
+profile_view.gd:360	⟦成⟧⟪␠⟫
+profile_view.gd:360	⟦环⟧⟪␠⟫
+profile_view.gd:361	⟦金⟧⟪␠⟫
+profile_view.gd:361	⟦—⟧⟪␠⟫
+profile_view.gd:361	⟦。⟧⟪\n⟫
+profile_view.gd:399	⟦的⟧⟪*⟫
+profile_view.gd:399	⟦成⟧⟪␠⟫
+profile_view.gd:399	⟦，⟧⟪\n⟫
+profile_view.gd:399	⟦在⟧⟪␠⟫
+profile_view.gd:400	⟦宽⟧⟪␠⟫
+profile_view.gd:400	⟦—⟧⟪␠⟫
+profile_view.gd:400	⟦。⟧⟪\n⟫
+profile_view.gd:400	⟦让⟧⟪␠⟫
+profile_view.gd:400	⟦。⟧⟪\n⟫
+profile_view.gd:421	⟦币⟧⟪␠⟫
+profile_view.gd:428	⟦分⟧⟪"⟫
+profile_view.gd:474	⟦标⟧⟪␠⟫
+profile_view.gd:486	⟦口⟧⟪\n⟫
+profile_view.gd:491	⟦。⟧⟪\n⟫
+profile_view.gd:491	⟦的⟧⟪␠⟫
+profile_view.gd:491	⟦是⟧⟪␠⟫
+profile_view.gd:491	⟦。⟧⟪\n⟫
+profile_view.gd:523	⟦绩⟧⟪␠⟫
+profile_view.gd:523	⟦肤⟧⟪␠⟫
+profile_view.gd:523	⟦就⟧⟪␠⟫
+profile_view.gd:523	⟦息⟧⟪␠⟫
+profile_view.gd:548	⟦第⟧⟪␠⟫
+profile_view.gd:548	⟦页⟧⟪␠⟫
+profile_view.gd:548	⟦→⟧⟪␠⟫
+profile_view.gd:548	⟦面⟧⟪\n⟫
+profile_view.gd:559	⟦处⟧⟪*⟫
+profile_view.gd:559	⟦。⟧⟪\n⟫
+profile_view.gd:559	⟦记⟧⟪\n⟫
+profile_view.gd:580	⟦，⟧⟪\n⟫
+profile_view.gd:580	⟦。⟧⟪\n⟫
+profile_view.gd:597	⟦游⟧⟪"⟫
+profile_view.gd:602	⟦的⟧⟪␠⟫
+profile_view.gd:602	⟦是⟧⟪␠⟫
+profile_view.gd:602	⟦）⟧⟪\n⟫
+profile_view.gd:663	⟦制⟧⟪␠⟫
+profile_view.gd:663	⟦次⟧⟪␠⟫
+profile_view.gd:676	⟦环⟧⟪␠⟫
+profile_view.gd:676	⟦）⟧⟪\n⟫
+profile_view.gd:694	⟦。⟧⟪\n⟫
+---- 内联上下文 ----
+class_name ProfileView
+extends AppPage
+## 个人中心**入口⟦页⟧⟪*⟫*（场景：profile_view.tscn）⟦。⟧⟪\n⟫##
+## 这一页只做两件事⟦：⟧⟪\n⟫## ```
+## ⟦┌⟧⟪␠⟫金色顶栏：⟦‹⟧⟪␠⟫返回         个人中心        祥云   ⟦⚙⟧⟪␠⟫──────────⟦┘⟧⟪\n⟫## ⟦│⟧⟪␠⟫资料面板 ────────────────────⟦─⟧⟪␠⟫竖排菜单（点击即跳转）──────⟦┘⟧⟪\n⟫## ⟦┌⟧⟪␠⟫金环头像 + 编辑角标（改名）  ⟦│⟧⟪␠⟫我的战绩              ⟦—⟧⟪␠⟫    ⟦│⟧⟪\n⟫## ⟦│⟧⟪␠⟫昵称 / ID + 复制 / VIP 徽章  ⟦│⟧⟪␠⟫主题皮肤              ⟦—⟧⟪␠⟫    ⟦│⟧⟪\n⟫## ⟦│⟧⟪␠⟫经验⟦条⟧⟪␠⟫                      ⟦│⟧⟪␠⟫我的成就              ⟦—⟧⟪␠⟫    ⟦│⟧⟪\n⟫## ⟦├⟧⟪␠⟫底部三格资产（金 / ⟦钻⟧⟪␠⟫/ 分） ⟦│⟧⟪␠⟫消息中心              ⟦—⟧⟪␠⟫    ⟦│⟧⟪\n⟫## ⟦│⟧⟪␠⟫退出登录（稿子位置，左下）   ⟦│⟧⟪␠⟫系统设置              ⟦—⟧⟪␠⟫    ⟦│⟧⟪\n⟫## └──────────────────────────────┴─────────────────────────────⟦┘⟧⟪\n⟫## ```
+##   * 右侧五个菜单⟦页⟧⟪*⟫*只当跳转入口**：分⟦制⟧⟪␠⟫`navigate()` ⟦刷⟧⟪\n⟫##     `Route.HISTORY / SKINS / ACHIEVEMENTS / MESSAGES / SETTINGS`⟦，⟧⟪\n⟫##   * 五个子页的内容已经拆⟦到⟧⟪␠⟫`history_view.gd` / `skins_view.gd` / `achievements_view.gd` /
+##     `messages_view.gd` / `settings_view.gd`，本文件不再内嵌任何子页实现⟦。⟧⟪\n⟫##
+## 视图只通过 `AppViewModel` 的接口读写数据（快照读、方法写），不直接碰档案对象⟦。⟧⟪\n⟫
+const MENU_TITLES := ["我的战绩", "主题皮肤", "我的成就", "消息中心"]
+## 金色顶栏高度（新⟦稿⟧⟪␠⟫58px⟦）⟧⟪\n⟫const TOP_BAR_HEIGHT := 58.0
+## 退出登录按钮：设计⟦稿⟧⟪␠⟫(205,528) 260x60，位于资料面⟦板⟧⟪*⟫*下方**
+const LOGOUT_SIZE := Vector2(260, 60)
+## 头像：稿子是 170 的金⟦环⟧⟪␠⟫+ 140 的头⟦像⟧⟪␠⟫+ 右下 32 的编辑角⟦标⟧⟪\n⟫const AVATAR_BOX := 170.0
+const AVATAR_SIZE := 148.0
+## 昵称右侧两颗圆形图标钮（复制 ID / 修改昵称）的边长⟦。⟧⟪\n⟫## 两颗取同一个尺寸：大小不一的图标并排看着就是没对齐⟦。⟧⟪\n⟫const NAME_ICON := 32.0
+## 资料面板高度占视口的比例（设计稿 350/608 ⟦≈⟧⟪␠⟫0.58⟦）⟧⟪\n⟫const CARD_HEIGHT_RATIO := 0.58
+## 左右两栏的宽度：按设计稿 595 : 395 的比例取，再按视口宽度等比缩放并夹在区间里⟦。⟧⟪\n⟫## 两栏⟦部⟧⟪␠⟫`EXPAND_FILL` + `stretch_ratio`，余量按 1.5 : 1 分掉，中间不会剩一条空白⟦。⟧⟪\n⟫const LEFT_COLUMN_RATIO := 0.52
+const LEFT_COLUMN_MIN := 380.0
+const LEFT_COLUMN_MAX := 660.0
+const RIGHT_COLUMN_RATIO := 0.34
+const RIGHT_COLUMN_MIN := 280.0
+const RIGHT_COLUMN_MAX := 460.0
+const COLUMN_STRETCH_LEFT := 1.5
+const COLUMN_STRETCH_RIGHT := 1.0
+## 主面板内边距 × 2：算两栏宽度时从可用宽度里扣⟦掉⟧⟪\n⟫const PANEL_INSET := 32.0
+
+var _avatar: AvatarView
+var _nickname_label: Label
+var _id_label: Label
+var _level_label: Label
+var _exp_bar: ProgressBar
+var _exp_label: Label
+## 资料面板底部的三格资产（金币 / 钻石 / 竞技分）
+var _asset_values: Dictionary = {}
+var _rename_row: HBoxContainer
+var _rename_edit: LineEdit
+var _menu_buttons: Array = []
+var _top_bar: Control
+var _top_bar_style: GlossyBox
+var _left_width := LEFT_COLUMN_MIN
+var _right_width := RIGHT_COLUMN_MIN
+
+func _bind_scene() -> void:
+    _build_top_bar()
+    _build_hub()
+    if app != null:
+        app.profile_changed.connect(_on_profile_changed)
+        app.skin_changed.connect(_on_skin_changed)
+        _on_skin_changed(app.skin_snapshot())
+    _refresh()
+    resized.connect(_sync_layout)
+    _sync_layout()
+
+# ---------------------------------------------------------------- 页头
+
+## 新稿的统一页头⟦：⟧⟪5⟫8px 金色顶栏（通栏⟦）⟧⟪+⟫ ⟦左⟧⟪␠⟫`‹` 返回 + 居中标题 + 右上角细金线祥云 + 齿轮⟦、⟧⟪\n⟫## 顶栏挂在页面最外层（不⟦在⟧⟪␠⟫`content()` 里），所以能贴到屏幕两边⟦）⟧⟪\n⟫## 内容区的上边距在 `_apply_safe_area()` 里加上这一条高度⟦。⟧⟪\n⟫func _build_top_bar() -> void:
+    if _top_bar != null:
+        return
+    _top_bar_style = ThemeFactory.top_bar_style()
+    _top_bar = Control.new()
+    _top_bar.name = "TopBar"
+    _top_bar.custom_minimum_size = Vector2(0, TOP_BAR_HEIGHT)
+    _top_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    add_child(_top_bar)
+    _top_bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_WIDE)
+    _top_bar.offset_bottom = TOP_BAR_HEIGHT
+
+    var bg := PanelContainer.new()
+    bg.name = "TopBarBg"
+    bg.mouse_filter = Control.MOUSE_FILTER_STOP
+    bg.add_theme_stylebox_override("panel", _top_bar_style)
+    _top_bar.add_child(bg)
+    bg.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+    var row := UiKit.row(12)
+    row.name = "TopBarRow"
+    bg.add_child(row)
+
+    # 左：返回箭头 + 齿轮；右侧祥云与它等宽，标题才是真的居中
+    var left := Control.new()
+    left.custom_minimum_size = Vector2(196, 46)
+    left.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    row.add_child(left)
+    var back := ThemeFactory.bare_button(Vector2(46, 46), 12)
+    back.name = "BackButton"
+    back.tooltip_text = "返回"
+    back.pressed.connect(_on_back_pressed)
+    left.add_child(back)
+    back.set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
+    back.offset_right = 46.0
+    var arrow := DesignIcons.back_arrow(Color.WHITE, 30.0)
+    arrow.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    back.add_child(arrow)
+    arrow.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    arrow.offset_left = 8.0
+    arrow.offset_top = 8.0
+    arrow.offset_right = -8.0
+    arrow.offset_bottom = -8.0
+
+    var title := ThemeFactory.outlined_label("个人中心", 34, Color("#fff5de"), Color("#6b3a06"), 6)
+    title.name = "TitleLabel"
+    title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    row.add_child(title)
+
+    var right := Control.new()
+    right.custom_minimum_size = Vector2(196, 46)
+    right.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    row.add_child(right)
+    var wisp := Ornaments.cloud_wisp(Ornaments.WispCorner.TOP_RIGHT, 146.0, 0.5)
+    right.add_child(wisp)
+    wisp.position = Vector2(0.0, 6.0)
+    var gear := ThemeFactory.bare_button(Vector2(46, 46), 12)
+    gear.name = "SettingsGear"
+    gear.tooltip_text = "系统设置"
+    gear.pressed.connect(open_settings)
+    right.add_child(gear)
+    gear.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
+    gear.offset_left = -46.0
+    var gear_icon := DesignIcons.gear(Color("#f0c24a"), 30.0)
+    gear_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    gear.add_child(gear_icon)
+    gear_icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    gear_icon.offset_left = 8.0
+    gear_icon.offset_top = 8.0
+    gear_icon.offset_right = -8.0
+    gear_icon.offset_bottom = -8.0
+
+    # 底边那道深金⟦线⟧⟪\n⟫    var rule := ColorRect.new()
+    rule.name = "TopBarRule"
+    rule.color = ThemeFactory.gold_rule_color()
+    rule.custom_minimum_size = Vector2(0, 2)
+    rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    _top_bar.add_child(rule)
+    rule.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+    _sync_top_bar_insets()
+
+## 顶栏高度与左右内缩：通栏贴边，但栏内内容要让开设备安全⟦区⟧⟪\n⟫func _sync_top_bar_insets() -> void:
+    if _top_bar == null:
+        return
+    var insets := SafeArea.insets(self)
+    _top_bar.offset_bottom = insets.y + TOP_BAR_HEIGHT
+    if _top_bar_style != null:
+        _top_bar_style.content_margin_left = insets.x + 12.0
+        _top_bar_style.content_margin_right = insets.z + 12.0
+        _top_bar_style.content_margin_top = insets.y
+        _top_bar_style.content_margin_bottom = 0.0
+
+## 内容区的上边⟦距⟧⟪␠⟫= 安全⟦区⟧⟪␠⟫+ 页面留白 + 顶栏高度（顶栏在 `content()` 之外⟦）⟧⟪\n⟫func _apply_safe_area() -> void:
+    super()
+    var box := content()
+    if box == null:
+        return
+    box.add_theme_constant_override("margin_top",
+        int(round(SafeArea.insets(self).y + page_padding() + TOP_BAR_HEIGHT)))
+
+func _on_page_resized() -> void:
+    super()
+    _sync_top_bar_insets()
+
+func _on_back_pressed() -> void:
+    if app == null:
+        return
+    app.navigate(AppViewModel.Route.LOBBY)
+
+## 手机返回⟦键⟧⟪␠⟫/ ESC：入口页不消费返回事件（交给 `AppRoot` 回大厅）
+func handle_back_request() -> bool:
+    return false
+
+# ---------------------------------------------------------------- 骨架
+
+func _build_hub() -> void:
+    var safe := content()
+    if safe == null:
+        return
+    # 旧场景是「顶部账号横⟦幅⟧⟪␠⟫+ 顶部标签栏」，这里整体替换成设计图的左右布局
+    for child in safe.get_children():
+        safe.remove_child(child)
+        child.queue_free()
+    var root := UiKit.column(0)
+    root.name = "Root"
+    root.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    root.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    safe.add_child(root)
+
+    # 设计稿里卡片直接浮在页底径向渐变上，因此主面板只留一层很淡的暗面
+    var panel := UiKit.surface(0.20, 16, 14)
+    panel.name = "MainPanel"
+    panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    root.add_child(panel)
+    var split := UiKit.row(18)
+    split.name = "MainSplit"
+    split.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    split.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    panel.add_child(split)
+
+    _build_account_column(split)
+    _build_menu_column(split)
+
+## 左右两栏的宽度（设计⟦稿⟧⟪␠⟫595 : 395）：取视口比例后再夹上限⟦，⟧⟪\n⟫## 资料面板的高度也按视口比例给（设计稿 350/608）——不跟着内容拉满，免得中间空一大片⟦。⟧⟪\n⟫func _sync_layout() -> void:
+    var usable := maxf(size.x - AppPage.SIDE_PADDING * 2.0 - PANEL_INSET, 320.0)
+    _left_width = clampf(usable * LEFT_COLUMN_RATIO, LEFT_COLUMN_MIN, LEFT_COLUMN_MAX)
+    _right_width = clampf(usable * RIGHT_COLUMN_RATIO, RIGHT_COLUMN_MIN, RIGHT_COLUMN_MAX)
+    var column := node_named("LeftColumn") as Control
+    if column != null:
+        column.custom_minimum_size = Vector2(_left_width, 0)
+    var menu := node_named("RightMenu") as Control
+    if menu != null:
+        menu.custom_minimum_size = Vector2(_right_width, 0)
+    var card := node_named("AccountCard") as Control
+    if card != null:
+        card.custom_minimum_size = Vector2(0, clampf(size.y * CARD_HEIGHT_RATIO, 300.0, 540.0))
+
+# ---------------------------------------------------------------- 样式
+
+## 资料面板（设计稿实测：底 #851E13、描⟦边⟧⟪␠⟫#F4CE69、圆⟦角⟧⟪␠⟫18、柔投影⟦）⟧⟪\n⟫func _profile_card_style() -> GlossyBox:
+    return ThemeFactory.glossy(Color("#8a2015"), Color("#6d160f"), Color("#f4ce69"),
+        18, 2, 0.05, 0.40, 10.0, 0.0, 0.0)
+
+## 右侧菜单行：⟦底⟧⟪␠⟫rgba(31,3,3,.45)、描⟦边⟧⟪␠⟫#C68A43⟦，⟧⟪2⟫px）、柔投影；hover 提亮并换亮金描边
+func _menu_row_style(state: String) -> GlossyBox:
+    match state:
+        "hover":
+            return ThemeFactory.glossy(Color(0.54, 0.13, 0.09, 0.92), Color(0.38, 0.08, 0.06, 0.94),
+                ThemeFactory.GOLD_MID, 12, 2, 0.10, 0.34, 8.0, 0.0, 0.0)
+        "pressed":
+            return ThemeFactory.glossy(Color(0.30, 0.07, 0.05, 0.94), Color(0.20, 0.04, 0.03, 0.96),
+                ThemeFactory.GOLD_EDGE, 12, 2, 0.04, 0.22, 5.0, 0.0, 0.0)
+        _:
+            return ThemeFactory.glossy(Color(31 / 255.0, 3 / 255.0, 3 / 255.0, 0.45),
+                Color(31 / 255.0, 3 / 255.0, 3 / 255.0, 0.58), Color("#c68a43"),
+                12, 1, 0.04, 0.26, 6.0, 0.0, 0.0)
+
+## 稿子的暗底金边按钮：退出登⟦录⟧⟪␠⟫/ 取消
+func _outline_button(text: String, font_size: int) -> Button:
+    var node := Button.new()
+    node.text = text
+    node.add_theme_font_size_override("font_size", font_size)
+    node.add_theme_color_override("font_color", Color(1, 1, 1, 0.96))
+    node.add_theme_color_override("font_hover_color", Color.WHITE)
+    node.add_theme_color_override("font_pressed_color", Color(0.92, 0.88, 0.84, 1.0))
+    node.add_theme_color_override("font_disabled_color", Color(1, 1, 1, 0.42))
+    node.add_theme_stylebox_override("normal", ThemeFactory.glossy(
+        Color(31 / 255.0, 3 / 255.0, 3 / 255.0, 0.55), Color(20 / 255.0, 2 / 255.0, 2 / 255.0, 0.62),
+        ThemeFactory.GOLD_MID, 14, 2, 0.06, 0.32, 6.0, 20.0, 12.0))
+    node.add_theme_stylebox_override("hover", ThemeFactory.glossy(
+        Color(0.20, 0.04, 0.04, 0.70), Color(0.12, 0.02, 0.02, 0.76),
+        ThemeFactory.GOLD_LIGHT, 14, 2, 0.10, 0.36, 7.0, 20.0, 12.0))
+    node.add_theme_stylebox_override("pressed", ThemeFactory.glossy(
+        Color(0.10, 0.02, 0.02, 0.78), Color(0.06, 0.01, 0.01, 0.84),
+        ThemeFactory.GOLD_EDGE, 14, 2, 0.04, 0.20, 4.0, 20.0, 12.0, 0.16))
+    node.add_theme_stylebox_override("disabled", ThemeFactory.glossy(
+        Color(0.16, 0.10, 0.09, 0.55), Color(0.10, 0.06, 0.05, 0.62),
+        Color(0.42, 0.30, 0.18, 0.8), 14, 2, 0.04, 0.16, 4.0, 20.0, 12.0))
+    node.add_theme_stylebox_override("focus", ThemeFactory.glossy(
+        Color(0, 0, 0, 0), Color(0, 0, 0, 0), Color(0, 0, 0, 0), 14, 0, 0.0, 0.0, 0.0, 20.0, 12.0))
+    node.focus_mode = Control.FOCUS_NONE
+    node.custom_minimum_size = Vector2(0, 48)
+    return node
+
+## 小图标按钮（复制 ID / 编辑头像）：深色圆底 + 金描⟦边⟧⟪␠⟫+ 一枚自绘图标⟦。⟧⟪\n⟫## 圆角取「半⟦高⟧⟪␠⟫- 1」：`GlossyBox._polygon_ok()` 要求 `圆角 ⟦≤⟧⟪␠⟫短边/2 - 0.5`⟦，⟧⟪\n⟫## 取满半高时整块填充会被判成自交多边形直接丢掉（圆钮就只剩一圈描边了）⟦。⟧⟪\n⟫func _icon_button(node_name: String, box: float, icon: Control, tooltip: String = "") -> Button:
+    var button := Button.new()
+    button.name = node_name
+    button.text = ""
+    button.tooltip_text = tooltip
+    button.focus_mode = Control.FOCUS_NONE
+    button.custom_minimum_size = Vector2(box, box)
+    var radius := maxi(8, int(round(box * 0.5)) - 1)
+    button.add_theme_stylebox_override("normal", ThemeFactory.glossy(
+        Color(0.14, 0.02, 0.02, 0.72), Color(0.08, 0.01, 0.01, 0.82),
+        Color("#f4ce69"), radius, 1, 0.05, 0.30, 5.0, 0.0, 0.0))
+    button.add_theme_stylebox_override("hover", ThemeFactory.glossy(
+        Color(0.24, 0.05, 0.04, 0.86), Color(0.14, 0.02, 0.02, 0.90),
+        ThemeFactory.GOLD_LIGHT, radius, 1, 0.10, 0.34, 6.0, 0.0, 0.0))
+    button.add_theme_stylebox_override("pressed", ThemeFactory.glossy(
+        Color(0.10, 0.01, 0.01, 0.86), Color(0.05, 0.0, 0.0, 0.90),
+        ThemeFactory.GOLD_EDGE, radius, 1, 0.04, 0.18, 3.0, 0.0, 0.0, 0.16))
+    button.add_theme_stylebox_override("focus", ThemeFactory.glossy(
+        Color(0, 0, 0, 0), Color(0, 0, 0, 0), Color(0, 0, 0, 0), radius, 0, 0.0, 0.0, 0.0, 0.0, 0.0))
+    if icon != null:
+        icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+        icon.custom_minimum_size = Vector2(box - 12.0, box - 12.0)
+        button.add_child(icon)
+        icon.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+        icon.offset_left = 6.0
+        icon.offset_top = 6.0
+        icon.offset_right = -6.0
+        icon.offset_bottom = -6.0
+    return button
+
+## 昵称右侧的圆形图标钮（复⟦制⟧⟪␠⟫ID / 修改昵称）⟦。⟧⟪\n⟫##
+## `size_flags_vertical` 必须显式设成 `SHRINK_CENTER`：`_icon_button()` 只给⟦了⟧⟪\n⟫## `custom_minimum_size`，默认的 `SIZE_FILL` 会让它在 HBox 里被拉到整行⟦高⟧⟪\n⟫## —⟦—⟧⟪␠⟫圆钮一旦不是正圆，描边与图标都会跟着歪⟦。⟧⟪\n⟫func _name_icon(node_name: String, icon: Control, tooltip: String, action: Callable) -> Button:
+    var button := _icon_button(node_name, NAME_ICON, icon, tooltip)
+    button.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    button.pressed.connect(action)
+    return button
+
+# ---------------------------------------------------------------- 左栏：资料面⟦板⟧⟪\n⟫
+func _build_account_column(parent: Control) -> void:
+    var col := UiKit.column(12)
+    col.name = "LeftColumn"
+    col.custom_minimum_size = Vector2(_left_width, 0)
+    col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    col.size_flags_stretch_ratio = COLUMN_STRETCH_LEFT
+    col.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    parent.add_child(col)
+
+    var card := PanelContainer.new()
+    card.name = "AccountCard"
+    card.add_theme_stylebox_override("panel", _profile_card_style())
+    # 面板高度按视口取比例（设计稿 350/608），高度⟦在⟧⟪␠⟫`_sync_layout` 里随窗口更新
+    card.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+    col.add_child(card)
+    var box := UiKit.column(12)
+    UiKit.padded(card, 20, 18).add_child(box)
+
+    box.add_child(_build_profile_head())
+    # 改名行紧跟资料头：它由昵称右侧那颗编辑钮唤出，出现在**紧邻的位⟦置⟧⟪*⟫*才有因果关系
+    # （原先挂在卡片最底下、资产条下面，点了编辑却要低头去别处找输入框）⟦。⟧⟪\n⟫    # 默认隐藏，容器会跳过它，所以收起时布局与之前完全一样⟦「⟧⟪␠⟫    box.add_child(_build_rename_row())
+    # 头像 / 说明在上，资产贴卡底（设计稿里资产就是面板最下面那一条）
+    box.add_child(UiKit.spacer(true))
+    box.add_child(UiKit.hairline(Color(1, 1, 1, 0.14)))
+    box.add_child(_build_assets_row())
+
+    # 退出登录：稿子在资料面⟦板⟧⟪*⟫*下方**、整页的左下角（不在账号卡里⟦）⟧⟪\n⟫    var logout_row := UiKit.row(0)
+    logout_row.name = "LogoutRow"
+    col.add_child(logout_row)
+    var logout_button := _outline_button("退出登⟦录⟧⟪"⟫, 22)
+    logout_button.name = "LogoutButton"
+    logout_button.custom_minimum_size = LOGOUT_SIZE
+    logout_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+    logout_button.pressed.connect(_on_logout_pressed)
+    logout_row.add_child(UiKit.spacer(true))
+    logout_row.add_child(logout_button)
+    logout_row.add_child(UiKit.spacer(true))
+
+## 资料面板顶部：金环头⟦像⟧⟪␠⟫+ 昵称行（昵称 + 复制 / 改名两颗图标钮）+ ID + VIP 徽章 + 经验条⟦。⟧⟪\n⟫##
+## 「复⟦制⟧⟪␠⟫ID」与「修改昵称」按需求从原来的位置（ID 行里、头像右下角）挪到了**昵称右侧**
+## 横向并排：两颗都是对"这个玩家"的操作，贴着名字最直观；昵称占满左侧⟦。⟧⟪\n⟫## 两颗钮贴信息列右端，与下方的经验条右端对齐⟦。⟧⟪\n⟫func _build_profile_head() -> Control:
+    var head := UiKit.row(18)
+    head.name = "ProfileHead"
+
+    var avatar_box := Control.new()
+    avatar_box.name = "AvatarBox"
+    avatar_box.custom_minimum_size = Vector2(AVATAR_BOX, AVATAR_BOX)
+    avatar_box.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    head.add_child(avatar_box)
+
+    var ring := AvatarRing.new()
+    ring.name = "AvatarRing"
+    ring.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    avatar_box.add_child(ring)
+    ring.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+    _avatar = AvatarView.new()
+    _avatar.name = "Avatar"
+    _avatar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    # 头像自带一圈金环；外面再套一层金环就⟦成⟧⟪␠⟫双金⟦环⟧⟪␠⟫了，
+    # 因此把头像自己那圈压成暗红，只留外面这一圈亮⟦金⟧⟪␠⟫—⟦—⟧⟪␠⟫与设计稿一致⟦。⟧⟪\n⟫    _avatar.ring_color = Color("#611712")
+    avatar_box.add_child(_avatar)
+    _avatar.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    var inset := (AVATAR_BOX - AVATAR_SIZE) * 0.5
+    _avatar.offset_left = inset
+    _avatar.offset_top = inset
+    _avatar.offset_right = -inset
+    _avatar.offset_bottom = -inset
+
+    var info := UiKit.column(6)
+    info.name = "ProfileInfo"
+    info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    head.add_child(info)
+
+    # 昵称行：昵称占满左侧（长名字裁切而不是把图标挤走），两颗图标钮贴右端
+    var name_row := UiKit.row(8)
+    name_row.name = "NameRow"
+    name_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    info.add_child(name_row)
+
+    _nickname_label = ThemeFactory.label("玩家", 30, Color.WHITE)
+    _nickname_label.name = "NicknameLabel"
+    _nickname_label.clip_text = true
+    _nickname_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    _nickname_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    name_row.add_child(_nickname_label)
+    name_row.add_child(_name_icon("CopyIdButton",
+        DesignIcons.copy(Color("#e8c88a"), 18.0), "复制 ID", _on_copy_id_pressed))
+    name_row.add_child(_name_icon("RenameButton", PenIcon.new(), "修改昵称", _on_rename_pressed))
+
+    var id_row := UiKit.row(8)
+    id_row.name = "IdRow"
+    info.add_child(id_row)
+    _id_label = ThemeFactory.label("ID: --", 18, Color("#f5e0c8"))
+    _id_label.name = "IdLabel"
+    _id_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    _id_label.clip_text = true
+    # `EXPAND_FILL` 不能省：`clip_text = true` 会把 Label ⟦的⟧⟪*⟫*最小宽度变⟦成⟧⟪␠⟫0**⟦，⟧⟪\n⟫    # ⟦在⟧⟪␠⟫HBox 里（水平是主轴）只给 `FILL` 的话它只拿最小宽度，后面那颗弹性占位再一挤，
+    # 整条 ID 就被压成 1px ⟦宽⟧⟪␠⟫—⟦—⟧⟪␠⟫看上去是一段莫名其妙的空带（实测就是这个症状）⟦。⟧⟪\n⟫    # 因此这里⟦让⟧⟪␠⟫Label 自己吃满剩余宽度，不再需要尾部占位⟦。⟧⟪\n⟫    _id_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    id_row.add_child(_id_label)
+
+    var vip := PanelContainer.new()
+    vip.name = "LevelPill"
+    vip.size_flags_horizontal = Control.SIZE_SHRINK_BEGIN
+    vip.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+        ThemeFactory.GOLD_MID, Color("#d99a1c"), Color("#fff0b8"), 8, 1, 0.30, 0.30, 4.0, 12.0, 4.0))
+    info.add_child(vip)
+    _level_label = ThemeFactory.label("VIP 1", 17, ThemeFactory.GOLD_INK)
+    _level_label.name = "LevelLabel"
+    _level_label.tooltip_text = "等级"
+    vip.add_child(_level_label)
+
+    _exp_bar = _make_exp_bar()
+    info.add_child(_exp_bar)
+    _exp_label = ThemeFactory.label("经验 0 / 200", 12, Color("#f0d7b4"))
+    _exp_label.name = "ExpLabel"
+    info.add_child(_exp_label)
+    return head
+
+## 面板底部三格资产：金⟦币⟧⟪␠⟫/ 钻石 / 竞技分（图标 + 标签一行，数值一行）
+func _build_assets_row() -> Control:
+    var row := UiKit.row(6)
+    row.name = "AssetsBox"
+    row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    row.add_child(_make_asset_cell("AssetGold", CurrencyIcon.Kind.COIN, "金币", ThemeFactory.GOLD))
+    row.add_child(_make_asset_cell("AssetDiamonds", CurrencyIcon.Kind.DIAMOND, "钻石", ThemeFactory.DIAMOND))
+    row.add_child(_make_asset_cell("AssetPoints", CurrencyIcon.Kind.STAR, "竞技⟦分⟧⟪"⟫, Color("#f0c060")))
+    return row
+
+func _make_asset_cell(node_name: String, kind: int, caption: String, accent: Color) -> Control:
+    var cell := UiKit.column(2)
+    cell.name = node_name
+    cell.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    var head := UiKit.row(5)
+    head.add_child(UiKit.currency_icon(kind, accent, 20.0))
+    var caption_label := ThemeFactory.label(caption, 15, Color("#f0c060"))
+    caption_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    head.add_child(caption_label)
+    head.add_child(UiKit.spacer(true))
+    cell.add_child(head)
+    var value := ThemeFactory.label("0", 22, Color.WHITE)
+    value.name = "AssetValue"
+    value.clip_text = true
+    cell.add_child(value)
+    _asset_values[node_name] = value
+    return cell
+
+func _make_exp_bar() -> ProgressBar:
+    var exp_bar := ProgressBar.new()
+    exp_bar.name = "ExpBar"
+    exp_bar.show_percentage = false
+    exp_bar.custom_minimum_size = Vector2(0, 12)
+    exp_bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    exp_bar.add_theme_stylebox_override("background",
+        ThemeFactory.flat_box(Color(0, 0, 0, 0.45), 6, Color(1, 1, 1, 0.10), 1))
+    exp_bar.add_theme_stylebox_override("fill",
+        ThemeFactory.glossy(ThemeFactory.GOLD_LIGHT, ThemeFactory.GOLD_MID, ThemeFactory.GOLD_EDGE,
+            6, 1, 0.45, 0.0, 0.0, 0.0, 0.0))
+    return exp_bar
+
+# ---------------------------------------------------------------- 右栏菜单（跳转入口）
+
+func _build_menu_column(parent: Control) -> void:
+    var col := UiKit.column(10)
+    col.name = "RightMenu"
+    col.custom_minimum_size = Vector2(_right_width, 0)
+    col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    col.size_flags_stretch_ratio = COLUMN_STRETCH_RIGHT
+    col.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    parent.add_child(col)
+    _menu_buttons.clear()
+    for i in MENU_TITLES.size():
+        # 设计图的右侧菜单每一项都是「彩色图⟦标⟧⟪␠⟫+ 文字 + 右侧 ›」，点击即跳到对应独立页
+        var button := Button.new()
+        button.name = "MenuButton%d" % i
+        button.text = ""
+        button.focus_mode = Control.FOCUS_NONE
+        button.custom_minimum_size = Vector2(0, 88)
+        button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+        button.pressed.connect(_select_menu.bind(i))
+        col.add_child(button)
+        button.add_child(_build_menu_content(str(MENU_TITLES[i]), _menu_icon(i)))
+        _apply_menu_row_style(button)
+        _menu_buttons.append(button)
+    # 设计图的第五项是「系统设置」，同样是一个跳转入⟦口⟧⟪\n⟫    var settings := _build_menu_settings_button()
+    col.add_child(settings)
+    _menu_buttons.append(settings)
+    col.add_child(UiKit.spacer(true))
+
+## 菜单项内容：图标 + 标题 + 右侧箭头（铺满按钮，鼠标事件交给按钮自己处理）⟦。⟧⟪\n⟫## 图标与箭头都用设计稿⟦的⟧⟪␠⟫SVG path（`DesignIcons`），只有文字⟦是⟧⟪␠⟫`Label`⟦。⟧⟪\n⟫func _build_menu_content(text: String, icon: Control, with_chevron: bool = true) -> Control:
+    var row := UiKit.row(10)
+    row.name = "MenuContent"
+    row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    row.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+    row.offset_left = 14.0
+    row.offset_right = -14.0
+    if icon != null:
+        icon.name = "MenuIcon"
+        icon.custom_minimum_size = Vector2(30, 30)
+        icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+        icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+        row.add_child(icon)
+    var label := ThemeFactory.label(text, 21, Color("#e8d5a8"))
+    label.name = "MenuLabel"
+    label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    row.add_child(label)
+    if with_chevron:
+        var chevron := DesignIcons.chevron_right(Color("#fff3c4"), 16.0)
+        chevron.name = "MenuChevron"
+        chevron.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+        row.add_child(chevron)
+    return row
+
+func _apply_menu_row_style(button: Button) -> void:
+    for state in ["normal", "hover", "pressed"]:
+        button.add_theme_stylebox_override(state, _menu_row_style(state))
+    button.add_theme_stylebox_override("focus", ThemeFactory.glossy(
+        Color(0, 0, 0, 0), Color(0, 0, 0, 0), Color(0, 0, 0, 0), 12, 0, 0.0, 0.0, 0.0, 0.0, 0.0))
+
+## 设计图右侧菜单的图标：战⟦绩⟧⟪␠⟫奖杯、主题皮⟦肤⟧⟪␠⟫调色盘、成⟦就⟧⟪␠⟫绶带勋章、消⟦息⟧⟪␠⟫信封
+func _menu_icon(index: int) -> Control:
+    match index:
+        0:
+            return DesignIcons.trophy(30.0)
+        1:
+            return DesignIcons.palette(30.0)
+        2:
+            return DesignIcons.achievement(30.0)
+        _:
+            return DesignIcons.message(Color("#f7efd8"), 30.0)
+
+## 第五项「系统设置」：齿轮图标，跳到系统设置独立页
+func _build_menu_settings_button() -> Button:
+    var button := Button.new()
+    button.name = "MenuButtonSettings"
+    button.text = ""
+    button.focus_mode = Control.FOCUS_NONE
+    button.custom_minimum_size = Vector2(0, 88)
+    button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    button.add_child(_build_menu_content("系统设置", DesignIcons.gear(Color("#e8d5a8"), 30.0)))
+    button.pressed.connect(open_settings)
+    _apply_menu_row_style(button)
+    return button
+
+## 菜单⟦第⟧⟪␠⟫`index` ⟦页⟧⟪␠⟫⟦→⟧⟪␠⟫对应的独立页⟦面⟧⟪\n⟫func _select_menu(index: int) -> void:
+    var routes := [
+        AppViewModel.Route.HISTORY,
+        AppViewModel.Route.SKINS,
+        AppViewModel.Route.ACHIEVEMENTS,
+        AppViewModel.Route.MESSAGES,
+    ]
+    if index < 0 or index >= routes.size() or app == null:
+        return
+    app.navigate(routes[index])
+
+## 系统设置入口：顶栏齿轮与右侧菜单第五项，**只有个人中心这两⟦处⟧⟪*⟫*⟦。⟧⟪\n⟫## （牌桌右上角原来也有一个齿轮，按需求去掉了；跨页请求打开设置的那个一次性标⟦记⟧⟪\n⟫## `AppViewModel.pending_open_settings` 随之删除，免得留下永远为 false 的死开关。）
+func open_settings() -> void:
+    if app != null:
+        app.navigate(AppViewModel.Route.SETTINGS)
+
+func open_history() -> void:
+    if app != null:
+        app.navigate(AppViewModel.Route.HISTORY)
+
+func open_skins() -> void:
+    if app != null:
+        app.navigate(AppViewModel.Route.SKINS)
+
+func open_achievements() -> void:
+    if app != null:
+        app.navigate(AppViewModel.Route.ACHIEVEMENTS)
+
+func open_messages() -> void:
+    if app != null:
+        app.navigate(AppViewModel.Route.MESSAGES)
+
+## 皮肤购买确认浮层现在在「主题皮肤」独立页里；这里保留旧方法名⟦，⟧⟪\n⟫## 改成跳转到那一页（外部工具与测试会调它）⟦。⟧⟪\n⟫func _open_skin_confirm(_skin_id: String) -> void:
+    open_skins()
+
+# ---------------------------------------------------------------- 数据
+
+func _on_profile_changed(_snapshot: Dictionary) -> void:
+    _refresh()
+
+func _on_skin_changed(snapshot: Dictionary) -> void:
+    apply_background_skin(snapshot.get("table", {}))
+
+func _refresh() -> void:
+    if app == null or _avatar == null:
+        return
+    var snapshot := app.profile_snapshot()
+    if not bool(snapshot.get("has_profile", false)):
+        return
+    _avatar.setup(str(snapshot.get("initial", "⟦游⟧⟪"⟫)), int(snapshot.get("avatar_index", 0)))
+    # 头像右下角留给「编辑」角标，等级改由 VIP 徽章承担
+    _avatar.level_badge = 0
+    _nickname_label.text = str(snapshot.get("nickname", ""))
+    _id_label.text = "ID: %s" % str(snapshot.get("short_id", ""))
+    # 本机账号没有独立⟦的⟧⟪␠⟫VIP 体系，用等级充当 VIP 等级（设计稿徽章写的⟦是⟧⟪␠⟫VIP 5⟦）⟧⟪\n⟫    _level_label.text = "VIP %d" % int(snapshot.get("level", 1))
+    _exp_bar.max_value = maxf(1.0, float(snapshot.get("level_span", 200)))
+    _exp_bar.value = float(snapshot.get("level_progress", 0))
+    _exp_label.text = "经验 %d / %d" % [int(snapshot.get("level_progress", 0)), int(snapshot.get("level_span", 200))]
+    _set_asset("AssetGold", UiKit.group_digits(int(snapshot.get("gold", 0))))
+    _set_asset("AssetDiamonds", UiKit.group_digits(int(snapshot.get("diamonds", 0))))
+    _set_asset("AssetPoints", UiKit.group_digits(int(snapshot.get("points", 0))))
+
+func _set_asset(key: String, text: String) -> void:
+    var label := _asset_values.get(key) as Label
+    if label != null:
+        label.text = text
+
+# ---------------------------------------------------------------- 操作
+
+## 改名行默认收起，点头像右下角的编辑角标才展开
+func _build_rename_row() -> Control:
+    _rename_row = UiKit.row(8)
+    _rename_row.name = "RenameRow"
+    _rename_row.visible = false
+    _rename_edit = ThemeFactory.line_edit("新的昵称", 17)
+    _rename_edit.name = "RenameEdit"
+    _rename_edit.max_length = AppViewModel.NICKNAME_MAX
+    _rename_edit.custom_minimum_size = Vector2(0, 52)
+    _rename_edit.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    _rename_row.add_child(_rename_edit)
+    var save := ThemeFactory.gold_button("保存", 16)
+    save.name = "RenameSaveButton"
+    save.custom_minimum_size = Vector2(78, 52)
+    save.pressed.connect(_on_rename_saved)
+    _rename_row.add_child(save)
+    var cancel := _outline_button("取消", 16)
+    cancel.name = "RenameCancelButton"
+    cancel.custom_minimum_size = Vector2(78, 52)
+    cancel.pressed.connect(_on_rename_cancel)
+    _rename_row.add_child(cancel)
+    return _rename_row
+
+func _on_rename_pressed() -> void:
+    if _rename_row == null:
+        return
+    _rename_row.visible = true
+    if _rename_edit != null:
+        _rename_edit.text = _nickname_label.text
+        _rename_edit.grab_focus()
+
+func _on_rename_saved() -> void:
+    if app == null or _rename_edit == null:
+        return
+    if app.rename(_rename_edit.text):
+        _rename_row.visible = false
+
+func _on_rename_cancel() -> void:
+    if _rename_row != null:
+        _rename_row.visible = false
+
+func _on_logout_pressed() -> void:
+    if app == null:
+        return
+    app.logout()
+
+## 「复⟦制⟧⟪␠⟫ID」：写进系统剪贴板，并给一⟦次⟧⟪␠⟫toast 反馈
+func _on_copy_id_pressed() -> void:
+    if _id_label == null:
+        return
+    var text := _id_label.text.replace("ID: ", "").strip_edges()
+    if text.is_empty() or text == "--":
+        return
+    DisplayServer.clipboard_set(text)
+    if app != null:
+        app.toast.emit("ID 已复制：%s" % text)
+
+# ---------------------------------------------------------------- 自绘图标
+
+## 头像金环：三层同心圆⟦环⟧⟪␠⟫+ 左上高光（设计稿里套在头像外面的 170 金环⟦）⟧⟪\n⟫class AvatarRing:
+    extends Control
+
+    func _ready() -> void:
+        mouse_filter = Control.MOUSE_FILTER_IGNORE
+        resized.connect(queue_redraw)
+
+    func _draw() -> void:
+        var center := size * 0.5
+        var radius := minf(size.x, size.y) * 0.5 - 1.0
+        if radius <= 8.0:
+            return
+        draw_arc(center, radius, 0.0, TAU, 72, Color("#f4ce69"), maxf(2.0, radius * 0.075), true)
+        draw_arc(center, radius * 0.93, 0.0, TAU, 72, Color("#8a5a12"), maxf(1.0, radius * 0.035), true)
+        draw_arc(center + Vector2(-radius * 0.10, -radius * 0.12), radius * 0.86, PI * 1.05, PI * 1.85,
+            24, Color(1, 1, 1, 0.28), maxf(1.5, radius * 0.05), true)
+
+
+## 「编辑」图标：一支斜置钢笔（头像右下角标）。`DesignIcons` 里没有钢笔，所以留一个自绘的⟦。⟧⟪\n⟫class PenIcon:
+    extends Control
+
+    func _ready() -> void:
+        mouse_filter = Control.MOUSE_FILTER_IGNORE
+        resized.connect(queue_redraw)
+
+    func _draw() -> void:
+        var w := size.x
+        var h := size.y
+        if w < 6.0 or h < 6.0:
+            return
+        var body := PackedVector2Array([
+            Vector2(w * 0.30, h * 0.66), Vector2(w * 0.62, h * 0.22),
+            Vector2(w * 0.80, h * 0.36), Vector2(w * 0.48, h * 0.80),
+        ])
+        draw_colored_polygon(body, Color("#fff3d0"))
+        var tip := PackedVector2Array([
+            Vector2(w * 0.30, h * 0.66), Vector2(w * 0.48, h * 0.80), Vector2(w * 0.22, h * 0.86),
+        ])
+        draw_colored_polygon(tip, ThemeFactory.GOLD_MID)
+        draw_line(Vector2(w * 0.62, h * 0.22), Vector2(w * 0.80, h * 0.36), Color("#8a5a12"),
+            maxf(1.0, w * 0.07), true)
+

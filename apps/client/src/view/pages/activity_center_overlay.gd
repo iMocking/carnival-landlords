@@ -1,15 +1,14 @@
 class_name ActivityCenterOverlay
 extends Control
-## 活动中心（按《狂欢斗地主》活动中心设计图）。
+## 活动中心（按《狂欢斗地主》活动中心设计稿）。
 ##
 ## ```
-## ┌ ‹ 返回          活动中心              [● 156,600] [◆ 2,360] ┐
-## │ ┌ 每日签到 ──────────────────────────┐ ┌ 每日任务 ────────┐ │
-## │ │  第1天 第2天 第3天 第4天 第5天 第7天 今天天        │ │ 🚩 完成3局经典场 2/3 [领取] │
-## │ │  1万   2万   10钻  5万   10万  50钻  🏆            │ │ 💰 获得1次胜利   0/1 [去完成] │
-## │ │  金币  金币        金币  金币       100万金币       │ │ 🃏 打出1次炸弹   0/1 [去完成] │
-## │ │ [领取]                                             │ │ 🏆 取得2连胜     0/1 [去完成] │
-## │ └────────────────────────────────────┘ └──────────────────┘ │
+## ┌ ‹            活动中心            [● 156,600] [◆ 2,360] ☁ ┐ ← 58px 金渐变顶栏
+## │ ┌── 每日签到 ─────────────────────────┐ ┌ 每日任务 ──────┐ │
+## │ │ 第1天 第2天 第3天 第4天 第5天 第7天 今天        │ │ 完成3局… 2/3 [领取] │
+## │ │ 🪙    🪙    💎    🪙    🪙    💎   🏆         │ │ 获得1次胜利 0/1 [去完成] │
+## │ │ 1万金币 …                            100万金币     │ │ …共 4 条           │
+## │ └──────────────────────────────────────┘ └────────────────┘ │
 ## │ ┌ 周末狂欢 / 周末登录领大奖 ┐ ┌ 限时双倍 / 今日双倍金币 ┐    │
 ## └────────────────────────────────────────────────────────────┘
 ## ```
@@ -17,16 +16,24 @@ extends Control
 ## 浮层而不是独立路由：与系统设置同一套做法 —— 它只是大厅的一个"子页"，
 ## 直接复用大厅的 `app` 与档案，不必为它扩一套路由。
 ## 浮层自己不做业务判断：签到与任务领取都调 `AppViewModel`，由它改档案并落盘。
+##
+## 面板语言（与商城一致）：顶栏是**金色渐变**（`ThemeFactory.top_bar_style()`），
+## 里面的卡片是「暗底 + 1px 暗金描边 + 柔投影 + 圆角 12」（`ThemeFactory.menu_panel_style()`），
+## 签到面板是径向渐变的暗红 + 2px 亮金描边，签到格是米色小卡，图标全部来自 `DesignIcons`。
 
 signal closed()
 
-## 签到格的状态色（设计图：已领=暗金、今天=亮金、未来=深红）
-const COLOR_DONE_TOP := Color("#7a5a2a")
-const COLOR_DONE_BOTTOM := Color("#4a3416")
-const COLOR_TODAY_TOP := Color("#ffe08a")
-const COLOR_TODAY_BOTTOM := Color("#e0a92c")
-const COLOR_LOCKED_TOP := Color("#8f1d22")
-const COLOR_LOCKED_BOTTOM := Color("#5c1519")
+## 金栏高度（与 `OverlayHeader.HEIGHT` 同源）
+const BAR_HEIGHT := 58.0
+## 右侧任务栏的最小宽度
+const TASK_COLUMN_MIN := 320.0
+## 一条任务行的高度
+const TASK_ROW_HEIGHT := 62.0
+
+const CREAM_CARD := Color("#fdf4dd")
+const CREAM_EDGE := Color("#e6d3ae")
+const INK_TEXT := Color("#5a3a1a")
+const TAB_RED := Color("#d8402e")
 
 var _app: AppViewModel
 var _header: OverlayHeader
@@ -64,55 +71,78 @@ func _build() -> void:
     var panel := PanelContainer.new()
     panel.name = "Panel"
     panel.add_theme_stylebox_override("panel", ThemeFactory.glossy(
-        Color(ThemeFactory.INK_700.r, ThemeFactory.INK_700.g, ThemeFactory.INK_700.b, 0.98),
-        Color(ThemeFactory.INK_900.r, ThemeFactory.INK_900.g, ThemeFactory.INK_900.b, 0.99),
-        ThemeFactory.GOLD, 20, 2, 0.08, 0.50, 8.0, 0.0, 0.0))
+        Color(ThemeFactory.ROOM_CENTER.r, ThemeFactory.ROOM_CENTER.g, ThemeFactory.ROOM_CENTER.b, 0.94),
+        Color(ThemeFactory.INK_600.r, ThemeFactory.INK_600.g, ThemeFactory.INK_600.b, 0.96),
+        Color(ThemeFactory.GOLD_BORDER.r, ThemeFactory.GOLD_BORDER.g, ThemeFactory.GOLD_BORDER.b, 0.55),
+        16, 1, 0.06, 0.46, 9.0, 0.0, 0.0))
     add_child(panel)
     panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
     var column := UiKit.column(10)
     panel.add_child(column)
 
-    _header = OverlayHeader.create("活动中心")
-    _header.back_pressed.connect(func() -> void: closed.emit())
-    var header_row := UiKit.row(0)
-    column.add_child(header_row)
-    UiKit.padded(header_row, 18, 4).add_child(_header)
-    column.add_child(Ornaments.cloud_band(24, 0.34))
+    _build_bar(column)
 
     # 主体：左右两栏（左=每日签到，右=每日任务），与设计图一致
-    var body := UiKit.row(16)
+    var body := UiKit.row(12)
+    body.name = "Body"
     body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     body.size_flags_vertical = Control.SIZE_EXPAND_FILL
-    var body_row := UiKit.row(0)
-    column.add_child(body_row)
-    UiKit.padded(body_row, 18, 4).add_child(body)
-
+    column.add_child(body)
     _build_sign_in_card(body)
     _build_task_card(body)
 
-    var banners := UiKit.row(16)
+    var banners := UiKit.row(12)
     banners.name = "Banners"
     banners.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    var banner_row := UiKit.row(0)
-    column.add_child(banner_row)
-    UiKit.padded(banner_row, 18, 4).add_child(banners)
+    column.add_child(banners)
     # 横幅内容由快照下发（见 `_refresh_banners`）——视图层不直接读目录，
     # 这样将来横幅改成服务端配置（CFG-06 / CFG-08）时界面不用动。
     _banner_row = banners
-    column.add_child(_gap(16))
 
     _build_toast(panel)
 
-## 左栏：每日签到（7 个日期格 + 今天的大奖格 + 领取按钮）
+## 顶部金栏：返回箭头 + 居中标题 + 右侧资产胶囊 + 右端细金线祥云
+func _build_bar(column: VBoxContainer) -> void:
+    var bar := PanelContainer.new()
+    bar.name = "OverlayBar"
+    bar.custom_minimum_size = Vector2(0, BAR_HEIGHT)
+    bar.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    bar.add_theme_stylebox_override("panel", ThemeFactory.top_bar_style())
+    column.add_child(bar)
+
+    _header = OverlayHeader.create("活动中心")
+    _header.back_pressed.connect(func() -> void: closed.emit())
+    bar.add_child(_header)
+
+    var rule := ColorRect.new()
+    rule.name = "BarRule"
+    rule.color = ThemeFactory.GOLD_EDGE
+    rule.custom_minimum_size = Vector2(0, 2)
+    rule.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    column.add_child(rule)
+
+    # 顶栏祥云：稿子里贴右上角、opacity 0.5（压在资产胶囊后面）
+    var wisp := Ornaments.cloud_wisp(Ornaments.WispCorner.TOP_RIGHT, 150.0, 0.5)
+    wisp.name = "BarWisp"
+    wisp.z_index = -1
+    bar.add_child(wisp)
+    var place := func() -> void:
+        wisp.position = Vector2(maxf(0.0, bar.size.x - wisp.size.x * 0.72), 4.0)
+    bar.resized.connect(place)
+    place.call()
+
+## 左栏：每日签到（7 个日期格 + 领取按钮）
 func _build_sign_in_card(parent: Control) -> void:
     var card := PanelContainer.new()
     card.name = "SignInCard"
     card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    card.size_flags_stretch_ratio = 2.0
-    card.add_theme_stylebox_override("panel", ThemeFactory.glossy(
-        Color(0.52, 0.06, 0.08, 0.94), Color(0.28, 0.02, 0.04, 0.96),
-        ThemeFactory.GOLD, 18, 2, 0.12, 0.44, 7.0, 0.0, 0.0))
+    card.size_flags_stretch_ratio = 1.9
+    # 稿子的签到面板是「径向渐变的暗红 + 2px 亮金描边」
+    var style := ThemeFactory.glossy(
+        ThemeFactory.CRIMSON, Color("#7d1414"), ThemeFactory.GOLD_BORDER, 16, 2, 0.05, 0.46, 8.0, 0.0, 0.0)
+    style.fill_mode = GlossyBox.Fill.RADIAL
+    card.add_theme_stylebox_override("panel", style)
     parent.add_child(card)
 
     var box := UiKit.column(10)
@@ -121,42 +151,39 @@ func _build_sign_in_card(parent: Control) -> void:
     _sign_in_title = UiKit.title_label("每日签到", 34)
     _sign_in_title.name = "SignInTitle"
     _sign_in_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    _sign_in_title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     box.add_child(_sign_in_title)
 
     _sign_in_row = UiKit.row(6)
     _sign_in_row.name = "SignInRow"
     _sign_in_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    _sign_in_row.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    _sign_in_row.size_flags_vertical = Control.SIZE_EXPAND_FILL
     box.add_child(_sign_in_row)
 
-    # 上下各一个弹性占位：签到格与领取按钮整体在卡片里垂直居中，
-    # 卡片被右栏撑高时（右栏任务多）才不会在上方留一大片空。
-    box.add_child(UiKit.spacer(true))
     _sign_in_button = ThemeFactory.button("领取", 20)
     _sign_in_button.name = "SignInClaim"
-    _sign_in_button.custom_minimum_size = Vector2(170, 50)
+    _sign_in_button.custom_minimum_size = Vector2(190, 46)
     _sign_in_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
     _sign_in_button.pressed.connect(_on_sign_in_pressed)
     box.add_child(_sign_in_button)
-    box.add_child(UiKit.spacer(true))
 
-## 右栏：每日任务（每条：图标 + 标题 + 进度 + 领取/去完成按钮）
+## 右栏：每日任务（每条：图标 + 标题 + 进度条 + 领取/去完成按钮）
 func _build_task_card(parent: Control) -> void:
     var card := PanelContainer.new()
     card.name = "TaskCard"
-    card.custom_minimum_size = Vector2(300, 0)
+    card.custom_minimum_size = Vector2(TASK_COLUMN_MIN, 0)
     card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    card.add_theme_stylebox_override("panel", ThemeFactory.glossy(
-        Color(0.42, 0.05, 0.07, 0.94), Color(0.24, 0.02, 0.03, 0.96),
-        Color(ThemeFactory.GOLD_MID.r, ThemeFactory.GOLD_MID.g, ThemeFactory.GOLD_MID.b, 0.55),
-        18, 2, 0.10, 0.42, 7.0, 0.0, 0.0))
+    card.add_theme_stylebox_override("panel",
+        ThemeFactory.menu_panel_style(0.85, 14, 0.0, 0.0))
     parent.add_child(card)
 
     var box := UiKit.column(8)
     UiKit.padded(card, 14, 12).add_child(box)
-    var title := ThemeFactory.label("每日任务", 24, ThemeFactory.GOLD_LIGHT)
+    var title := ThemeFactory.label("每日任务", 26, Color("#f5c86a"))
     title.name = "TaskCardTitle"
     title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    title.add_theme_color_override("font_outline_color", Color(0.28, 0.05, 0.04, 0.80))
+    title.add_theme_constant_override("outline_size", 4)
     box.add_child(title)
     _task_list = UiKit.column(8)
     _task_list.name = "TaskList"
@@ -169,24 +196,39 @@ func _make_banner(banner: Dictionary) -> Control:
     var panel := PanelContainer.new()
     panel.name = "Banner_%s" % str(banner.get("id", ""))
     panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    panel.custom_minimum_size = Vector2(0, 76)
-    panel.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+    panel.custom_minimum_size = Vector2(0, 78)
+    var style := ThemeFactory.glossy(
         banner.get("top", ThemeFactory.CRIMSON), banner.get("bottom", ThemeFactory.CRIMSON_DEEP),
-        banner.get("accent", ThemeFactory.GOLD), 16, 2, 0.30, 0.42, 6.0, 16.0, 10.0))
+        Color(ThemeFactory.GOLD_BORDER.r, ThemeFactory.GOLD_BORDER.g, ThemeFactory.GOLD_BORDER.b, 0.38),
+        14, 1, 0.10, 0.40, 6.0, 16.0, 10.0)
+    style.fill_mode = GlossyBox.Fill.RADIAL
+    panel.add_theme_stylebox_override("panel", style)
     var row := UiKit.row(12)
-    panel.add_child(row)
-    row.add_child(DecoIcons.chest())
+    UiKit.padded(panel, 16, 8).add_child(row)
+    row.add_child(_make_banner_icon(str(banner.get("id", ""))))
     var text := UiKit.column(0)
     text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     text.size_flags_vertical = Control.SIZE_SHRINK_CENTER
     row.add_child(text)
-    var heading := ThemeFactory.label(str(banner.get("title", "")), 24,
+    var heading := ThemeFactory.label(str(banner.get("title", "")), 26,
         banner.get("accent", ThemeFactory.GOLD_LIGHT))
-    heading.add_theme_color_override("font_outline_color", Color(0.24, 0.02, 0.03, 0.70))
+    heading.add_theme_color_override("font_outline_color", Color(0.28, 0.05, 0.04, 0.75))
     heading.add_theme_constant_override("outline_size", 4)
     text.add_child(heading)
-    text.add_child(ThemeFactory.label(str(banner.get("subtitle", "")), 15, ThemeFactory.CREAM))
+    text.add_child(ThemeFactory.label(str(banner.get("subtitle", "")), 16, ThemeFactory.CREAM))
     return panel
+
+## 横幅左侧的小图标（周末狂欢 = 红包，限时双倍 = 宝箱）—— 直接用 `DesignIcons`
+func _make_banner_icon(banner_id: String) -> Control:
+    var node: Control
+    if banner_id.contains("double"):
+        node = DesignIcons.chest_small(44.0)
+    else:
+        node = DesignIcons.red_packet(50.0)
+    node.name = "BannerIcon"
+    node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    node.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    return node
 
 ## 轻量提示条（领取结果），浮在面板右下角
 func _build_toast(parent: Control) -> void:
@@ -211,12 +253,6 @@ func _layout_overlay() -> void:
     panel.offset_top = 16.0
     panel.offset_right = -side
     panel.offset_bottom = -16.0
-
-func _gap(height: float) -> Control:
-    var gap := Control.new()
-    gap.custom_minimum_size = Vector2(0, height)
-    gap.mouse_filter = Control.MOUSE_FILTER_IGNORE
-    return gap
 
 # ------------------------------------------------------------------ 数据刷新
 
@@ -263,53 +299,82 @@ func _refresh_sign_in(snapshot: Dictionary) -> void:
     if _sign_in_title != null:
         _sign_in_title.text = str(snapshot.get("signed_in_label", "每日签到"))
 
-## 单个签到格：日期标题 + 奖励图标 + 奖励文案。三种状态三套配色。
+## 单个签到格（稿子：「米色小卡 + 顶部日期条 + 奖励图标 + 奖励文案 + 立即领取」）。
+## 三种状态：
+## * **已领**（`claimed`）—— 整格压暗，日期条变深红；
+## * **今天**（`is_active`）—— 整格金色高亮，日期条写「今天」；
+## * **未来** —— 米色常色。
 func _make_sign_in_cell(day: int, reward: Dictionary, claimed: bool, is_today: bool) -> Control:
-    var top := COLOR_LOCKED_TOP
-    var bottom := COLOR_LOCKED_BOTTOM
-    if claimed:
-        top = COLOR_DONE_TOP
-        bottom = COLOR_DONE_BOTTOM
-    elif is_today:
-        top = COLOR_TODAY_TOP
-        bottom = COLOR_TODAY_BOTTOM
     var card := PanelContainer.new()
     card.name = "SignInDay%d" % day
     card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-    # 固定高度：让七个格子等高、且与设计图一样是"竖长条"，
-    # 不给高度的话 GridContainer 会把它们拉满整栏，格子会变成很高的空盒子。
-    card.custom_minimum_size = Vector2(0, 176)
-    card.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-    card.add_theme_stylebox_override("panel", ThemeFactory.glossy(
-        top, bottom, ThemeFactory.GOLD, 12, 2, 0.24, 0.34, 5.0, 6.0, 8.0))
-    var box := UiKit.column(4)
-    card.add_child(box)
+    card.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    if is_today:
+        card.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+            Color("#ffe9a8"), Color("#e0a92c"), Color("#fff7d9"), 10, 1, 0.10, 0.40, 5.0, 0.0, 0.0))
+    else:
+        card.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+            CREAM_CARD, CREAM_CARD.darkened(0.06), CREAM_EDGE, 10, 1, 0.04, 0.30, 4.0, 0.0, 0.0))
+    if claimed:
+        card.modulate = Color(0.88, 0.86, 0.80, 0.92)
 
-    # 日期标题：今天那格写「今天天」，与设计图一致
-    var caption := "今天天" if is_today else "第%d天" % day
-    var title := ThemeFactory.label(caption, 14,
-        ThemeFactory.GOLD_INK if is_today else ThemeFactory.CREAM)
-    title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-    title.clip_text = true
-    box.add_child(title)
+    var column := UiKit.column(4)
+    card.add_child(column)
 
-    var icon := UiKit.currency_icon(
-        CurrencyIcon.Kind.DIAMOND if str(reward.get("kind", "gold")) == "diamond" else CurrencyIcon.Kind.COIN,
-        ThemeFactory.DIAMOND if str(reward.get("kind", "gold")) == "diamond" else ThemeFactory.GOLD,
-        34.0)
+    # 日期条：稿子是"顶部一条深红（今天那格是亮红）+ 居中小字"
+    var tab := PanelContainer.new()
+    tab.name = "DayTab"
+    tab.custom_minimum_size = Vector2(0, 28)
+    var tab_color := Color("#e84b35") if is_today else TAB_RED
+    if claimed:
+        tab_color = Color("#9c2a1e")
+    tab.add_theme_stylebox_override("panel", ThemeFactory.glossy(
+        tab_color, tab_color.darkened(0.14), Color(0, 0, 0, 0), 10, 0, 0.10, 0.0, 0.0, 2.0, 2.0))
+    column.add_child(tab)
+    var caption := "今天" if is_today else "第%d天" % day
+    var day_label := ThemeFactory.label(caption, 15, Color("#ffffff"))
+    day_label.name = "DayCaption"
+    day_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+    day_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+    day_label.add_theme_color_override("font_outline_color", Color(0.30, 0.05, 0.04, 0.60))
+    day_label.add_theme_constant_override("outline_size", 3)
+    tab.add_child(day_label)
+
+    var body := UiKit.column(4)
+    body.size_flags_vertical = Control.SIZE_EXPAND_FILL
+    body.alignment = BoxContainer.ALIGNMENT_CENTER
+    UiKit.padded(column, 4, 6).add_child(body)
+
+    var is_diamond := str(reward.get("kind", "gold")) == "diamond"
+    var icon: Control
+    if is_diamond:
+        icon = DesignIcons.gem_small(38.0)
+    else:
+        icon = DesignIcons.coin_small(38.0)
+    icon.name = "RewardIcon"
+    icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
     icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-    box.add_child(icon)
+    icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    body.add_child(icon)
 
-    var text := ThemeFactory.label(str(reward.get("label", "")), 13,
-        ThemeFactory.GOLD_INK if is_today else ThemeFactory.GOLD_LIGHT)
+    var text := ThemeFactory.label(str(reward.get("label", "")), 15, INK_TEXT)
+    text.name = "RewardText"
     text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
     text.clip_text = true
-    box.add_child(text)
+    body.add_child(text)
+
+    if is_today:
+        var claim := ThemeFactory.button("领取", 14)
+        claim.name = "CellClaim"
+        claim.custom_minimum_size = Vector2(0, 30)
+        claim.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+        claim.pressed.connect(_on_sign_in_pressed)
+        body.add_child(claim)
 
     if claimed:
-        var done := ThemeFactory.label("已领", 12, ThemeFactory.MINT)
+        var done := ThemeFactory.label("已领", 13, Color("#8a6a50"))
         done.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-        box.add_child(done)
+        body.add_child(done)
     return card
 
 func _refresh_tasks(snapshot: Dictionary) -> void:
@@ -322,56 +387,68 @@ func _refresh_tasks(snapshot: Dictionary) -> void:
     for task in snapshot.get("tasks", []):
         _task_list.add_child(_make_task_row(task))
 
-## 一条每日任务：图标 + 标题 + 「进度」 + 领取 / 去完成
+## 一条每日任务（稿子：图标 + 描述 + 「2/3」+ 进度条 + 领取 / 去完成）
 func _make_task_row(task: Dictionary) -> Control:
     var task_id := str(task.get("id", ""))
     var target := maxi(1, int(task.get("target", 1)))
-    var progress := int(task.get("progress", 0))
+    var progress := clampi(int(task.get("progress", 0)), 0, target)
     var claimed := bool(task.get("claimed", false))
     var ready := bool(task.get("ready", progress >= target and not claimed))
-    var accent: Dictionary = task.get("reward", {})
-    var accent_color := ThemeFactory.DIAMOND if str(accent.get("kind", "gold")) == "diamond" \
+    var reward: Dictionary = task.get("reward", {})
+    var accent_color := ThemeFactory.DIAMOND if str(reward.get("kind", "gold")) == "diamond" \
         else ThemeFactory.GOLD
 
     var panel := UiKit.sub_panel(0.62)
     panel.name = "Task_%s" % task_id
     panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    panel.custom_minimum_size = Vector2(0, TASK_ROW_HEIGHT)
     var row := UiKit.row(10)
     UiKit.padded(panel, 10, 8).add_child(row)
 
-    var icon := UiKit.currency_icon(CurrencyIcon.Kind.COIN, accent_color, 28.0)
-    icon.name = "TaskIcon"
-    row.add_child(icon)
+    # 图标沿用设计稿：旗（对局）/ 金币（胜利）/ 牌（炸弹）/ 奖杯（连胜）
+    var badge: Control
+    if task_id.contains("bomb"):
+        badge = DesignIcons.flag(34.0)
+    elif task_id.contains("streak"):
+        badge = DesignIcons.trophy(36.0)
+    else:
+        badge = DesignIcons.coin(35.0)
+    badge.name = "TaskIcon"
+    badge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+    badge.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+    row.add_child(badge)
 
     var info := UiKit.column(4)
     info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
     info.size_flags_vertical = Control.SIZE_SHRINK_CENTER
     row.add_child(info)
-    var title := ThemeFactory.label(str(task.get("title", "")), 16, ThemeFactory.CREAM)
+
+    var line := UiKit.row(6)
+    line.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    info.add_child(line)
+    var title := ThemeFactory.label(str(task.get("title", "")), 18, ThemeFactory.CREAM)
     title.clip_text = true
-    info.add_child(title)
-    var reward_label := ThemeFactory.label("奖励 %s" % str(task.get("reward_text", "")), 12, accent_color)
-    info.add_child(reward_label)
+    title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+    line.add_child(title)
+    var counter := ThemeFactory.label("%d/%d" % [progress, target], 17, accent_color)
+    counter.name = "TaskProgress"
+    counter.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+    line.add_child(counter)
+
     var bar := ProgressBar.new()
     bar.name = "TaskBar"
     bar.show_percentage = false
     bar.max_value = target
     bar.value = progress
     bar.custom_minimum_size = Vector2(0, 8)
-    bar.add_theme_stylebox_override("background", ThemeFactory.flat_box(Color(0, 0, 0, 0.42), 4))
+    bar.add_theme_stylebox_override("background", ThemeFactory.flat_box(Color("#3a0f0a"), 4))
     bar.add_theme_stylebox_override("fill", ThemeFactory.flat_box(accent_color, 4))
     info.add_child(bar)
 
-    var counter := ThemeFactory.label("%d/%d" % [progress, target], 13, ThemeFactory.GOLD_LIGHT)
-    counter.name = "TaskProgress"
-    counter.custom_minimum_size = Vector2(44, 0)
-    counter.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-    counter.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-    row.add_child(counter)
-
-    var action := ThemeFactory.tab_button("领取" if ready else ("已完成" if claimed else "去完成"), ready, 14)
+    var action := ThemeFactory.tab_button("领取" if ready else ("已完成" if claimed else "去完成"),
+        ready, 15)
     action.name = "TaskAction"
-    action.custom_minimum_size = Vector2(74, 38)
+    action.custom_minimum_size = Vector2(86, 38)
     action.size_flags_vertical = Control.SIZE_SHRINK_CENTER
     action.disabled = claimed
     action.pressed.connect(_on_task_pressed.bind(task_id, ready))

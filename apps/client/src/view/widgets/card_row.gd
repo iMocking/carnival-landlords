@@ -18,6 +18,26 @@ var card_size := Vector2(64, 92)
 var max_spacing := 46.0
 var lift := 24.0
 var hover_lift := true
+## 卡牌在自身矩形里的对齐方式：`true` = 贴底（给"选中上抬"留出上方空间）。
+## 手牌带用贴底对齐 —— 设计稿里手牌底边是一条固定基线（`HandRow` 的底边），
+## 牌上抬时只有牌顶变化，牌底不动，所以整体观感是"从牌堆里抽出来"。
+var bottom_align := false:
+    set(value):
+        bottom_align = value
+        _relayout()
+## 卡牌带在控件矩形内部**再向中间收拢**的像素数（左右各一份）。
+##
+## 为什么需要它：`size.x` 是**行**的宽度，行的两侧留白被 `page_padding_test` 钉死成
+## 与其它页面同一个数（`AppPage.SIDE_PADDING`）。但牌桌左下角"我的头像"正好占着行左端
+## 那一列，而手牌底边（稿子 518/640）比头像顶边（511/640）还低几个像素 ——
+## 满手牌（17~20 张）摊到整行时，最左边几张必然压住头像。
+## 于是**行不动、牌带收拢**：两侧留白的约定与"别盖住头像"的版面要求可以同时成立。
+##
+## 发牌动画读的是同一份排版（见 `slot_center()`），所以牌飞到位之后再换成真手牌不会跳。
+var side_clearance := 0.0:
+    set(value):
+        side_clearance = maxf(value, 0.0)
+        _relayout()
 var interactive := false:
     set(value):
         interactive = value
@@ -162,14 +182,10 @@ func _relayout() -> void:
     var count := _order.size()
     if count == 0:
         return
-    var available := maxf(size.x, card_size.x)
-    var spacing := max_spacing
-    if count > 1:
-        spacing = min(max_spacing, (available - card_size.x) / float(count - 1))
-    spacing = max(spacing, 6.0)
-    var total := card_size.x + spacing * (count - 1)
-    var start_x := (available - total) * 0.5
-    var base_y := (size.y - card_size.y) * 0.5
+    var metrics := _layout_metrics(count)
+    var start_x := float(metrics["start_x"])
+    var spacing := float(metrics["spacing"])
+    var base_y := float(metrics["base_y"])
     for i in count:
         var view: CardView = _order[i]
         view.size = card_size
@@ -179,3 +195,38 @@ func _relayout() -> void:
         var y := base_y - (lift if should_lift else 0.0)
         view.position = Vector2(start_x + i * spacing, y)
         view.z_index = i
+
+## 一排共 `count` 张牌时的排版结果（牌带净空 / 可用宽度 / 步进 / 首张 x / 基线 y）。
+##
+## `_relayout()` 与 `slot_center()` 共用它：发牌动画要把牌发到"这张牌最终待着的地方"，
+## 两处各算一份数学迟早会漂移（差几像素就是"牌落地后手牌跳一下"），所以只留一个来源。
+func _layout_metrics(count: int) -> Dictionary:
+    var base_y := (size.y - card_size.y) if bottom_align else (size.y - card_size.y) * 0.5
+    if count <= 0:
+        return {
+            "margin": 0.0, "available": maxf(size.x, card_size.x),
+            "spacing": max_spacing, "start_x": 0.0, "base_y": maxf(base_y, 0.0),
+        }
+    # 净空先夹一次：收拢到行里放不下两张牌时就退化成"贴边"，而不是把牌挤成负间距
+    var margin := minf(side_clearance, maxf((size.x - card_size.x) * 0.5, 0.0))
+    var available := maxf(size.x - margin * 2.0, card_size.x)
+    var spacing := max_spacing
+    if count > 1:
+        spacing = min(max_spacing, (available - card_size.x) / float(count - 1))
+    spacing = max(spacing, 6.0)
+    var total := card_size.x + spacing * (count - 1)
+    return {
+        "margin": margin,
+        "available": available,
+        "spacing": spacing,
+        "start_x": margin + (available - total) * 0.5,
+        "base_y": maxf(base_y, 0.0),
+    }
+
+## 第 `index` 张牌（共 `count` 张、且都未抬起）落位后的**中心点**，控件局部坐标。
+## 发牌动画用它算落点；抬起 / 悬停不参与 —— 发牌时牌都是躺平的。
+func slot_center(index: int, count: int) -> Vector2:
+    var metrics := _layout_metrics(count)
+    return Vector2(
+        float(metrics["start_x"]) + float(index) * float(metrics["spacing"]) + card_size.x * 0.5,
+        float(metrics["base_y"]) + card_size.y * 0.5)

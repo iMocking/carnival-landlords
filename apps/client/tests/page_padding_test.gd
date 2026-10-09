@@ -71,25 +71,46 @@ func _check_sides(control: Control, view: Vector2i, base: float, tag: String) ->
 func _probe(view: Vector2i) -> void:
     var tag := "%dx%d" % [view.x, view.y]
 
-    # ---- 基准：系统设置浮层的面板 ----
-    var profile := _open("res://src/view/pages/profile_view.tscn", view)
+    # ---- 基准：系统设置页（独立页面）的整页面板 ----
+    var settings := _open("res://src/view/pages/settings_view.tscn", view)
     await _frames(10)
-    profile.open_settings()
-    await _frames(6)
-    var panel := profile.find_child("SettingsPanel", true, false) as Control
-    _check(panel != null, "%s 个人中心有系统设置面板 SettingsPanel" % tag)
+    var panel := settings.find_child("SettingsPanel", true, false) as Control
+    _check(panel != null, "%s 系统设置页有面板 SettingsPanel" % tag)
     var base := AppPage.SIDE_PADDING
     if panel != null:
-        # 浮层面板的内缩 = 安全区 + 页面留白（无头环境安全区为 0）
-        base = SafeArea.insets(profile).x + AppPage.SIDE_PADDING
+        # 面板内缩 = 安全区 + 页面留白（无头环境安全区为 0）
+        base = SafeArea.insets(settings).x + AppPage.SIDE_PADDING
         _check(_approx(panel.global_position.x, base),
             "%s 系统设置面板按「安全区 + 页面留白」内缩（期望 %.0f，实际 %.0f）"
             % [tag, base, panel.global_position.x])
         _check_sides(panel, view, base, "%s 系统设置面板" % tag)
+    settings.queue_free()
+    await _frames(2)
+
+    # ---- 个人中心（入口页）：主面板同一套留白 ----
+    var profile := _open("res://src/view/pages/profile_view.tscn", view)
+    await _frames(10)
     var main_panel := profile.find_child("MainPanel", true, false) as Control
     _check_sides(main_panel, view, base, "%s 个人中心主面板" % tag)
     profile.queue_free()
     await _frames(2)
+
+    # ---- 个人中心的五个子页：内容区（`Scroll`）同样按 base 内缩 ----
+    # 注意：`AppPage.content()` 本身是铺满父级的 `MarginContainer`，留白体现在**它的子节点**上，
+    # 所以这里量的是各页的滚动内容区 `Scroll`（五个子页的内容都挂在它里面）。
+    for entry in [
+        {"path": "res://src/view/pages/history_view.tscn", "tag": "我的战绩"},
+        {"path": "res://src/view/pages/skins_view.tscn", "tag": "主题皮肤"},
+        {"path": "res://src/view/pages/achievements_view.tscn", "tag": "我的成就"},
+        {"path": "res://src/view/pages/messages_view.tscn", "tag": "消息中心"},
+    ]:
+        var section := _open(str(entry["path"]), view)
+        await _frames(10)
+        var scroll := section.find_child("Scroll", true, false) as Control
+        _check(scroll != null, "%s 的子页 %s 有滚动内容区" % [tag, str(entry["tag"])])
+        _check_sides(scroll, view, base, "%s %s 内容区" % [tag, str(entry["tag"])])
+        section.queue_free()
+        await _frames(2)
 
     # ---- 登录页 / 大厅页 ----
     for entry in [

@@ -27,10 +27,18 @@ func _initialize() -> void:
     var ultra := Vector2i(1720, 720)
     var tablet := Vector2i(1280, 960)
     var profile := "res://src/view/pages/profile_view.tscn"
+    # 个人中心右侧菜单的五个入口各自是独立页面（菜单只做跳转），所以逐页各自截一张
+    var history := "res://src/view/pages/history_view.tscn"
+    var skins := "res://src/view/pages/skins_view.tscn"
+    var achievements := "res://src/view/pages/achievements_view.tscn"
+    var messages := "res://src/view/pages/messages_view.tscn"
+    var settings := "res://src/view/pages/settings_view.tscn"
     var lobby := "res://src/view/pages/lobby_view.tscn"
     var login := "res://src/view/pages/login_view.tscn"
     var game := "res://src/view/main_view.tscn"
     _jobs = [
+        # 启动加载页（不是 AppPage，直接实例化 BootView；进度停在设计稿的 70%）
+        {"name": "00_boot", "size": wide, "boot": true},
         {"name": "01_login", "size": wide, "scene": login},
         {"name": "02_lobby", "size": wide, "scene": lobby},
         # 玩法区是「上二下三」两行：几个典型视口都拍一张，确认下排三张不会被切掉
@@ -41,25 +49,29 @@ func _initialize() -> void:
         {"name": "02c_shop", "size": wide, "scene": lobby, "overlay": "shop"},
         {"name": "02d_activity_ultra", "size": ultra, "scene": lobby, "overlay": "activity"},
         {"name": "02e_shop_tablet", "size": tablet, "scene": lobby, "overlay": "shop"},
-        {"name": "03_profile_history", "size": wide, "scene": profile, "tab": 0},
-        {"name": "04_profile_skins", "size": wide, "scene": profile, "tab": 1},
-        {"name": "05_profile_achievements", "size": wide, "scene": profile, "tab": 2},
-        {"name": "05b_profile_messages", "size": wide, "scene": profile, "tab": 3},
-        # 系统设置浮层：四个分类各来一张（基础/音效/隐私/账号）
-        {"name": "05c_settings_basic", "size": wide, "scene": profile, "settings": 0},
-        {"name": "05d_settings_audio", "size": wide, "scene": profile, "settings": 1},
-        {"name": "05e_settings_account", "size": wide, "scene": profile, "settings": 3},
-        {"name": "05f_settings_ultra", "size": ultra, "scene": profile, "settings": 0},
-        {"name": "05g_settings_tablet", "size": tablet, "scene": profile, "settings": 0},
+        # 个人中心（入口页：账号卡 + 五项跳转菜单）
+        {"name": "03_profile_hub", "size": wide, "scene": profile},
+        # 五项入口各自是独立页面
+        {"name": "03_profile_history", "size": wide, "scene": history},
+        {"name": "04_profile_skins", "size": wide, "scene": skins},
+        {"name": "05_profile_achievements", "size": wide, "scene": achievements},
+        {"name": "05b_profile_messages", "size": wide, "scene": messages},
+        # 系统设置页：四个分类各来一张（基础/音效/隐私/账号）
+        {"name": "05c_settings_basic", "size": wide, "scene": settings, "settings": 0},
+        {"name": "05d_settings_audio", "size": wide, "scene": settings, "settings": 1},
+        {"name": "05e_settings_account", "size": wide, "scene": settings, "settings": 3},
+        {"name": "05f_settings_ultra", "size": ultra, "scene": settings, "settings": 0},
+        {"name": "05g_settings_tablet", "size": tablet, "scene": settings, "settings": 0},
         {"name": "06_game", "size": wide, "scene": game, "drive": true},
         {"name": "07_login_ultra", "size": ultra, "scene": login},
         {"name": "08_lobby_ultra", "size": ultra, "scene": lobby},
-        {"name": "09_profile_ultra", "size": ultra, "scene": profile, "tab": 0},
+        {"name": "09_profile_ultra", "size": ultra, "scene": profile},
+        {"name": "09b_history_ultra", "size": ultra, "scene": history},
         {"name": "10_game_ultra", "size": ultra, "scene": game, "drive": true},
         {"name": "11_lobby_tablet", "size": tablet, "scene": lobby},
-        {"name": "12_profile_tablet", "size": tablet, "scene": profile, "tab": 2},
+        {"name": "12_profile_tablet", "size": tablet, "scene": achievements},
         # 皮肤购买确认浮层：未解锁的卡片点一下只会弹确认，不会直接扣钻石
-        {"name": "17_skin_confirm", "size": wide, "scene": profile, "tab": 1, "warmup": 90,
+        {"name": "17_skin_confirm", "size": wide, "scene": skins, "warmup": 90,
             "after": func(page: Node) -> void:
                 if page != null and page.has_method("_open_skin_confirm"):
                     page.call("_open_skin_confirm", "table_imperial")},
@@ -104,8 +116,16 @@ func _initialize() -> void:
 func _process(_delta: float) -> bool:
     if _job >= _jobs.size():
         return true
-    _frames += 1
     var job: Dictionary = _jobs[_job]
+    # 发牌那几秒**不计入** warmup。
+    #
+    # 牌桌一开局先走一段发牌动画（`DealAnimator`，时长还会随「牌速调节」变化），
+    # 而这里的 warmup 是"帧数"。不排除它的话，同一份 warmup 会拍到发牌动画、或者拍到
+    # "牌刚发完还没有人出牌"的空牌桌 —— 而那些数字是按"已经在打"调的。
+    # 用"等发牌结束"而不是"把 warmup 调大"：帧率不定（无 vsync）与牌速档位都会让补的帧数不准。
+    if _is_dealing(_page):
+        return false
+    _frames += 1
 
     if _page != null and _frames > 3:
         if job.has("tab"):
@@ -159,6 +179,17 @@ func _next() -> void:
     var job: Dictionary = _jobs[_job]
     root.size = job["size"]
     _frames = 0
+    if bool(job.get("boot", false)):
+        # 启动页不是 AppPage：直接实例化 BootView 并让进度停在设计稿的位置。
+        # 用 `load()` 而不是 `BootView.new()`，避免依赖 --import 生成的全局类名缓存。
+        var script: GDScript = load("res://src/view/boot_view.gd")
+        var view: Control = script.new()
+        view.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+        root.add_child(view)
+        view.call("set_progress", 0.7)
+        view.set("size", Vector2(job["size"]))
+        _page = view
+        return
     if job.has("mode"):
         _app.active_mode = GameMode.find(str(job["mode"]))
     var packed: PackedScene = load(str(job["scene"]))
@@ -179,6 +210,14 @@ func _capture(shot_name: String) -> void:
 
 func _find(node: Node, node_name: String) -> Node:
     return node.find_child(node_name, true, false)
+
+## 牌桌是否还在发牌。非牌桌页、以及页面 `_ready()` 还没跑（ViewModel 尚未建立）时都是 false。
+func _is_dealing(page: Node) -> bool:
+    var game := page as MainView
+    if game == null:
+        return false
+    var vm := game.view_model()
+    return vm != null and vm.is_dealing()
 
 # ------------------------------------------------------------------ 假档案
 

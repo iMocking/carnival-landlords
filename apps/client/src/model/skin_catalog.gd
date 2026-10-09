@@ -6,8 +6,8 @@ extends RefCounted
 ## 字段约定：
 ## * 背景皮肤：top / mid / bottom（径向渐变三段）+ accent（桌沿与强调色）+ rail（桌沿主色）
 ##   + felt / felt_light / felt_dark（牌桌台面呢绒三段）。
-##   **厅堂底色与台面呢绒是两套颜色** —— 概念设计图是「暗红厅堂 + 翠绿台面」，
-##   若沿用同一组颜色，牌桌就会变成一整块红或一整块绿，失去"桌布铺在房间里"的层次。
+##   **厅堂底色与台面呢绒是两套颜色** —— 新视觉稿是「暗红厅堂 + 红呢台面（深棕桌沿）」，
+##   两者虽然同为暖色，但浓度差得很远；若沿用同一组颜色，牌桌就会糊成一片红。
 ## * 卡牌皮肤：face / face_border（牌面）+ back / back_border / back_inner（牌背织纹）+ red / black（点数与花色）
 
 const KIND_TABLE := 0
@@ -16,10 +16,12 @@ const KIND_CARD := 1
 const DEFAULT_TABLE_ID := "table_classic"
 const DEFAULT_CARD_ID := "card_classic"
 
-## 台面呢绒的默认三段（皮肤没给 felt_* 时回退到这里）
-const FELT_LIGHT := Color("#3fae6d")
-const FELT := Color("#1b7a45")
-const FELT_DARK := Color("#072713")
+## 台面呢绒的默认三段（皮肤没给 felt_* 时回退到这里）。
+## 新视觉稿（`design_update/对局牌桌/index.html`）的台面是**红呢 #9E1A17**，
+## 桌沿是深棕木 + 内外两道金线，因此默认值跟着换。
+const FELT_LIGHT := Color("#c03028")
+const FELT := Color("#9e1a17")
+const FELT_DARK := Color("#5e0d0b")
 
 static var _tables: Array = []
 static var _cards: Array = []
@@ -30,15 +32,15 @@ static func tables() -> Array:
         _tables = [
             {
                 "id": "table_classic",
-                "name": "经典绿呢",
-                "desc": "红木厅堂 · 翠绿台面",
+                "name": "经典红呢",
+                "desc": "暗红厅堂 · 红呢台面",
                 "kind": KIND_TABLE,
                 "price": 0,
-                "top": Color("#7a1a1e"),
-                "mid": Color("#4a0f13"),
-                "bottom": Color("#1e0507"),
-                "accent": Color("#f7cf5f"),
-                "rail": Color("#6b3418"),
+                "top": Color("#9e3324"),
+                "mid": Color("#731c14"),
+                "bottom": Color("#540f0d"),
+                "accent": Color("#ffd75e"),
+                "rail": Color("#451a0d"),
                 "felt_light": FELT_LIGHT,
                 "felt": FELT,
                 "felt_dark": FELT_DARK,
